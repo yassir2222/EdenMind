@@ -11,9 +11,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String keycloakId;
-
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -65,14 +62,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getKeycloakId() {
-        return keycloakId;
-    }
-
-    public void setKeycloakId(String keycloakId) {
-        this.keycloakId = keycloakId;
     }
 
     public String getEmail() {

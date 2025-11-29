@@ -35,11 +35,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/keycloak/{keycloakId}")
-    public ResponseEntity<User> getUserByKeycloakId(@PathVariable String keycloakId) {
-        User user = userService.getUserByKeycloakId(keycloakId);
-        return ResponseEntity.ok(user);
-    }
+
 
 
     @PostMapping

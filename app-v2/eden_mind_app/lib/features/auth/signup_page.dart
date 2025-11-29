@@ -12,16 +12,41 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleSignup() async {
+    if (_firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
-      // Keycloak handles registration via the login page usually, or we can add a specific param.
-      // For now, we redirect to the standard login flow where users can choose to register.
-      await context.read<AuthService>().login();
+      await context.read<AuthService>().register(
+        _firstNameController.text.trim(),
+        _lastNameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
       if (mounted && context.read<AuthService>().isAuthenticated) {
-        // Clear stack and go to dashboard
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const DashboardPage()),
           (route) => false,
@@ -99,6 +124,71 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 40),
 
+                    // First Name Field
+                    TextField(
+                      controller: _firstNameController,
+                      decoration: InputDecoration(
+                        hintText: 'First Name',
+                        filled: true,
+                        fillColor: const Color(0xFFF2F3F7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Last Name Field
+                    TextField(
+                      controller: _lastNameController,
+                      decoration: InputDecoration(
+                        hintText: 'Last Name',
+                        filled: true,
+                        fillColor: const Color(0xFFF2F3F7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Email Field
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Email Address',
+                        filled: true,
+                        fillColor: const Color(0xFFF2F3F7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Password Field
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        filled: true,
+                        fillColor: const Color(0xFFF2F3F7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+
                     // Signup Button
                     if (_isLoading)
                       const CircularProgressIndicator()
@@ -118,9 +208,10 @@ class _SignupPageState extends State<SignupPage> {
                           shadowColor: const Color(
                             0xFF8E97FD,
                           ).withValues(alpha: 0.4),
+                          minimumSize: const Size(double.infinity, 50),
                         ),
                         child: const Text(
-                          'SIGN UP WITH KEYCLOAK',
+                          'SIGN UP',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

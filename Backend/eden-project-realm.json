@@ -48,6 +48,8 @@
                 "http://localhost:3000/login/oauth2/code/keycloak",
                 "com.example.app://callback",
                 "com.example.app:/oauth2redirect",
+                "com.example.edenmindapp://callback",
+                "com.example.edenmindapp:/oauth2redirect",
                 "http://127.0.0.1:port/callback"
             ],
             "webOrigins": [

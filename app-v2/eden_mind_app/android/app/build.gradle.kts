@@ -28,7 +28,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["appAuthRedirectScheme"] = "com.example.app"
+        manifestPlaceholders["appAuthRedirectScheme"] = "com.example.edenmindapp"
     }
 
     buildTypes {

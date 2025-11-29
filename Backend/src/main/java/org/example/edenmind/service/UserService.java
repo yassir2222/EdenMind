@@ -26,10 +26,7 @@ public class UserService {
     }
 
 
-    public User getUserByKeycloakId(String keycloakId) {
-        return userRepository.findByKeycloakId(keycloakId)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec keycloakId: " + keycloakId));
-    }
+
 
 
     public User createUser(User user) {

@@ -13,12 +13,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter email and password')),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
-      await context.read<AuthService>().login();
+      await context.read<AuthService>().login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
       if (mounted && context.read<AuthService>().isAuthenticated) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const DashboardPage()),
@@ -96,6 +115,39 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 40),
 
+                    // Email Field
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Email Address',
+                        filled: true,
+                        fillColor: const Color(0xFFF2F3F7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Password Field
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        filled: true,
+                        fillColor: const Color(0xFFF2F3F7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+
                     // Login Button
                     if (_isLoading)
                       const CircularProgressIndicator()
@@ -115,9 +167,10 @@ class _LoginPageState extends State<LoginPage> {
                           shadowColor: const Color(
                             0xFF8E97FD,
                           ).withValues(alpha: 0.4),
+                          minimumSize: const Size(double.infinity, 50),
                         ),
                         child: const Text(
-                          'LOG IN WITH KEYCLOAK',
+                          'LOG IN',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -149,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                         _buildSocialIcon(
                           Icons.g_mobiledata,
                           const Color(0xFF3F414E),
-                        ), // Placeholder for Google
+                        ),
                       ],
                     ),
 
