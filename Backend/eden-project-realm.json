@@ -1,0 +1,59 @@
+{
+    "realm": "Eden-Project",
+    "displayName": "Eden Project Realm",
+    "enabled": true,
+    "roles": {
+        "realm": [
+            {
+                "name": "patient",
+                "description": "Rôle pour les utilisateurs patients"
+            },
+            {
+                "name": "admin",
+                "description": "Rôle pour les administrateurs du système"
+            }
+        ]
+    },
+    "users": [
+        {
+            "username": "admin",
+            "enabled": true,
+            "firstName": "Super",
+            "lastName": "Admin",
+            "email": "superadmin@eden.project",
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "admin",
+                "patient"
+            ]
+        }
+    ],
+    "clients": [
+        {
+            "clientId": "client",
+            "name": "Client de l'application",
+            "enabled": true,
+            "publicClient": false,
+            "bearerOnly": false,
+            "clientAuthenticatorType": "client-secret",
+            "secret": "client",
+            "redirectUris": [
+                "http://localhost:3000/*",
+                "http://localhost:3000/login/oauth2/code/keycloak",
+                "com.example.app://callback",
+                "com.example.app:/oauth2redirect",
+                "http://127.0.0.1:port/callback"
+            ],
+            "webOrigins": [
+                "http://localhost:3000"
+            ],
+            "protocol": "openid-connect"
+        }
+    ]
+}
