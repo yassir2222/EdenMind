@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import '../auth/auth_service.dart';
 import '../auth/login_page.dart';
+import 'dart:developer';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -12,10 +13,62 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
     final userProfile = authService.userProfile;
-    final name = userProfile?['name'] ?? 'User';
-    final email = userProfile?['email'] ?? 'No email';
-    // Static fallback as per design request
-    const memberSince = 'October 2023';
+
+    String name = 'User';
+    String email = userProfile?['sub'] ?? 'No email';
+    String memberSince = 'October 2023'; // Default fallback
+
+    if (userProfile != null) {
+      log('userProfile Response: $userProfile', name: 'userProfile');
+      // 1. Handle Name
+      if (userProfile.containsKey('firstName') &&
+          userProfile.containsKey('lastName')) {
+        name = '${userProfile['firstName']} ${userProfile['lastName']}';
+      } else if (userProfile.containsKey('sub')) {
+        // Fallback: Derive from email if names are missing
+        final String sub = userProfile['sub'];
+        if (email == 'No email') email = sub;
+
+        if (name == 'User') {
+          if (sub.contains('@')) {
+            final localPart = sub.split('@')[0];
+            name = localPart
+                .split(RegExp(r'[._]'))
+                .map((word) {
+                  if (word.isEmpty) return '';
+                  return '${word[0].toUpperCase()}${word.substring(1)}';
+                })
+                .join(' ');
+          } else {
+            name = sub;
+          }
+        }
+      }
+
+      // 2. Handle Member Since Date
+      if (userProfile.containsKey('createdAt')) {
+        try {
+          final DateTime createdAt = DateTime.parse(userProfile['createdAt']);
+          final List<String> months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+          ];
+          memberSince = '${months[createdAt.month - 1]} ${createdAt.year}';
+        } catch (e) {
+          debugPrint('Error parsing createdAt: $e');
+        }
+      }
+    }
 
     return Scaffold(
       backgroundColor: EdenMindTheme.backgroundColor,
@@ -189,6 +242,7 @@ class ProfilePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: EdenMindTheme.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
+              // border: Border.all(color: EdenMindTheme.primaryColor.withValues(alpha: 0.2)),
             ),
             child: Icon(icon, color: EdenMindTheme.primaryColor),
           ),

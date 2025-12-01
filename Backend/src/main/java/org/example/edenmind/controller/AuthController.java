@@ -44,7 +44,13 @@ public class AuthController {
         userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        var jwtToken = jwtUtils.generateToken(userDetails);
+        
+        java.util.Map<String, Object> extraClaims = new java.util.HashMap<>();
+        extraClaims.put("firstName", user.getFirstName());
+        extraClaims.put("lastName", user.getLastName());
+        extraClaims.put("createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString());
+
+        var jwtToken = jwtUtils.generateToken(extraClaims, userDetails);
         
         return ResponseEntity.ok(AuthResponse.builder()
                 .token(jwtToken)
@@ -61,7 +67,14 @@ public class AuthController {
         );
         
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        var jwtToken = jwtUtils.generateToken(userDetails);
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+        java.util.Map<String, Object> extraClaims = new java.util.HashMap<>();
+        extraClaims.put("firstName", user.getFirstName());
+        extraClaims.put("lastName", user.getLastName());
+        extraClaims.put("createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString());
+
+        var jwtToken = jwtUtils.generateToken(extraClaims, userDetails);
         
         return ResponseEntity.ok(AuthResponse.builder()
                 .token(jwtToken)

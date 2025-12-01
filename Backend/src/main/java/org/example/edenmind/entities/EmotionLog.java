@@ -18,7 +18,7 @@ public class EmotionLog {
     @Column(nullable = false)
     private String emotionType;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer intensity;
 
     @Column(columnDefinition = "TEXT")
@@ -26,6 +26,9 @@ public class EmotionLog {
 
     @Column(name = "trigger_event")
     private String triggerEvent;
+    
+    @Column(name = "activities")
+    private String activities; // Comma separated list
 
     @Column(updatable = false)
     private LocalDateTime recordedAt;
@@ -33,10 +36,12 @@ public class EmotionLog {
     public EmotionLog() {
     }
 
-    public EmotionLog(User user, String emotionType, Integer intensity) {
+    public EmotionLog(User user, String emotionType, String activities, String note) {
         this.user = user;
         this.emotionType = emotionType;
-        this.intensity = intensity;
+        this.activities = activities;
+        this.note = note;
+        this.intensity = 5; // Default
     }
 
     @PrePersist
@@ -90,6 +95,14 @@ public class EmotionLog {
 
     public void setTriggerEvent(String triggerEvent) {
         this.triggerEvent = triggerEvent;
+    }
+
+    public String getActivities() {
+        return activities;
+    }
+
+    public void setActivities(String activities) {
+        this.activities = activities;
     }
 
     public LocalDateTime getRecordedAt() {

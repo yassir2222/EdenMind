@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:eden_mind_app/features/chatbot/chatbot_page.dart';
 import 'package:eden_mind_app/features/profile/profile_page.dart';
+import 'package:eden_mind_app/features/mood_log/mood_log_page.dart';
+import 'package:eden_mind_app/features/meditation/meditation_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -190,7 +192,10 @@ class _DashboardPageState extends State<DashboardPage> {
             buttonText: 'Log',
             buttonColor: EdenMindTheme.secondaryColor,
             onTap: () {
-              // Navigate to Mood Log
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MoodLogPage()),
+              );
             },
           ),
         ),
@@ -331,6 +336,14 @@ class _DashboardPageState extends State<DashboardPage> {
                 subtitle: 'Focus',
                 imageUrl:
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuB3DtKan55pNQOyhQnAKZURdLaUGoSpUjbPRXdM6uw3uIjP62x2_eN1OoMrQmCPVnQOKPJjgoEwPXwWTwahxAO-D9EVfiBZBM51k0P1PTfEu4rRN7kYXtbx0F68yGn2d3T4TuIY9RX8P6RsXsw17BioiwOtj1Es96C_SK0jmVQuVu9p6TbqDktn4igtLe4HYnF2BMCJf1X9zsuko408RjaJ3heqIVemagyb9h-FbPsWF4I0erZO2MEpGlsplNKzf8Yq19bF7N5lGGY',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MeditationPage(),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -343,47 +356,51 @@ class _DashboardPageState extends State<DashboardPage> {
     required String title,
     required String subtitle,
     required String imageUrl,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      height: 160,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-      ),
+    return GestureDetector(
+      onTap: onTap,
       child: Container(
+        height: 160,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
           ),
         ),
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.bottomLeft,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
             ),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white.withValues(alpha: 0.8),
+          ),
+          padding: const EdgeInsets.all(16),
+          alignment: Alignment.bottomLeft,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          ],
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

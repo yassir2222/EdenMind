@@ -1,75 +1,44 @@
 package org.example.edenmind.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.edenmind.entities.EmotionLog;
-import org.example.edenmind.service.EmotionLogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
+import org.example.edenmind.entities.User;
+import org.example.edenmind.repositories.EmotionLogRepository;
+import org.example.edenmind.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Controller REST pour gérer les journaux d'émotions
- * Toutes les routes commencent par /api/emotions
- */
 @RestController
 @RequestMapping("/api/emotions")
+@RequiredArgsConstructor
 public class EmotionLogController {
 
-    @Autowired
-    private EmotionLogService emotionLogService;
+    private final EmotionLogRepository emotionLogRepository;
+    private final UserRepository userRepository;
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<EmotionLog>> getUserEmotionLogs(@PathVariable Long userId) {
-        List<EmotionLog> emotions = emotionLogService.getUserEmotionLogs(userId);
-        return ResponseEntity.ok(emotions);
+    @PostMapping
+    public ResponseEntity<?> createLog(@RequestBody Map<String, Object> request, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String emotionType = (String) request.get("emotionType");
+        String activities = (String) request.get("activities");
+        String note = (String) request.get("note");
+
+        EmotionLog log = new EmotionLog(user, emotionType, activities, note);
+        emotionLogRepository.save(log);
+
+        return ResponseEntity.ok().build();
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<EmotionLog> getEmotionLogById(@PathVariable Long id) {
-        EmotionLog emotion = emotionLogService.getEmotionLogById(id);
-        return ResponseEntity.ok(emotion);
-    }
-
-
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<EmotionLog> createEmotionLog(
-            @PathVariable Long userId,
-            @RequestBody EmotionLog emotionLog) {
-
-        EmotionLog createdEmotion = emotionLogService.createEmotionLog(userId, emotionLog);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmotion);
-    }
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmotionLog(@PathVariable Long id) {
-        emotionLogService.deleteEmotionLog(id);
-        return ResponseEntity.noContent().build();
-    }
-
-
-    @GetMapping("/user/{userId}/range")
-    public ResponseEntity<List<EmotionLog>> getEmotionLogsByDateRange(
-            @PathVariable Long userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-
-        List<EmotionLog> emotions = emotionLogService.getEmotionLogsByDateRange(userId, start, end);
-        return ResponseEntity.ok(emotions);
-    }
-
-
-    @GetMapping("/user/{userId}/type/{emotionType}")
-    public ResponseEntity<List<EmotionLog>> getEmotionLogsByType(
-            @PathVariable Long userId,
-            @PathVariable String emotionType) {
-
-        List<EmotionLog> emotions = emotionLogService.getEmotionLogsByType(userId, emotionType);
-        return ResponseEntity.ok(emotions);
+    @GetMapping
+    public ResponseEntity<List<EmotionLog>> getLogs(@AuthenticationPrincipal UserDetails userDetails) {
+        List<EmotionLog> logs = emotionLogRepository.findByUserEmailOrderByRecordedAtDesc(userDetails.getUsername());
+        return ResponseEntity.ok(logs);
     }
 }

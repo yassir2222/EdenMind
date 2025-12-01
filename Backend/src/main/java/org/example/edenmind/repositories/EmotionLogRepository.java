@@ -9,14 +9,8 @@ import java.util.List;
 
 @Repository
 public interface EmotionLogRepository extends JpaRepository<EmotionLog, Long> {
-
+    List<EmotionLog> findByUserEmailOrderByRecordedAtDesc(String email);
     List<EmotionLog> findByUserIdOrderByRecordedAtDesc(Long userId);
-
-    List<EmotionLog> findByUserIdAndRecordedAtBetween(
-            Long userId,
-            LocalDateTime start,
-            LocalDateTime end
-    );
-
+    List<EmotionLog> findByUserIdAndRecordedAtBetween(Long userId, LocalDateTime start, LocalDateTime end);
     List<EmotionLog> findByUserIdAndEmotionType(Long userId, String emotionType);
 }
