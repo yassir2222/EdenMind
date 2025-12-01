@@ -1,61 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:eden_mind_app/features/chatbot/chatbot_page.dart';
+import 'package:eden_mind_app/features/profile/profile_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: EdenMindTheme.backgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader()
-                .animate()
-                .fadeIn(duration: 600.ms)
-                .slideY(begin: -0.2, end: 0),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 10,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildGreeting()
-                        .animate()
-                        .fadeIn(delay: 200.ms, duration: 600.ms)
-                        .slideX(begin: -0.2, end: 0),
-                    const SizedBox(height: 30),
-                    _buildActionGrid(
-                      context,
-                    ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(),
-                    const SizedBox(height: 30),
-                    _buildDailyCalm()
-                        .animate()
-                        .fadeIn(delay: 600.ms, duration: 600.ms)
-                        .slideY(begin: 0.2, end: 0),
-                    const SizedBox(height: 30),
-                    _buildRecommendedSection().animate().fadeIn(
-                      delay: 800.ms,
-                      duration: 600.ms,
-                    ),
-                    const SizedBox(height: 100), // Spacing for bottom nav
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _buildBody(),
       bottomNavigationBar: _buildBottomNavBar()
           .animate()
           .fadeIn(delay: 1000.ms, duration: 600.ms)
           .slideY(begin: 1, end: 0),
+    );
+  }
+
+  Widget _buildBody() {
+    switch (_selectedIndex) {
+      case 0:
+        return _buildHome();
+      case 1:
+        return const Center(child: Text("Exercises Page"));
+      case 2:
+        return const Center(child: Text("Music Page"));
+      case 3:
+        return const ProfilePage();
+      default:
+        return _buildHome();
+    }
+  }
+
+  Widget _buildHome() {
+    return SafeArea(
+      child: Column(
+        children: [
+          _buildHeader()
+              .animate()
+              .fadeIn(duration: 600.ms)
+              .slideY(begin: -0.2, end: 0),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildGreeting()
+                      .animate()
+                      .fadeIn(delay: 200.ms, duration: 600.ms)
+                      .slideX(begin: -0.2, end: 0),
+                  const SizedBox(height: 30),
+                  _buildActionGrid(
+                    context,
+                  ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(),
+                  const SizedBox(height: 30),
+                  _buildDailyCalm()
+                      .animate()
+                      .fadeIn(delay: 600.ms, duration: 600.ms)
+                      .slideY(begin: 0.2, end: 0),
+                  const SizedBox(height: 30),
+                  _buildRecommendedSection().animate().fadeIn(
+                    delay: 800.ms,
+                    duration: 600.ms,
+                  ),
+                  const SizedBox(height: 100), // Spacing for bottom nav
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -85,7 +109,7 @@ class DashboardPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha: 0.1),
                 ),
                 child: Icon(
                   Icons.notifications_outlined,
@@ -143,7 +167,7 @@ class DashboardPage extends StatelessWidget {
             title: 'AI Chatbot',
             subtitle: 'Talk it out',
             icon: Icons.smart_toy_outlined,
-            color: Colors.deepPurple.withOpacity(0.1),
+            color: Colors.deepPurple.withValues(alpha: 0.1),
             iconBgColor: EdenMindTheme.primaryColor,
             buttonText: 'Start',
             buttonColor: EdenMindTheme.primaryColor,
@@ -161,7 +185,7 @@ class DashboardPage extends StatelessWidget {
             title: 'Mood Log',
             subtitle: 'Track feelings',
             icon: Icons.mood,
-            color: Colors.amber.withOpacity(0.1),
+            color: Colors.amber.withValues(alpha: 0.1),
             iconBgColor: EdenMindTheme.secondaryColor,
             buttonText: 'Log',
             buttonColor: EdenMindTheme.secondaryColor,
@@ -267,7 +291,7 @@ class DashboardPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(Icons.play_arrow, color: Colors.white),
@@ -335,7 +359,7 @@ class DashboardPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.black.withOpacity(0.6)],
+            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
           ),
         ),
         padding: const EdgeInsets.all(16),
@@ -356,7 +380,7 @@ class DashboardPage extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -368,14 +392,14 @@ class DashboardPage extends StatelessWidget {
   Widget _buildBottomNavBar() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),
           topRight: Radius.circular(40),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -390,14 +414,27 @@ class DashboardPage extends StatelessWidget {
               _buildNavItem(
                 icon: Icons.home_rounded,
                 label: 'Home',
-                isSelected: true,
+                index: 0,
+                isSelected: _selectedIndex == 0,
               ),
               _buildNavItem(
                 icon: Icons.psychology_outlined,
                 label: 'Exercises',
+                index: 1,
+                isSelected: _selectedIndex == 1,
               ),
-              _buildNavItem(icon: Icons.music_note_outlined, label: 'Music'),
-              _buildNavItem(icon: Icons.person_outline, label: 'Profile'),
+              _buildNavItem(
+                icon: Icons.music_note_outlined,
+                label: 'Music',
+                index: 2,
+                isSelected: _selectedIndex == 2,
+              ),
+              _buildNavItem(
+                icon: Icons.person_outline,
+                label: 'Profile',
+                index: 3,
+                isSelected: _selectedIndex == 3,
+              ),
             ],
           ),
         ),
@@ -408,26 +445,34 @@ class DashboardPage extends StatelessWidget {
   Widget _buildNavItem({
     required IconData icon,
     required String label,
+    required int index,
     bool isSelected = false,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isSelected ? EdenMindTheme.primaryColor : Colors.grey[400],
-          size: 28,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
             color: isSelected ? EdenMindTheme.primaryColor : Colors.grey[400],
+            size: 28,
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              color: isSelected ? EdenMindTheme.primaryColor : Colors.grey[400],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

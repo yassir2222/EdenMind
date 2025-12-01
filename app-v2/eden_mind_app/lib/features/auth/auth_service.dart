@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'dart:developer';
 
 class AuthService extends ChangeNotifier {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
@@ -29,6 +30,7 @@ class AuthService extends ChangeNotifier {
     if (token != null && !JwtDecoder.isExpired(token)) {
       _isAuthenticated = true;
       _userProfile = JwtDecoder.decode(token);
+      log('The value is $_userProfile', name: 'userProfile');
     } else {
       _isAuthenticated = false;
       _userProfile = null;
