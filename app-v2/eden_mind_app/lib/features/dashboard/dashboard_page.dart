@@ -4,6 +4,7 @@ import 'package:eden_mind_app/features/chatbot/chatbot_page.dart';
 import 'package:eden_mind_app/features/profile/profile_page.dart';
 import 'package:eden_mind_app/features/mood_log/mood_log_page.dart';
 import 'package:eden_mind_app/features/meditation/meditation_page.dart';
+import 'package:eden_mind_app/features/games/therapeutic_games_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -33,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
       case 0:
         return _buildHome();
       case 1:
-        return const Center(child: Text("Exercises Page"));
+        return const TherapeuticGamesPage();
       case 2:
         return const Center(child: Text("Music Page"));
       case 3:

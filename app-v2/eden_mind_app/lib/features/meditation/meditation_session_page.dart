@@ -18,6 +18,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
   bool _isPlaying = false;
   Duration _totalDuration = const Duration(minutes: 10);
   Duration _currentPosition = Duration.zero;
+  bool _isMuted = false;
 
   @override
   void initState() {
@@ -284,8 +285,15 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                icon: const Icon(Icons.shuffle, color: Color(0xFFA1A4B2)),
-                onPressed: () {},
+                icon: Icon(
+                  _isMuted ? Icons.volume_off : Icons.volume_up,
+                  color: const Color(0xFFA1A4B2),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isMuted = !_isMuted;
+                  });
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.replay_10, color: Color(0xFFA1A4B2)),

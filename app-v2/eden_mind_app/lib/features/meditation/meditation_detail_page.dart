@@ -35,10 +35,9 @@ class MeditationDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-            _buildBottomButton()
-                .animate()
-                .fadeIn(delay: 600.ms)
-                .slideY(begin: 1, end: 0),
+            _buildBottomButton(
+              context,
+            ).animate().fadeIn(delay: 600.ms).slideY(begin: 1, end: 0),
           ],
         ),
       ),
@@ -72,9 +71,9 @@ class MeditationDetailPage extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          const Text(
-            'Morning Start',
-            style: TextStyle(
+          Text(
+            session['title'],
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Color(0xFF12141D),
@@ -114,8 +113,8 @@ class MeditationDetailPage extends StatelessWidget {
         height: 300,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          image: const DecorationImage(
-            image: AssetImage('assets/images/meditation_hero.png'),
+          image: DecorationImage(
+            image: NetworkImage(session['image']),
             fit: BoxFit.cover,
           ),
         ),
@@ -225,7 +224,7 @@ class MeditationDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomButton() {
+  Widget _buildBottomButton(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
