@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'breathing_game_page.dart';
+import 'distortion_hunter_page.dart';
 
 class TherapeuticGamesPage extends StatelessWidget {
   const TherapeuticGamesPage({super.key});
@@ -23,7 +25,7 @@ class TherapeuticGamesPage extends StatelessWidget {
                   .fadeIn(duration: 600.ms)
                   .slideX(begin: -0.2, end: 0),
               const SizedBox(height: 32),
-              _buildGamesGrid()
+              _buildGamesGrid(context)
                   .animate()
                   .fadeIn(delay: 200.ms, duration: 600.ms)
                   .slideY(begin: 0.2, end: 0),
@@ -101,7 +103,7 @@ class TherapeuticGamesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGamesGrid() {
+  Widget _buildGamesGrid(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -151,6 +153,14 @@ class TherapeuticGamesPage extends StatelessWidget {
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuCWgaPHi6B-xDC9XXX2E-IHD-HTQj4n7eoNefluppp_YoGE7BaxsdfXjJtBBOf8Lv-TiSs5KVWuY1ppQkmR6Jtriq3djLaCYbb_3yVdEcCK3HKF50-6QZGSfYkyZcK8LAALIPrEsmiCiuFg5jooU_-sMChjyv3XebiYKSARUbzUaHIH6pxo3rMKRAVI6X9mEHI595uxlN2vh39uAy407cvHC4Zy-kDt2VPSRoPDG4zVij2qE44qHdv9agoqB36yjUhZxn4CpfXKM4o',
                 aspectRatio: 1.0,
                 backgroundColor: const Color(0xFFEBF9F4),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DistortionHunterPage(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               _buildGameCard(
@@ -162,7 +172,22 @@ class TherapeuticGamesPage extends StatelessWidget {
                 backgroundColor: const Color(0xFFFBE5E5),
               ),
               const SizedBox(height: 16),
-              _buildNewGameCard(),
+              _buildGameCard(
+                title: 'Deep Breathing',
+                subtitle: 'Relaxation',
+                imageUrl:
+                    'https://lh3.googleusercontent.com/aida-public/AB6AXuBWnIfK5KXrVxBRNp5cxzlcpNSxoVowNR1_rAjrrYktZxEER5PmlogBXNq1I_N48DMZAi48EK91e4HQtU0KrGoX4mjKgEjXQF9wON0BAnVzgdja86_hRaNMb7mhw1u17PuuIUtBRrD832FbcfDTeF1Mv4YOGhDxs7Yy8IvHIPzhdgDvI6jZSiqGIRpqTKFSu9Xs_TdZW0CBCOOgxIHB46Nbf5doxrMqeuPZKRZwRx_zTzNk1CtxJ7MLxJBCgyocsneJL5fdvy185ZI',
+                aspectRatio: 1.0,
+                backgroundColor: const Color(0xFFA3A7F4).withValues(alpha: 0.1),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BreathingGamePage(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -176,6 +201,7 @@ class TherapeuticGamesPage extends StatelessWidget {
     required String imageUrl,
     required double aspectRatio,
     required Color backgroundColor,
+    VoidCallback? onTap,
   }) {
     return AspectRatio(
       aspectRatio: aspectRatio,
@@ -239,7 +265,7 @@ class TherapeuticGamesPage extends StatelessWidget {
             Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () {},
+                onTap: onTap,
                 splashColor: Colors.white.withValues(alpha: 0.2),
               ),
             ),
@@ -247,120 +273,5 @@ class TherapeuticGamesPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildNewGameCard() {
-    return AspectRatio(
-      aspectRatio: 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFA3A7F4).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: const Color(0xFFA3A7F4).withValues(alpha: 0.3),
-            width: 2,
-            style: BorderStyle
-                .solid, // Flutter doesn't support dashed border natively easily without a package or custom painter.
-            // I'll stick to solid for now or use a custom painter if strictly needed, but solid with low opacity is often close enough for MVP.
-            // Actually, I can use a CustomPaint for dashed border if I want to be perfect.
-            // Let's try to be perfect.
-          ),
-        ),
-        child: CustomPaint(
-          painter: DashedBorderPainter(
-            color: const Color(0xFFA3A7F4).withValues(alpha: 0.3),
-            strokeWidth: 2,
-            dashPattern: [6, 4],
-            radius: const Radius.circular(24),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'New Game',
-                  style: GoogleFonts.manrope(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFA3A7F4),
-                  ),
-                ),
-                Text(
-                  'Coming Soon',
-                  style: GoogleFonts.manrope(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFFA3A7F4).withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DashedBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final List<double> dashPattern;
-  final Radius radius;
-
-  DashedBorderPainter({
-    required this.color,
-    this.strokeWidth = 1,
-    this.dashPattern = const [5, 3],
-    this.radius = Radius.zero,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    final Path path = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-          radius,
-        ),
-      );
-
-    final Path dashedPath = _createDashedPath(path);
-    canvas.drawPath(dashedPath, paint);
-  }
-
-  Path _createDashedPath(Path source) {
-    final Path dest = Path();
-    for (final PathMetric metric in source.computeMetrics()) {
-      double distance = 0;
-      int index = 0;
-      while (distance < metric.length) {
-        final double len = dashPattern[index % dashPattern.length];
-        if (distance + len > metric.length) {
-          dest.addPath(
-            metric.extractPath(distance, metric.length),
-            Offset.zero,
-          );
-          break;
-        }
-        dest.addPath(metric.extractPath(distance, distance + len), Offset.zero);
-        distance += len;
-        index++;
-      }
-    }
-    return dest;
-  }
-
-  @override
-  bool shouldRepaint(DashedBorderPainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.dashPattern != dashPattern ||
-        oldDelegate.radius != radius;
   }
 }
