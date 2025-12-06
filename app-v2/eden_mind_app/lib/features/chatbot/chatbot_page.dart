@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'chat_service.dart';
 
 class ChatbotPage extends StatefulWidget {
@@ -240,12 +241,14 @@ class _ChatbotPageState extends State<ChatbotPage> {
                 bottomLeft: Radius.circular(8),
               ),
             ),
-            child: Text(
-              message,
-              style: TextStyle(
-                fontSize: 14,
-                color: EdenMindTheme.textColor,
-                height: 1.5,
+            child: MarkdownBody(
+              data: message,
+              styleSheet: MarkdownStyleSheet(
+                p: TextStyle(
+                  fontSize: 14,
+                  color: EdenMindTheme.textColor,
+                  height: 1.5,
+                ),
               ),
             ),
           ),
