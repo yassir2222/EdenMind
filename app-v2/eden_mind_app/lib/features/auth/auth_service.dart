@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:eden_mind_app/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -11,10 +13,7 @@ class AuthService extends ChangeNotifier {
 
   // Dynamic Base URL based on Platform
   String get _baseUrl {
-    if (Platform.isAndroid) {
-      return 'http://192.168.1.130:8081/api/auth'; // Android emulator uses 10.0.2.2 for host's localhost
-    }
-    return 'http://192.168.1.130:8081/api/auth';
+    return '${AppConfig.baseUrl}/auth';
   }
 
   bool _isAuthenticated = false;

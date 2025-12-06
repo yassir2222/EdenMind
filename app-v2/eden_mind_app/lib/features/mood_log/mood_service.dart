@@ -2,17 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:io';
+import 'package:eden_mind_app/config/app_config.dart';
 
 class MoodService {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   // Dynamic Base URL based on Platform (Same logic as AuthService)
   String get _baseUrl {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8081/api/emotions';
-    }
-    return 'http://192.168.1.105:8081/api/emotions';
+    return '${AppConfig.baseUrl}/emotions';
   }
 
   Future<void> saveMood(

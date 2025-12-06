@@ -1,14 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
+
+import 'package:eden_mind_app/config/app_config.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
   // Dynamic Base URL based on Platform
   String get _baseUrl {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8081/api/chat'; // Android emulator uses 10.0.2.2 for host's localhost
-    }
-    return 'http://192.168.1.105:8081/api/chat';
+    return '${AppConfig.baseUrl}/chat';
   }
 
   Future<String> sendMessage(String query) async {
