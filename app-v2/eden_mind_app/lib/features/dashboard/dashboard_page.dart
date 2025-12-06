@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:eden_mind_app/features/auth/auth_service.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:eden_mind_app/features/chatbot/chatbot_page.dart';
 import 'package:eden_mind_app/features/profile/profile_page.dart';
 import 'package:eden_mind_app/features/mood_log/mood_log_page.dart';
 import 'package:eden_mind_app/features/meditation/meditation_page.dart';
 import 'package:eden_mind_app/features/games/therapeutic_games_page.dart';
+import 'package:eden_mind_app/features/music/music_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -36,7 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
       case 1:
         return const TherapeuticGamesPage();
       case 2:
-        return const Center(child: Text("Music Page"));
+        return const MusicPage();
       case 3:
         return const ProfilePage();
       default:
@@ -142,11 +145,14 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildGreeting() {
+    final userProfile = context.watch<AuthService>().userProfile;
+    final firstName = userProfile?['firstName'] ?? 'User';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hello, Sarah',
+          'Hello, $firstName',
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,

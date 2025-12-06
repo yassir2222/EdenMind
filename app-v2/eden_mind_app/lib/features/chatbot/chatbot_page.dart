@@ -1,9 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'chat_service.dart';
 
-class ChatbotPage extends StatelessWidget {
+class ChatbotPage extends StatefulWidget {
   const ChatbotPage({super.key});
+
+  @override
+  State<ChatbotPage> createState() => _ChatbotPageState();
+}
+
+class _ChatbotPageState extends State<ChatbotPage> {
+  final ChatService _chatService = ChatService();
+  final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final List<Map<String, dynamic>> _messages = [
+    {
+      'text':
+          'Hello! I\'m ZenBot, your personal companion. How are you feeling today?',
+      'isBot': true,
+    },
+  ];
+  bool _isLoading = false;
+
+  void _sendMessage() async {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() {
+      _messages.add({'text': text, 'isBot': false});
+      _isLoading = true;
+    });
+    _controller.clear();
+    _scrollToBottom();
+
+    try {
+      final response = await _chatService.sendMessage(text);
+      if (mounted) {
+        setState(() {
+          _messages.add({'text': response, 'isBot': true});
+          _isLoading = false;
+        });
+        _scrollToBottom();
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _messages.add({
+            'text':
+                'Sorry, I am having trouble connecting right now. Please try again later.',
+            'isBot': true,
+          });
+          _isLoading = false;
+        });
+        _scrollToBottom();
+      }
+    }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,24 +79,24 @@ class ChatbotPage extends StatelessWidget {
           children: [
             _buildHeader(context),
             Expanded(
-              child: ListView(
+              child: ListView.builder(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(24),
-                children: [
-                  _buildBotMessage(
-                    'Hello! I\'m ZenBot, your personal companion. How are you feeling today?',
-                    delay: 200.ms,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildUserMessage(
-                    'I\'m feeling a bit anxious about my upcoming presentation.',
-                    delay: 600.ms,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildBotMessage(
-                    'I understand. That sounds stressful. Let\'s try a quick breathing exercise together. Are you ready?',
-                    delay: 1000.ms,
-                  ),
-                ],
+                itemCount: _messages.length + (_isLoading ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == _messages.length) {
+                    return _buildTypingIndicator();
+                  }
+                  final message = _messages[index];
+                  if (message['isBot']) {
+                    return _buildBotMessage(
+                      message['text'],
+                      delay: 0.ms,
+                    ); // Delay removed for dynamic messages
+                  } else {
+                    return _buildUserMessage(message['text'], delay: 0.ms);
+                  }
+                },
               ),
             ),
             _buildInputArea(),
@@ -67,13 +132,26 @@ class ChatbotPage extends StatelessWidget {
                   color: EdenMindTheme.textColor,
                 ),
               ),
-              Text(
-                'Online',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.green,
-                  fontWeight: FontWeight.w500,
-                ),
+              Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text(
+                    'Online',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -92,6 +170,42 @@ class ChatbotPage extends StatelessWidget {
     );
   }
 
+  Widget _buildTypingIndicator() {
+    return Row(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            image: const DecorationImage(
+              image: NetworkImage(
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuAUjoZSD0Z1JZ3DnYJjDWgcUXZLhXIwDd94lBHx1PYegts1HLu7qllFbo7tYLdaw112irk9etRP26HOJbTEdGxhYNqkjzXVUPd8o2zTaxoTuU7tOpJ_uN5uHHfA73qYZcD5bWLxQAJXQnlsV1Wk9O7Q6XJPgJSPjN851jJ0GNxu6gYT_ORjdMnsB5YMQ2tBMmJEzsOnf8USSIDSHcKan6FlZIg1aesCDaQrO7fLIMjvVrmUXXHR4GEbj_EwOVYrASFQLlS1xe4JoQE',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+              bottomRight: Radius.circular(24),
+              bottomLeft: Radius.circular(8),
+            ),
+          ),
+          child: const Text('Typing...', style: TextStyle(color: Colors.grey)),
+        ),
+      ],
+    );
+  }
+
   Widget _buildBotMessage(String message, {Duration? delay}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -99,6 +213,9 @@ class ChatbotPage extends StatelessWidget {
         Container(
           width: 40,
           height: 40,
+          margin: const EdgeInsets.only(
+            bottom: 16,
+          ), // Added margin to align with bubble
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             image: const DecorationImage(
@@ -113,6 +230,7 @@ class ChatbotPage extends StatelessWidget {
         Flexible(
           child: Container(
             padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 16),
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -133,7 +251,7 @@ class ChatbotPage extends StatelessWidget {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: delay).slideX(begin: -0.1, end: 0);
+    ).animate().fadeIn(duration: delay ?? 200.ms).slideX(begin: -0.1, end: 0);
   }
 
   Widget _buildUserMessage(String message, {Duration? delay}) {
@@ -143,6 +261,7 @@ class ChatbotPage extends StatelessWidget {
         Flexible(
           child: Container(
             padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               color: EdenMindTheme.primaryColor,
               borderRadius: const BorderRadius.only(
@@ -163,7 +282,7 @@ class ChatbotPage extends StatelessWidget {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: delay).slideX(begin: 0.1, end: 0);
+    ).animate().fadeIn(duration: delay ?? 200.ms).slideX(begin: 0.1, end: 0);
   }
 
   Widget _buildInputArea() {
@@ -204,6 +323,8 @@ class ChatbotPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: _controller,
+                      onSubmitted: (_) => _sendMessage(),
                       decoration: InputDecoration(
                         hintText: 'Type your message...',
                         hintStyle: TextStyle(
@@ -222,14 +343,17 @@ class ChatbotPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: EdenMindTheme.primaryColor,
-              borderRadius: BorderRadius.circular(16),
+          GestureDetector(
+            onTap: _sendMessage,
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: EdenMindTheme.primaryColor,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(Icons.send_rounded, color: Colors.white),
             ),
-            child: const Icon(Icons.send_rounded, color: Colors.white),
           ),
         ],
       ),

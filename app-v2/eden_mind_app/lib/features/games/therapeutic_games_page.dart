@@ -1,9 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'breathing_game_page.dart';
 import 'distortion_hunter_page.dart';
+import 'serenity_tower_page.dart';
 
 class TherapeuticGamesPage extends StatelessWidget {
   const TherapeuticGamesPage({super.key});
@@ -127,6 +127,14 @@ class TherapeuticGamesPage extends StatelessWidget {
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuAiyM3GMbjBRRkalKkzHDvWdf4IpyklHTPwV7OSrplElJzJOyWNx0crow9TSMWVrbvqbSZXRGWGuXmMzv58c55LQX9eULzcpjqAz_UmhHAk-iE2G6amEDsPyuYGV3-DIzSKadmmIWJGCkODLbCcGQZc3Oc6i20U9oNjxfU_Mi93J60u7FLL4xuX87-2sGVzwxx2hZ6PGVDsgHk1hMtcnLwlWDv7YtgWhFSViE4lhl4c8sn-i9bui8p9wJKj-QLSSmlmYnyqL042J2s',
                 aspectRatio: 1.0,
                 backgroundColor: const Color(0xFFFFEFE2),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SerenityTowerPage(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               _buildGameCard(

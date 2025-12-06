@@ -18,11 +18,11 @@ class _DistortionHunterPageState extends State<DistortionHunterPage>
   late AnimationController _gameLoopController;
 
   // Game State
-  List<CloudEntity> _clouds = [];
-  List<SunEntity> _suns = [];
+  final List<CloudEntity> _clouds = [];
+  final List<SunEntity> _suns = [];
   int _score = 0;
   bool _isPaused = false;
-  bool _isGameOver = false;
+  final bool _isGameOver = false;
 
   // Feedback State
   bool _showFeedbackOverlay = false;
@@ -31,7 +31,7 @@ class _DistortionHunterPageState extends State<DistortionHunterPage>
 
   // Spawning
   Timer? _spawnTimer;
-  double _spawnRate = 3.5;
+  final double _spawnRate = 3.5;
 
   @override
   void initState() {

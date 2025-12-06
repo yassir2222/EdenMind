@@ -41,14 +41,15 @@ public class AuthController {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getEmail());
         
         java.util.Map<String, Object> extraClaims = new java.util.HashMap<>();
-        extraClaims.put("firstName", user.getFirstName());
-        extraClaims.put("lastName", user.getLastName());
-        extraClaims.put("createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString());
+        extraClaims.put("id", savedUser.getId());
+        extraClaims.put("firstName", savedUser.getFirstName());
+        extraClaims.put("lastName", savedUser.getLastName());
+        extraClaims.put("createdAt", savedUser.getCreatedAt() != null ? savedUser.getCreatedAt().toString() : java.time.LocalDateTime.now().toString());
 
         var jwtToken = jwtUtils.generateToken(extraClaims, userDetails);
         
@@ -70,6 +71,7 @@ public class AuthController {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
         java.util.Map<String, Object> extraClaims = new java.util.HashMap<>();
+        extraClaims.put("id", user.getId());
         extraClaims.put("firstName", user.getFirstName());
         extraClaims.put("lastName", user.getLastName());
         extraClaims.put("createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : java.time.LocalDateTime.now().toString());

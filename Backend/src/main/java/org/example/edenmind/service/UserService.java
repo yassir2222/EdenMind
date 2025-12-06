@@ -48,6 +48,12 @@ public class UserService {
         user.setPhoneNumber(userDetails.getPhoneNumber());
         user.setBio(userDetails.getBio());
         user.setAvatarUrl(userDetails.getAvatarUrl());
+        user.setBirthday(userDetails.getBirthday());
+        user.setFamilySituation(userDetails.getFamilySituation());
+        user.setWorkType(userDetails.getWorkType());
+        user.setWorkHours(userDetails.getWorkHours());
+        user.setChildrenCount(userDetails.getChildrenCount());
+        user.setCountry(userDetails.getCountry());
 
         return userRepository.save(user);
     }
