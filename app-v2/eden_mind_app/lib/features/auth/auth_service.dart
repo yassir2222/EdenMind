@@ -40,7 +40,16 @@ class AuthService extends ChangeNotifier {
           );
 
           if (response.statusCode == 200) {
-            _userProfile = jsonDecode(response.body);
+            final freshData = jsonDecode(response.body);
+            // MERGE: Keep the ID from the token if the backend doesn't send it,
+            // or if we just want to be safe.
+            // Also preserve other critical token fields if needed.
+            _userProfile = {
+              ...decodedToken, // Start with token data (guaranteed to have id)
+              ...freshData, // Overwrite with fresh data
+              'id': userId, // FORCE the ID to be present
+            };
+
             log(
               'Fetched fresh user profile: $_userProfile',
               name: 'AuthService',

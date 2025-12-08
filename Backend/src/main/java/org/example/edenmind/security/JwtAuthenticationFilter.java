@@ -34,12 +34,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("JwtAuthFilter: No Bearer token found in request to " + request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
-        userEmail = jwtUtils.extractUsername(jwt);
+        try {
+            userEmail = jwtUtils.extractUsername(jwt);
+            System.out.println("JwtAuthFilter: Extracted email " + userEmail + " from token");
+        } catch (Exception e) {
+             System.out.println("JwtAuthFilter: Failed to extract username: " + e.getMessage());
+             filterChain.doFilter(request, response);
+             return;
+        }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
@@ -53,6 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("JwtAuthFilter: Authentication set for user " + userEmail);
+            } else {
+                System.out.println("JwtAuthFilter: Token invalid for user " + userEmail);
             }
         }
         filterChain.doFilter(request, response);
