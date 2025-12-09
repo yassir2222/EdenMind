@@ -30,7 +30,7 @@ class JwtUtilsTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(jwtUtils, "secretKey", secretKey);
-        ReflectionTestUtils.setField(jwtUtils, "jwtExpiration", 3600000L); // 1 hour
+        ReflectionTestUtils.setField(jwtUtils, "jwtExpiration", 3600000L); 
 
         when(userDetails.getUsername()).thenReturn("test@example.com");
     }

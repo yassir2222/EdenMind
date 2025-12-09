@@ -62,7 +62,7 @@ class ChatControllerTest {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(chatController).build();
         
-        // Mock Security Context
+        
         User user = new User();
         user.setId(1L);
         user.setEmail("test@example.com");
