@@ -37,6 +37,7 @@ class AuthService extends ChangeNotifier {
         if (userId != null) {
           final response = await http.get(
             Uri.parse('$_baseUrl/../users/$userId'),
+            headers: {'Authorization': 'Bearer $token'},
           );
 
           if (response.statusCode == 200) {
@@ -167,17 +168,25 @@ class AuthService extends ChangeNotifier {
   }) async {
     try {
       final userId = _userProfile?['id'] ?? _userProfile?['userId'];
+      final token = await _secureStorage.read(key: 'jwt_token');
 
       if (userId == null) {
         throw Exception('User ID not found in profile');
       }
 
+      if (token == null) {
+        throw Exception('No authentication token');
+      }
+
       // Fetch current user details first
       final userResponse = await http.get(
         Uri.parse('$_baseUrl/../users/$userId'),
+        headers: {'Authorization': 'Bearer $token'},
       );
       if (userResponse.statusCode != 200) {
-        throw Exception('Failed to fetch user details');
+        throw Exception(
+          'Failed to fetch user details: ${userResponse.statusCode}',
+        );
       }
 
       final currentUser = jsonDecode(userResponse.body);
@@ -198,7 +207,10 @@ class AuthService extends ChangeNotifier {
 
       final response = await http.put(
         Uri.parse('$_baseUrl/../users/$userId'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: jsonEncode(finalData),
       );
 

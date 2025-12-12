@@ -8,6 +8,7 @@ import 'package:eden_mind_app/features/mood_log/mood_log_page.dart';
 import 'package:eden_mind_app/features/meditation/meditation_page.dart';
 import 'package:eden_mind_app/features/games/therapeutic_games_page.dart';
 import 'package:eden_mind_app/features/music/music_page.dart';
+import 'package:eden_mind_app/features/notifications/notifications_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -109,35 +110,45 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ],
           ),
-          Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey.withValues(alpha: 0.1),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsPage(),
                 ),
-                child: Icon(
-                  Icons.notifications_outlined,
-                  color: Colors.grey[600],
-                ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
+              );
+            },
+            child: Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.fromBorderSide(
-                      BorderSide(color: Colors.white, width: 2),
+                    color: Colors.grey.withValues(alpha: 0.1),
+                  ),
+                  child: Icon(
+                    Icons.notifications_outlined,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                      border: Border.fromBorderSide(
+                        BorderSide(color: Colors.white, width: 2),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -334,6 +345,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 subtitle: 'Listen',
                 imageUrl:
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuB1ezywX7QFy2SDh4LMhZ8emDFn_4y--GR-MgjyUXxmIeTu-n5bq2jnoQhCiv3ajqArDg_gS0pLosmQqYkt1CX4lbNnCJKiPeyEJ2DNi9m7ZQbXnk0R3gw5jBNTJwzZIkH0Mf_X1cFlzg3jtNBIpdUulFA8JMFKjnQUywO54llVkj-CiKD83WTsF6hQlw-L9kPk3HhZK_tph8oCYSD78PvqMSKdpRmedsntuBmjV_IiucGUX0MMMOR9dZxuOzoBhI0JwD-OTMEB9x4',
+                onTap: () {
+                  // Navigate to Music tab
+                  setState(() {
+                    _selectedIndex = 2;
+                  });
+                },
               ),
             ),
             const SizedBox(width: 16),
