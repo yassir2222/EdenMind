@@ -182,112 +182,126 @@ class _DistortionHunterPageState extends State<DistortionHunterPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF1BFFFF), // Match bottom of gradient
       extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          // Premium Dynamic Background
-          Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF2E3192), // Deep calming blue
-                    Color(0xFF1BFFFF), // Bright cyan accent
-                  ],
-                  stops: [0.0, 1.0],
+      body: SizedBox.expand(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Premium Dynamic Background
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF2E3192), // Deep calming blue
+                      Color(0xFF1BFFFF), // Bright cyan accent
+                    ],
+                    stops: [0.0, 1.0],
+                  ),
                 ),
               ),
             ),
-          ),
-          // Soft overlay for depth
-          Positioned.fill(
-            child: Container(
-              color: Colors.white.withValues(alpha: 0.1),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                child: Container(),
+            // Soft overlay for depth
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withValues(alpha: 0.05),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
 
-          // Game Elements
-          ..._clouds.map((cloud) => _buildCloud(cloud)),
-          ..._suns.map((sun) => _buildSun(sun)),
+            // Game Elements
+            ..._clouds.map((cloud) => _buildCloud(cloud)),
+            ..._suns.map((sun) => _buildSun(sun)),
 
-          // HUD
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildGlassButton(
-                    icon: _isPaused
-                        ? Icons.play_arrow_rounded
-                        : Icons.pause_rounded,
-                    onTap: _isPaused ? _resumeGame : _pauseGame,
+            // HUD - Fixed at top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildGlassButton(
+                        icon: _isPaused
+                            ? Icons.play_arrow_rounded
+                            : Icons.pause_rounded,
+                        onTap: _isPaused ? _resumeGame : _pauseGame,
+                      ),
+                      _buildScoreBadge(),
+                      _buildGlassButton(
+                        icon: Icons.close_rounded,
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
-                  _buildScoreBadge(),
-                  _buildGlassButton(
-                    icon: Icons.close_rounded,
-                    onTap: () => Navigator.pop(context),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
 
-          // Feedback Overlay
-          if (_showFeedbackOverlay) _buildFeedbackOverlay(),
+            // Feedback Overlay
+            if (_showFeedbackOverlay) _buildFeedbackOverlay(),
 
-          // Pause Overlay
-          if (_isPaused &&
-              !_showFeedbackOverlay &&
-              !ModalRoute.of(context)!.isCurrent)
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 20,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
+            // Pause Overlay
+            if (_isPaused &&
+                !_showFeedbackOverlay &&
+                !ModalRoute.of(context)!.isCurrent)
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.pause_rounded,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            'PAUSED',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 4,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.pause_rounded,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'PAUSED',
-                          style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 4,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
