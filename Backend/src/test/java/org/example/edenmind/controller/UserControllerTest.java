@@ -12,8 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Collections;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,6 +41,15 @@ class UserControllerTest {
     }
 
     @Test
+    void testGetAllUsers() throws Exception {
+        when(userService.getAllUsers()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
     void testGetUserById() throws Exception {
         User user = new User();
         user.setId(1L);
@@ -48,6 +60,24 @@ class UserControllerTest {
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("test@example.com"));
+    }
+
+    @Test
+    void testCreateUser() throws Exception {
+        User user = new User();
+        user.setEmail("new@example.com");
+        
+        User createdUser = new User();
+        createdUser.setId(1L);
+        createdUser.setEmail("new@example.com");
+
+        when(userService.createUser(any(User.class))).thenReturn(createdUser);
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1L));
     }
 
     @Test
@@ -64,4 +94,13 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Updated"));
     }
+
+    @Test
+    void testDeleteUser() throws Exception {
+        doNothing().when(userService).deleteUser(1L);
+
+        mockMvc.perform(delete("/api/users/1"))
+                .andExpect(status().isNoContent());
+    }
 }
+
