@@ -130,10 +130,17 @@ class AuthService extends ChangeNotifier {
 
   Future<String?> uploadImage(File imageFile) async {
     try {
+      final token = await _secureStorage.read(key: 'jwt_token');
+
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('$_baseUrl/../uploads'), // Adjust path to reach /api/uploads
+        Uri.parse('${AppConfig.baseUrl}/uploads'),
       );
+
+      // Add authorization header
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
 
       // Add file
       request.files.add(
@@ -145,7 +152,54 @@ class AuthService extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['url'];
+        final relativeUrl = data['url'] as String;
+
+        // Construct full URL with server address
+        final fullUrl =
+            'http://${AppConfig.serverIp}:${AppConfig.serverPort}$relativeUrl';
+        log('Image uploaded: $fullUrl', name: 'AuthService');
+        return fullUrl;
+      } else {
+        throw Exception('Failed to upload image: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Image upload error: $e');
+      rethrow;
+    }
+  }
+
+  /// Upload image from bytes (for web support)
+  Future<String?> uploadImageBytes(List<int> bytes, String filename) async {
+    try {
+      final token = await _secureStorage.read(key: 'jwt_token');
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${AppConfig.baseUrl}/uploads'),
+      );
+
+      // Add authorization header
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+
+      // Add file from bytes
+      request.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: filename),
+      );
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final relativeUrl = data['url'] as String;
+
+        // Construct full URL with server address
+        final fullUrl =
+            'http://${AppConfig.serverIp}:${AppConfig.serverPort}$relativeUrl';
+        log('Image uploaded: $fullUrl', name: 'AuthService');
+        return fullUrl;
       } else {
         throw Exception('Failed to upload image: ${response.body}');
       }

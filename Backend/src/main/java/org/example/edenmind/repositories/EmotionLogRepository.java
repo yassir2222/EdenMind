@@ -13,4 +13,6 @@ public interface EmotionLogRepository extends JpaRepository<EmotionLog, Long> {
     List<EmotionLog> findByUserIdOrderByRecordedAtDesc(Long userId);
     List<EmotionLog> findByUserIdAndRecordedAtBetween(Long userId, LocalDateTime start, LocalDateTime end);
     List<EmotionLog> findByUserIdAndEmotionType(Long userId, String emotionType);
+    long countByUserEmail(String email);
 }
+

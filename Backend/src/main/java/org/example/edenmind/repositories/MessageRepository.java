@@ -16,4 +16,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Modifying
     @Transactional
     void deleteByConversationId(Long conversationId);
+    
+    long countByConversationUserId(Long userId);
 }
