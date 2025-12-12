@@ -73,4 +73,18 @@ class ChatService {
       throw Exception('Failed to load messages');
     }
   }
+
+  Future<void> deleteConversation(int conversationId) async {
+    final token = await _secureStorage.read(key: 'jwt_token');
+    if (token == null) throw Exception('No authentication token found');
+
+    final response = await http.delete(
+      Uri.parse('$_baseUrl/conversations/$conversationId'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 204 && response.statusCode != 200) {
+      throw Exception('Failed to delete conversation');
+    }
+  }
 }

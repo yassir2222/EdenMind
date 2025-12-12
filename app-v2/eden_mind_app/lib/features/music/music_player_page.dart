@@ -9,6 +9,7 @@ class Track {
   final String imageUrl;
   final String audioUrl;
   final String description;
+  final String category;
 
   const Track({
     required this.title,
@@ -16,6 +17,7 @@ class Track {
     required this.imageUrl,
     required this.audioUrl,
     required this.description,
+    this.category = 'ambient',
   });
 }
 
