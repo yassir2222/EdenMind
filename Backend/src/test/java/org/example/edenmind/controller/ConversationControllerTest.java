@@ -48,7 +48,22 @@ class ConversationControllerTest {
         when(conversationService.getUserConversations(anyLong())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/conversations/user/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
+    void testGetConversationById() throws Exception {
+        Conversation conversation = new Conversation();
+        conversation.setId(1L);
+        conversation.setTitle("Test Conversation");
+
+        when(conversationService.getConversationById(1L)).thenReturn(conversation);
+
+        mockMvc.perform(get("/api/conversations/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").value("Test Conversation"));
     }
 
     @Test
@@ -77,6 +92,15 @@ class ConversationControllerTest {
     }
 
     @Test
+    void testGetConversationMessages() throws Exception {
+        when(conversationService.getConversationMessages(anyLong())).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/conversations/1/messages"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
     void testAddMessage() throws Exception {
         Map<String, String> request = new HashMap<>();
         request.put("content", "Hello");
@@ -95,3 +119,4 @@ class ConversationControllerTest {
                 .andExpect(jsonPath("$.content").value("Hello"));
     }
 }
+
