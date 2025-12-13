@@ -5,6 +5,7 @@ import org.example.edenmind.entities.EmotionLog;
 import org.example.edenmind.entities.User;
 import org.example.edenmind.repositories.EmotionLogRepository;
 import org.example.edenmind.repositories.UserRepository;
+import org.example.edenmind.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,7 @@ public class EmotionLogController {
 
     private final EmotionLogRepository emotionLogRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @PostMapping
     public ResponseEntity<?> createLog(@RequestBody Map<String, Object> request, @AuthenticationPrincipal UserDetails userDetails) {
@@ -33,6 +35,9 @@ public class EmotionLogController {
         EmotionLog log = new EmotionLog(user, emotionType, activities, note);
         emotionLogRepository.save(log);
 
+        // Create notification for mood logging
+        notificationService.notifyMoodLogged(user, emotionType);
+
         return ResponseEntity.ok().build();
     }
 
@@ -42,3 +47,4 @@ public class EmotionLogController {
         return ResponseEntity.ok(logs);
     }
 }
+

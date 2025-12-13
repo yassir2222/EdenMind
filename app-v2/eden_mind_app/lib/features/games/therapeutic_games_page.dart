@@ -4,6 +4,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'breathing_game_page.dart';
 import 'distortion_hunter_page.dart';
 import 'serenity_tower_page.dart';
+import 'emotion_mosaic_page.dart';
+import 'grounding_inventory_page.dart';
+import 'gratitude_jar_page.dart';
 
 class TherapeuticGamesPage extends StatelessWidget {
   const TherapeuticGamesPage({super.key});
@@ -118,6 +121,14 @@ class TherapeuticGamesPage extends StatelessWidget {
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuCmgmvnXd7Y_vpRXe6xoHXItSrSAtRY0UUZ19PId_7ZOaAWdez8xmNcoqUWXtvD2BHUg9m6ELqbIOGMY9ZrWdyXhoM2lQi519bugffftpZ8yvhaWYIgK10SYJPznsDxWMzN1v3AGNWrpUAAjG-Q9aUe1Zh0le8qCXGiYaZeEiIcBXZA7O9BF2c_xcBwsplmMrzexnX84SOVaXQSSvmP5VCuwEalQDZAQrZWUi2sqdOcRkRzv3pyjnsiIGa0Bh5KZyE9rZunBXgLMjA',
                 aspectRatio: 3 / 4,
                 backgroundColor: const Color(0xFFEBEBFF),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BreathingGamePage(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               _buildGameCard(
@@ -144,6 +155,14 @@ class TherapeuticGamesPage extends StatelessWidget {
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuBaF8hexDeY039pBmyCENvdxe-qgq1QlNab__4rYmpaoQwD1QGw7MlFL8gNbUQ9QBvWuB_c8C9We4vnD6tBhvAidsA0_mcRT1TrgHcS_Rv2iyqU6Ny3NCN29NeLhp1ZANbNwTIG2HvXs3A1O7COXR_MnYAE13KrDymxAcQeRe0k9DIBKt9crEKE96ITe96r3-HJIjfaGn4hv-5EilP4nt9ZWgk3G-28Sqp3NKFmg22Zhku4PCGKBLTMZoeBBdc-yo5sQzgzG07pbVE',
                 aspectRatio: 3 / 4,
                 backgroundColor: const Color(0xFFE5F5FC),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GroundingInventoryPage(),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -178,20 +197,28 @@ class TherapeuticGamesPage extends StatelessWidget {
                     'https://lh3.googleusercontent.com/aida-public/AB6AXuCKkc5HDLzYZzOVpnafHxzW8BSv5yKvB-NA0jAIX3UcG-x_QzCzcAResTKo3Be1LjMCsoIXnymWKVYVi9HTnZhoQUNwKt_WVgwGNLv0y-J7BcUNfQtdw7HqWvpDx0wUvy4UiiroXxnheEY4RDtBy1SvovzWz0zwY8jlaLd0VDTnY7T6H7NvMHJi_uUK7-2Lj7es28kkaGEDirMaan_UXVkwdO84cLVxdfNCvbFOld3NmVU9NkwoLzRC4X6OVdw7FPtk2vrbYQw7MjE',
                 aspectRatio: 3 / 4,
                 backgroundColor: const Color(0xFFFBE5E5),
-              ),
-              const SizedBox(height: 16),
-              _buildGameCard(
-                title: 'Deep Breathing',
-                subtitle: 'Relaxation',
-                imageUrl:
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuBWnIfK5KXrVxBRNp5cxzlcpNSxoVowNR1_rAjrrYktZxEER5PmlogBXNq1I_N48DMZAi48EK91e4HQtU0KrGoX4mjKgEjXQF9wON0BAnVzgdja86_hRaNMb7mhw1u17PuuIUtBRrD832FbcfDTeF1Mv4YOGhDxs7Yy8IvHIPzhdgDvI6jZSiqGIRpqTKFSu9Xs_TdZW0CBCOOgxIHB46Nbf5doxrMqeuPZKRZwRx_zTzNk1CtxJ7MLxJBCgyocsneJL5fdvy185ZI',
-                aspectRatio: 1.0,
-                backgroundColor: const Color(0xFFA3A7F4).withValues(alpha: 0.1),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const BreathingGamePage(),
+                      builder: (context) => const EmotionMosaicPage(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildGameCard(
+                title: 'Le Bocal de Gratitude',
+                subtitle: 'Positive Thinking',
+                imageUrl:
+                    'https://lh3.googleusercontent.com/aida-public/AB6AXuAiyM3GMbjBRRkalKkzHDvWdf4IpyklHTPwV7OSrplElJzJOyWNx0crow9TSMWVrbvqbSZXRGWGuXmMzv58c55LQX9eULzcpjqAz_UmhHAk-iE2G6amEDsPyuYGV3-DIzSKadmmIWJGCkODLbCcGQZc3Oc6i20U9oNjxfU_Mi93J60u7FLL4xuX87-2sGVzwxx2hZ6PGVDsgHk1hMtcnLwlWDv7YtgWhFSViE4lhl4c8sn-i9bui8p9wJKj-QLSSmlmYnyqL042J2s',
+                aspectRatio: 1.0,
+                backgroundColor: const Color(0xFFFFF3E0),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GratitudeJarPage(),
                     ),
                   );
                 },

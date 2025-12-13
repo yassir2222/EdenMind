@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:eden_mind_app/features/notifications/notification_service.dart';
 
 class MeditationSessionPage extends StatefulWidget {
   final Map<String, dynamic> session;
@@ -14,11 +16,14 @@ class MeditationSessionPage extends StatefulWidget {
 class _MeditationSessionPageState extends State<MeditationSessionPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _breathController;
-  Timer? _timer;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  final NotificationService _notificationService = NotificationService();
   bool _isPlaying = false;
   Duration _totalDuration = const Duration(minutes: 10);
   Duration _currentPosition = Duration.zero;
   bool _isMuted = false;
+  bool _isAudioLoading = false;
+  bool _hasNotifiedCompletion = false;
 
   @override
   void initState() {
@@ -27,47 +32,175 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
       vsync: this,
       duration: const Duration(seconds: 4),
     );
-    // Parse duration from session data if possible, else default to 10 min
-    // Assuming format "10 min"
-    if (widget.session['duration'] != null) {
+
+    // Parse duration from session data
+    if (widget.session['durationSeconds'] != null) {
+      _totalDuration = Duration(
+        seconds: widget.session['durationSeconds'] as int,
+      );
+    } else if (widget.session['duration'] != null) {
       final durationStr = widget.session['duration'] as String;
       final minutes = int.tryParse(durationStr.split(' ')[0]) ?? 10;
       _totalDuration = Duration(minutes: minutes);
     }
+
+    _setupAudioPlayer();
+  }
+
+  Future<void> _setupAudioPlayer() async {
+    // Listen to position changes
+    _audioPlayer.onPositionChanged.listen((position) {
+      if (mounted) {
+        setState(() {
+          _currentPosition = position;
+        });
+      }
+    });
+
+    // Listen to duration changes
+    _audioPlayer.onDurationChanged.listen((duration) {
+      if (mounted) {
+        setState(() {
+          _totalDuration = duration;
+        });
+      }
+    });
+
+    // Listen to player state changes
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          _isPlaying = state == PlayerState.playing;
+          if (_isPlaying) {
+            _breathController.repeat(reverse: true);
+          } else {
+            _breathController.stop();
+          }
+        });
+      }
+    });
+
+    // Listen to completion
+    _audioPlayer.onPlayerComplete.listen((_) {
+      if (mounted) {
+        setState(() {
+          _isPlaying = false;
+          _currentPosition = Duration.zero;
+          _breathController.stop();
+        });
+
+        // Send notification for meditation completion
+        if (!_hasNotifiedCompletion) {
+          _hasNotifiedCompletion = true;
+          final sessionName = widget.session['title'] ?? 'Meditation';
+          final minutes = _totalDuration.inMinutes;
+          _notificationService.notifyMeditationCompleted(sessionName, minutes);
+
+          // Show completion dialog
+          _showCompletionDialog();
+        }
+      }
+    });
+  }
+
+  void _showCompletionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            const Icon(Icons.celebration, color: Colors.amber, size: 28),
+            const SizedBox(width: 8),
+            const Text('Well Done! 🧘'),
+          ],
+        ),
+        content: Text(
+          'You completed a ${_totalDuration.inMinutes}-minute meditation session. '
+          'Your mind and body thank you!',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context); // Return to meditation list
+            },
+            child: const Text('Back to Meditations'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFA3A7F4),
+            ),
+            child: const Text(
+              'Continue',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
     _breathController.dispose();
-    _timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
-  void _togglePlay() {
-    setState(() {
-      _isPlaying = !_isPlaying;
+  Future<void> _togglePlay() async {
+    final audioUrl = widget.session['audioUrl'] as String?;
+    if (audioUrl == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No audio available for this session')),
+      );
+      return;
+    }
+
+    setState(() => _isAudioLoading = true);
+
+    try {
       if (_isPlaying) {
-        _breathController.repeat(reverse: true);
-        _startTimer();
+        await _audioPlayer.pause();
       } else {
-        _breathController.stop();
-        _timer?.cancel();
+        if (_currentPosition == Duration.zero) {
+          await _audioPlayer.play(UrlSource(audioUrl));
+        } else {
+          await _audioPlayer.resume();
+        }
       }
-    });
+    } catch (e) {
+      debugPrint('Error playing audio: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error playing audio: $e')));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isAudioLoading = false);
+      }
+    }
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_currentPosition < _totalDuration) {
-          _currentPosition += const Duration(seconds: 1);
-        } else {
-          _isPlaying = false;
-          _breathController.stop();
-          _timer?.cancel();
-        }
-      });
-    });
+  Future<void> _toggleMute() async {
+    setState(() => _isMuted = !_isMuted);
+    await _audioPlayer.setVolume(_isMuted ? 0.0 : 1.0);
+  }
+
+  Future<void> _seekBackward() async {
+    final newPosition = _currentPosition - const Duration(seconds: 10);
+    await _audioPlayer.seek(
+      newPosition < Duration.zero ? Duration.zero : newPosition,
+    );
+  }
+
+  Future<void> _seekForward() async {
+    final newPosition = _currentPosition + const Duration(seconds: 10);
+    await _audioPlayer.seek(
+      newPosition > _totalDuration ? _totalDuration : newPosition,
+    );
   }
 
   String _formatDuration(Duration duration) {
@@ -80,6 +213,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
   @override
   Widget build(BuildContext context) {
     final remainingTime = _totalDuration - _currentPosition;
+    final color = widget.session['color'] as Color? ?? const Color(0xFFA3A7F4);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FD),
@@ -91,25 +225,30 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Inhale... Exhale...',
-                    style: TextStyle(
+                  Text(
+                    _isPlaying ? 'Breathe...' : 'Press play to start',
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF12141D),
                     ),
                   ).animate().fadeIn().slideY(begin: -0.5, end: 0),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Follow the rhythm of your breath.',
-                    style: TextStyle(fontSize: 16, color: Color(0xFFA1A4B2)),
+                  Text(
+                    _isPlaying
+                        ? 'Follow the rhythm of the music.'
+                        : widget.session['title'] ?? 'Meditation',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFFA1A4B2),
+                    ),
                   ).animate().fadeIn(delay: 200.ms),
                   const SizedBox(height: 48),
-                  _buildBreathingCircle(remainingTime),
+                  _buildBreathingCircle(remainingTime, color),
                 ],
               ),
             ),
-            _buildControls(remainingTime),
+            _buildControls(color),
           ],
         ),
       ),
@@ -140,13 +279,16 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                 size: 24,
                 color: Color(0xFFA1A4B2),
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                _audioPlayer.stop();
+                Navigator.pop(context);
+              },
             ),
           ),
           Column(
             children: [
               Text(
-                widget.session['title'],
+                widget.session['title'] ?? 'Meditation',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -177,7 +319,32 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                 size: 24,
                 color: Color(0xFFA1A4B2),
               ),
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(widget.session['title'] ?? 'Meditation'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Category: ${widget.session['category'] ?? 'Ambient'}',
+                        ),
+                        Text(
+                          'Duration: ${widget.session['duration'] ?? 'Unknown'}',
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -185,7 +352,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
     );
   }
 
-  Widget _buildBreathingCircle(Duration remainingTime) {
+  Widget _buildBreathingCircle(Duration remainingTime, Color color) {
     return AnimatedBuilder(
       animation: _breathController,
       builder: (context, child) {
@@ -201,7 +368,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                 height: 280 + (_breathController.value * 20),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFFA3A7F4).withValues(alpha: 0.1),
+                  color: color.withValues(alpha: 0.1),
                 ),
               ),
               // Inner glow
@@ -210,7 +377,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                 height: 240 + (_breathController.value * 30),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFFA3A7F4).withValues(alpha: 0.2),
+                  color: color.withValues(alpha: 0.2),
                 ),
               ),
               // Main circle
@@ -222,7 +389,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFA3A7F4).withValues(alpha: 0.2),
+                      color: color.withValues(alpha: 0.2),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -232,22 +399,25 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        _formatDuration(remainingTime),
-                        style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF12141D),
-                          fontFamily: 'Manrope',
+                      if (_isAudioLoading)
+                        CircularProgressIndicator(color: color)
+                      else ...[
+                        Text(
+                          _formatDuration(remainingTime),
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF12141D),
+                          ),
                         ),
-                      ),
-                      const Text(
-                        'Remaining',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFFA1A4B2),
+                        const Text(
+                          'Remaining',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFFA1A4B2),
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -257,16 +427,12 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                 width: 220,
                 height: 220,
                 child: CircularProgressIndicator(
-                  value:
-                      1.0 -
-                      (_currentPosition.inSeconds / _totalDuration.inSeconds),
+                  value: _totalDuration.inSeconds > 0
+                      ? _currentPosition.inSeconds / _totalDuration.inSeconds
+                      : 0,
                   strokeWidth: 4,
-                  backgroundColor: const Color(
-                    0xFFA3A7F4,
-                  ).withValues(alpha: 0.1),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFFA3A7F4),
-                  ),
+                  backgroundColor: color.withValues(alpha: 0.1),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
               ),
             ],
@@ -276,7 +442,7 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
     );
   }
 
-  Widget _buildControls(Duration remainingTime) {
+  Widget _buildControls(Color color) {
     return Container(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -289,65 +455,55 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                   _isMuted ? Icons.volume_off : Icons.volume_up,
                   color: const Color(0xFFA1A4B2),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _isMuted = !_isMuted;
-                  });
-                },
+                onPressed: _toggleMute,
               ),
               IconButton(
                 icon: const Icon(Icons.replay_10, color: Color(0xFFA1A4B2)),
-                onPressed: () {
-                  setState(() {
-                    final newSeconds = _currentPosition.inSeconds - 10;
-                    _currentPosition = Duration(
-                      seconds: newSeconds < 0 ? 0 : newSeconds,
-                    );
-                  });
-                },
+                onPressed: _seekBackward,
               ),
               GestureDetector(
-                onTap: _togglePlay,
+                onTap: _isAudioLoading ? null : _togglePlay,
                 child: Container(
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFA3A7F4),
+                    color: color,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFA3A7F4).withValues(alpha: 0.4),
+                        color: color.withValues(alpha: 0.4),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),
                     ],
                   ),
-                  child: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow_rounded,
-                    color: Colors.white,
-                    size: 40,
-                  ),
+                  child: _isAudioLoading
+                      ? const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                      : Icon(
+                          _isPlaying ? Icons.pause : Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 40,
+                        ),
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.forward_10, color: Color(0xFFA1A4B2)),
-                onPressed: () {
-                  setState(() {
-                    final newSeconds = _currentPosition.inSeconds + 10;
-                    _currentPosition = Duration(
-                      seconds: newSeconds > _totalDuration.inSeconds
-                          ? _totalDuration.inSeconds
-                          : newSeconds,
-                    );
-                  });
-                },
+                onPressed: _seekForward,
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.favorite_border,
-                  color: Color(0xFFA1A4B2),
-                ),
-                onPressed: () {},
+                icon: const Icon(Icons.stop, color: Color(0xFFA1A4B2)),
+                onPressed: () async {
+                  await _audioPlayer.stop();
+                  setState(() {
+                    _currentPosition = Duration.zero;
+                  });
+                },
               ),
             ],
           ),
@@ -361,11 +517,9 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
               Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: const Color(0xFFA3A7F4),
-                    inactiveTrackColor: const Color(
-                      0xFFA3A7F4,
-                    ).withValues(alpha: 0.2),
-                    thumbColor: const Color(0xFFA3A7F4),
+                    activeTrackColor: color,
+                    inactiveTrackColor: color.withValues(alpha: 0.2),
+                    thumbColor: color,
                     trackHeight: 4,
                     thumbShape: const RoundSliderThumbShape(
                       enabledThumbRadius: 6,
@@ -375,12 +529,13 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
                     ),
                   ),
                   child: Slider(
-                    value: _currentPosition.inSeconds.toDouble(),
+                    value: _currentPosition.inSeconds.toDouble().clamp(
+                      0,
+                      _totalDuration.inSeconds.toDouble(),
+                    ),
                     max: _totalDuration.inSeconds.toDouble(),
-                    onChanged: (value) {
-                      setState(() {
-                        _currentPosition = Duration(seconds: value.toInt());
-                      });
+                    onChanged: (value) async {
+                      await _audioPlayer.seek(Duration(seconds: value.toInt()));
                     },
                   ),
                 ),
