@@ -6,7 +6,10 @@ import 'chat_service.dart';
 import 'dart:ui'; // For BackdropFilter
 
 class ChatbotPage extends StatefulWidget {
-  const ChatbotPage({super.key});
+  final String? initialMood;
+  final String? initialMessage;
+
+  const ChatbotPage({super.key, this.initialMood, this.initialMessage});
 
   @override
   State<ChatbotPage> createState() => _ChatbotPageState();
@@ -27,12 +30,20 @@ class _ChatbotPageState extends State<ChatbotPage> {
   @override
   void initState() {
     super.initState();
-    // Start a new chat by default, but also fetch history
-    _messages.add({
-      'text':
-          'Hello! I\'m ZenBot, your personal companion. How are you feeling today?',
-      'isBot': true,
-    });
+    // Use mood-aware message if provided, otherwise default greeting
+    if (widget.initialMessage != null && widget.initialMood != null) {
+      _messages.add({
+        'text': widget.initialMessage!,
+        'isBot': true,
+        'mood': widget.initialMood,
+      });
+    } else {
+      _messages.add({
+        'text':
+            'Hello! I\'m ZenBot, your personal companion. How are you feeling today?',
+        'isBot': true,
+      });
+    }
     _fetchConversations();
   }
 
