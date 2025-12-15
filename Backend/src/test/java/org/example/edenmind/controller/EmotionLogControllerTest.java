@@ -42,6 +42,9 @@ public class EmotionLogControllerTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private org.example.edenmind.service.NotificationService notificationService;
+
     @InjectMocks
     private EmotionLogController emotionLogController;
 

@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'add_mood_page.dart';
 import 'mood_service.dart';
+import 'package:provider/provider.dart';
 
 class MoodLogPage extends StatefulWidget {
   const MoodLogPage({super.key});
@@ -24,7 +25,7 @@ class _MoodLogPageState extends State<MoodLogPage> {
 
   Future<void> _loadMoods() async {
     try {
-      final moods = await MoodService().getMoods();
+      final moods = await context.read<MoodService>().getMoods();
       if (mounted) {
         setState(() {
           _moods = moods;
@@ -112,28 +113,45 @@ class _MoodLogPageState extends State<MoodLogPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'How are you feeling?',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+          if (Navigator.of(context).canPop())
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.arrow_back,
                   color: EdenMindTheme.textColor,
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Your Mood History',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: EdenMindTheme.subTextColor,
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(8),
                 ),
               ),
-            ],
+            ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'How are you feeling?',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: EdenMindTheme.textColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Your Mood History',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: EdenMindTheme.subTextColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

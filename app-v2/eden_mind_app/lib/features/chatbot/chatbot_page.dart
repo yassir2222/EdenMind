@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'chat_service.dart';
 import 'dart:ui'; // For BackdropFilter
+import 'package:provider/provider.dart';
 
 class ChatbotPage extends StatefulWidget {
   final String? initialMood;
@@ -16,7 +17,7 @@ class ChatbotPage extends StatefulWidget {
 }
 
 class _ChatbotPageState extends State<ChatbotPage> {
-  final ChatService _chatService = ChatService();
+  ChatService get _chatService => context.read<ChatService>();
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 

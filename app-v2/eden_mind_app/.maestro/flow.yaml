@@ -1,0 +1,4 @@
+appId: com.example.eden_mind_app
+---
+- launchApp
+- assertVisible: "Welcome" # Replace with a text actually on your landing page
