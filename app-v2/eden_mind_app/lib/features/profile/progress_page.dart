@@ -250,8 +250,9 @@ class _ProgressPageState extends State<ProgressPage> {
   }
 
   String _getScoreMessage(int score) {
-    if (score >= 80)
+    if (score >= 80) {
       return "Amazing! You're doing great on your wellness journey! 🌟";
+    }
     if (score >= 60) return "Good progress! Keep up the great work! 💪";
     if (score >= 40) return "You're on the right track. Keep going! 🚀";
     if (score >= 20) return "Every step counts. Let's build momentum! 🌱";

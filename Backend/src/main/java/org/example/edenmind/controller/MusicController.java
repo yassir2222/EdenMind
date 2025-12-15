@@ -1,24 +1,26 @@
 package org.example.edenmind.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/music")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:60826"})
 public class MusicController {
-
+    private static final Logger logger = LoggerFactory.getLogger(MusicController.class);
     private Path getMusicPath() {
         Path relativePath = Paths.get("music");
         if (Files.exists(relativePath) && Files.isDirectory(relativePath)) {
@@ -36,7 +38,7 @@ public class MusicController {
             System.out.println("Looking for music in: " + musicPath.toAbsolutePath());
 
             if (!Files.exists(musicPath) || !Files.isDirectory(musicPath)) {
-                System.out.println("Music folder not found");
+                logger.info("Music folder not found");
                 return ResponseEntity.ok(tracks);
             }
 
@@ -44,11 +46,11 @@ public class MusicController {
             File[] files = musicDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp3"));
             
             if (files == null || files.length == 0) {
-                System.out.println("No MP3 files found");
+                logger.info("No MP3 files found");
                 return ResponseEntity.ok(tracks);
             }
 
-            System.out.println("Found " + files.length + " MP3 files");
+            logger.info("Found " + files.length + " MP3 files");
 
             for (File file : files) {
                 String fileName = file.getName();
@@ -59,7 +61,7 @@ public class MusicController {
                 int minutes = Math.max(1, estimatedSeconds / 60);
                 
                 TrackDto track = new TrackDto();
-                track.setId(Math.abs(fileName.hashCode()));
+                track.setId(fileName.hashCode() & Integer.MAX_VALUE);
                 track.setFileName(fileName);
                 track.setTitle(displayName);
                 track.setDuration(minutes + " min");
@@ -68,13 +70,12 @@ public class MusicController {
                 track.setUrl("/api/music/stream/" + fileName);
                 
                 tracks.add(track);
-                System.out.println("Added track: " + displayName);
+                logger.info("Added track: " + displayName);
             }
 
             return ResponseEntity.ok(tracks);
         } catch (Exception e) {
             System.err.println("Error loading tracks: " + e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.ok(tracks);
         }
     }
@@ -86,10 +87,10 @@ public class MusicController {
             Path filePath = musicPath.resolve(fileName);
             File file = filePath.toFile();
 
-            System.out.println("Streaming file: " + filePath.toAbsolutePath());
+            logger.info("Streaming file: " + filePath.toAbsolutePath());
 
             if (!file.exists() || !file.isFile()) {
-                System.out.println("File not found: " + filePath.toAbsolutePath());
+                logger.info("File not found: " + filePath.toAbsolutePath());
                 return ResponseEntity.notFound().build();
             }
 

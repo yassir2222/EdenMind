@@ -9,6 +9,7 @@ import 'package:eden_mind_app/features/meditation/meditation_page.dart';
 import 'package:eden_mind_app/features/games/therapeutic_games_page.dart';
 import 'package:eden_mind_app/features/music/music_page.dart';
 import 'package:eden_mind_app/features/notifications/notifications_page.dart';
+import 'package:eden_mind_app/features/map/therapist_map_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -180,42 +181,77 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildActionGrid(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _buildActionCard(
-            title: 'AI Chatbot',
-            subtitle: 'Talk it out',
-            icon: Icons.smart_toy_outlined,
-            color: Colors.deepPurple.withValues(alpha: 0.1),
-            iconBgColor: EdenMindTheme.primaryColor,
-            buttonText: 'Start',
-            buttonColor: EdenMindTheme.primaryColor,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChatbotPage()),
-              );
-            },
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionCard(
+                title: 'AI Chatbot',
+                subtitle: 'Talk it out',
+                icon: Icons.smart_toy_outlined,
+                color: Colors.deepPurple.withValues(alpha: 0.1),
+                iconBgColor: EdenMindTheme.primaryColor,
+                buttonText: 'Start',
+                buttonColor: EdenMindTheme.primaryColor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChatbotPage(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildActionCard(
+                title: 'Mood Log',
+                subtitle: 'Track feelings',
+                icon: Icons.mood,
+                color: Colors.amber.withValues(alpha: 0.1),
+                iconBgColor: EdenMindTheme.secondaryColor,
+                buttonText: 'Log',
+                buttonColor: EdenMindTheme.secondaryColor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MoodLogPage(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildActionCard(
-            title: 'Mood Log',
-            subtitle: 'Track feelings',
-            icon: Icons.mood,
-            color: Colors.amber.withValues(alpha: 0.1),
-            iconBgColor: EdenMindTheme.secondaryColor,
-            buttonText: 'Log',
-            buttonColor: EdenMindTheme.secondaryColor,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MoodLogPage()),
-              );
-            },
-          ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionCard(
+                title: 'Find Therapist',
+                subtitle: 'Nearby help',
+                icon: Icons.map_rounded,
+                color: Colors.teal.withValues(alpha: 0.1),
+                iconBgColor: Colors.teal,
+                buttonText: 'Find',
+                buttonColor: Colors.teal,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TherapistMapPage(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            // Placeholder for balance or future feature
+            const SizedBox(width: 16),
+            Expanded(child: Container()),
+          ],
         ),
       ],
     );

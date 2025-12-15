@@ -31,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -323,5 +324,168 @@ class ChatControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.error", is("RAG Error")));
     }
+    @Test
+    void testDeleteConversation_Success() throws Exception {
+        mockAuthenticatedUser();
+        Conversation conversation = new Conversation();
+        conversation.setId(20L);
+        conversation.setUser(testUser);
+
+        when(conversationRepository.findById(20L)).thenReturn(Optional.of(conversation));
+
+        mockMvc.perform(delete("/api/chat/conversations/20"))
+                .andExpect(status().isNoContent());
+
+        verify(messageRepository).deleteByConversationId(20L);
+        verify(conversationRepository).delete(conversation);
+    }
+
+    @Test
+    void testDeleteConversation_NotFound() throws Exception {
+        mockAuthenticatedUser();
+        when(conversationRepository.findById(99L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/api/chat/conversations/99"))
+                .andExpect(status().isNotFound());
+
+        verify(messageRepository, never()).deleteByConversationId(anyLong());
+        verify(conversationRepository, never()).delete(any());
+    }
+
+    @Test
+    void testDeleteConversation_Forbidden() throws Exception {
+        mockAuthenticatedUser();
+        User otherUser = new User();
+        otherUser.setId(2L);
+        Conversation conversation = new Conversation();
+        conversation.setId(20L);
+        conversation.setUser(otherUser);
+
+        when(conversationRepository.findById(20L)).thenReturn(Optional.of(conversation));
+
+        mockMvc.perform(delete("/api/chat/conversations/20"))
+                .andExpect(status().isForbidden());
+
+        verify(messageRepository, never()).deleteByConversationId(anyLong());
+        verify(conversationRepository, never()).delete(any());
+    }
+
+    @Test
+    void testDeleteConversation_Unauthenticated() throws Exception {
+        mockMvc.perform(delete("/api/chat/conversations/20"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    // --- Chat Edge Cases & Context ---
+
+    @Test
+    void testChat_UserContext_NullFieldsAndEmptyMoods() throws Exception {
+        mockAuthenticatedUser();
+        // User with null fields
+        testUser.setBio(null);
+        testUser.setWorkType(null);
+        testUser.setFamilySituation(null);
+
+        when(emotionLogRepository.findByUserEmailOrderByRecordedAtDesc("test@example.com"))
+                .thenReturn(Collections.emptyList());
+
+        when(ragService.ask(anyString(), anyString())).thenAnswer(invocation -> {
+            String context = invocation.getArgument(1);
+            // Verify context does NOT contain "Bio:", "Work:", "Family:", "Recent Mood Logs:"
+            if (context.contains("Bio:") || context.contains("Work:") || context.contains("Family:") || context.contains("Recent Mood Logs:")) {
+                throw new AssertionError("Context contained unexpected fields: " + context);
+            }
+            return "Answer";
+        });
+
+        when(conversationRepository.save(any(Conversation.class))).thenAnswer(i -> {
+            Conversation c = i.getArgument(0);
+            c.setId(200L);
+            return c;
+        });
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("query", "Hello");
+
+        mockMvc.perform(post("/api/chat/query")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    void testChat_AccessDenied_ExistingConversation() throws Exception {
+        mockAuthenticatedUser();
+        User otherUser = new User();
+        otherUser.setId(999L);
+        Conversation conversation = new Conversation();
+        conversation.setId(300L);
+        conversation.setUser(otherUser);
+
+        when(conversationRepository.findById(300L)).thenReturn(Optional.of(conversation));
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("query", "Hello");
+        request.put("conversationId", 300L);
+
+        mockMvc.perform(post("/api/chat/query")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.error", containsString("Access denied")));
+    }
+
+    @Test
+    void testChat_LongQuery_TitleTruncation() throws Exception {
+        mockAuthenticatedUser();
+        String longQuery = "This is a very long query that serves to test if the title is correctly truncated to 30 characters as per the logic in the controller.";
+
+        when(ragService.ask(anyString(), anyString())).thenReturn("Answer");
+        when(conversationRepository.save(any(Conversation.class))).thenAnswer(i -> {
+            Conversation c = i.getArgument(0);
+            c.setId(400L);
+            // We can assert here or capturing argument
+            if (c.getTitle().length() > 33) { // 30 + "..."
+                throw new AssertionError("Title too long: " + c.getTitle());
+            }
+            if (!c.getTitle().endsWith("...")) {
+                throw new AssertionError("Title should end with ...: " + c.getTitle());
+            }
+            return c;
+        });
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("query", longQuery);
+
+        mockMvc.perform(post("/api/chat/query")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetAuthenticatedUser_UserNotFoundInDb() throws Exception {
+        // Auth context present but user not in DB -> Should result in stateless behavior (user == null)
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("unknown@example.com");
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userRepository.findByEmail("unknown@example.com")).thenReturn(Optional.empty());
+
+        when(ragService.ask(anyString(), anyString())).thenReturn("Stateless Answer");
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("query", "Hello");
+
+        mockMvc.perform(post("/api/chat/query")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer", is("Stateless Answer")));
+    }
 }
+    
 
