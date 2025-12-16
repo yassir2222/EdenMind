@@ -5,7 +5,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage;
+  final http.Client _client;
+
+  ChatService({http.Client? client, FlutterSecureStorage? secureStorage})
+    : _client = client ?? http.Client(),
+      _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   // Dynamic Base URL based on Platform
   String get _baseUrl {
@@ -19,7 +24,7 @@ class ChatService {
     final token = await _secureStorage.read(key: 'jwt_token');
     if (token == null) throw Exception('No authentication token found');
 
-    final response = await http.post(
+    final response = await _client.post(
       Uri.parse('$_baseUrl/query'),
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +51,7 @@ class ChatService {
     final token = await _secureStorage.read(key: 'jwt_token');
     if (token == null) throw Exception('No authentication token found');
 
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse('$_baseUrl/conversations'),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -62,7 +67,7 @@ class ChatService {
     final token = await _secureStorage.read(key: 'jwt_token');
     if (token == null) throw Exception('No authentication token found');
 
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse('$_baseUrl/conversations/$conversationId/messages'),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -78,7 +83,7 @@ class ChatService {
     final token = await _secureStorage.read(key: 'jwt_token');
     if (token == null) throw Exception('No authentication token found');
 
-    final response = await http.delete(
+    final response = await _client.delete(
       Uri.parse('$_baseUrl/conversations/$conversationId'),
       headers: {'Authorization': 'Bearer $token'},
     );

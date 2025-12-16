@@ -5,7 +5,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:eden_mind_app/config/app_config.dart';
 
 class MoodService {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage;
+  final http.Client _client;
+
+  MoodService({http.Client? client, FlutterSecureStorage? secureStorage})
+    : _client = client ?? http.Client(),
+      _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   // Dynamic Base URL based on Platform (Same logic as AuthService)
   String get _baseUrl {
@@ -20,7 +25,7 @@ class MoodService {
     final token = await _secureStorage.read(key: 'jwt_token');
     if (token == null) throw Exception('No token found');
 
-    final response = await http.post(
+    final response = await _client.post(
       Uri.parse(_baseUrl),
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +47,7 @@ class MoodService {
     final token = await _secureStorage.read(key: 'jwt_token');
     if (token == null) throw Exception('No token found');
 
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse(_baseUrl),
       headers: {
         'Content-Type': 'application/json',
