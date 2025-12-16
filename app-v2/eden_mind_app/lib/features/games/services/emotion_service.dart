@@ -74,10 +74,7 @@ class EmotionService {
       // Run Inference
       var outputShape = _interpreter!.getOutputTensor(0).shape;
       var outputClasses = outputShape.last;
-      var output = List.filled(
-        1 * outputClasses,
-        0.0,
-      ).reshape([1, outputClasses]);
+      var output = List.generate(1, (_) => List.filled(outputClasses, 0.0));
 
       _interpreter!.run(input, output);
 
@@ -198,12 +195,10 @@ class EmotionService {
         int g = (y - (0.337633 * (u - 128)) - (0.698001 * (v - 128))).toInt();
         int b = (y + (1.732446 * (u - 128))).toInt();
 
-        image.setPixelRgb(
+        image.setPixel(
           w,
           h,
-          r.clamp(0, 255),
-          g.clamp(0, 255),
-          b.clamp(0, 255),
+          img.ColorRgb8(r.clamp(0, 255), g.clamp(0, 255), b.clamp(0, 255)),
         );
       }
     }

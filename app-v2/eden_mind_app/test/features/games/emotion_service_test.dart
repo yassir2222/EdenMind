@@ -4,6 +4,8 @@ import 'package:eden_mind_app/features/games/services/emotion_service.dart';
 
 @GenerateMocks([])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late EmotionService emotionService;
 
   setUp(() {

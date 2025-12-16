@@ -6,7 +6,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BreathingGamePage extends StatefulWidget {
-  const BreathingGamePage({super.key});
+  final AudioPlayer? audioPlayer;
+  const BreathingGamePage({super.key, this.audioPlayer});
 
   @override
   State<BreathingGamePage> createState() => _BreathingGamePageState();
@@ -16,7 +17,7 @@ class _BreathingGamePageState extends State<BreathingGamePage>
     with TickerProviderStateMixin {
   late AnimationController _breathingController;
   late Animation<double> _scaleAnimation;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  late AudioPlayer _audioPlayer;
   Timer? _gameTimer;
   int _elapsedSeconds = 0;
   int _score = 0;
@@ -27,6 +28,7 @@ class _BreathingGamePageState extends State<BreathingGamePage>
   @override
   void initState() {
     super.initState();
+    _audioPlayer = widget.audioPlayer ?? AudioPlayer();
     _breathingController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4), // 4 seconds inhale/exhale

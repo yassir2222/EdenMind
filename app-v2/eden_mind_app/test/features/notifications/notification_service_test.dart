@@ -12,7 +12,7 @@ import 'notification_service_test.mocks.dart';
 @GenerateMocks([http.Client, FlutterSecureStorage])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   late NotificationService notificationService;
   late MockClient mockClient;
   late MockFlutterSecureStorage mockStorage;
@@ -20,7 +20,10 @@ void main() {
   setUp(() {
     mockClient = MockClient();
     mockStorage = MockFlutterSecureStorage();
-    notificationService = NotificationService();
+    notificationService = NotificationService(
+      client: mockClient,
+      secureStorage: mockStorage,
+    );
   });
 
   group('NotificationService Tests', () {
@@ -31,6 +34,10 @@ void main() {
     });
 
     test('getUnreadCount returns an integer', () async {
+      when(
+        mockStorage.read(key: anyNamed('key')),
+      ).thenAnswer((_) async => null);
+
       // Test the unread count functionality - expects 0 when no token
       final count = await notificationService.getUnreadCount();
       expect(count, isA<int>());

@@ -45,7 +45,9 @@ void main() {
     testWidgets('shows snackbar when fields are empty', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      await tester.tap(find.text('SIGN UP'));
+      final buttonFinder = find.text('SIGN UP');
+      await tester.ensureVisible(buttonFinder);
+      await tester.tap(buttonFinder);
       await tester.pump();
 
       expect(find.text('Please fill in all fields'), findsOneWidget);
@@ -66,7 +68,9 @@ void main() {
       await tester.enterText(find.byType(TextField).at(2), 'john@example.com');
       await tester.enterText(find.byType(TextField).at(3), 'password');
 
-      await tester.tap(find.text('SIGN UP'));
+      final buttonFinder = find.text('SIGN UP');
+      await tester.ensureVisible(buttonFinder);
+      await tester.tap(buttonFinder);
       await tester.pump(); // Start animation
       await tester.pump(const Duration(milliseconds: 100)); // Finish future
 
@@ -90,7 +94,9 @@ void main() {
       await tester.enterText(find.byType(TextField).at(2), 'john@example.com');
       await tester.enterText(find.byType(TextField).at(3), 'password');
 
-      await tester.tap(find.text('SIGN UP'));
+      final buttonFinder = find.text('SIGN UP');
+      await tester.ensureVisible(buttonFinder);
+      await tester.tap(buttonFinder);
       await tester.pump();
       await tester.pump(); // settled
 
