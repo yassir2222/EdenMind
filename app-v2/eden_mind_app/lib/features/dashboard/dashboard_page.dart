@@ -9,6 +9,7 @@ import 'package:eden_mind_app/features/meditation/meditation_page.dart';
 import 'package:eden_mind_app/features/games/therapeutic_games_page.dart';
 import 'package:eden_mind_app/features/music/music_page.dart';
 import 'package:eden_mind_app/features/notifications/notifications_page.dart';
+import 'package:eden_mind_app/features/face_sentiment/face_sentiment_page.dart';
 import 'package:eden_mind_app/features/map/therapist_map_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -67,7 +68,12 @@ class _DashboardPageState extends State<DashboardPage> {
                       .animate()
                       .fadeIn(delay: 200.ms, duration: 600.ms)
                       .slideX(begin: -0.2, end: 0),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+                  _buildMoodScannerCard()
+                      .animate()
+                      .fadeIn(delay: 300.ms, duration: 600.ms)
+                      .slideY(begin: 0.2, end: 0),
+                  const SizedBox(height: 24),
                   _buildActionGrid(
                     context,
                   ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(),
@@ -177,6 +183,113 @@ class _DashboardPageState extends State<DashboardPage> {
           style: TextStyle(fontSize: 16, color: Colors.grey[500]),
         ),
       ],
+    );
+  }
+
+  Widget _buildMoodScannerCard() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const FaceSentimentPage()),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [const Color(0xFF667eea), const Color(0xFF764ba2)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF667eea).withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.face_retouching_natural,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'Mood Scanner',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          'NEW',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Let AI detect your mood via camera',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
