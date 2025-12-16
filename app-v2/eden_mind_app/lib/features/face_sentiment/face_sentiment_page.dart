@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+import 'dart:ui_web' as ui;
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:image_picker/image_picker.dart';
 import 'face_sentiment_service.dart';
 import '../chatbot/chatbot_page.dart';
 
@@ -18,15 +19,21 @@ class FaceSentimentPage extends StatefulWidget {
 class _FaceSentimentPageState extends State<FaceSentimentPage>
     with TickerProviderStateMixin {
   final FaceSentimentService _sentimentService = FaceSentimentService();
-  final ImagePicker _imagePicker = ImagePicker();
 
   // State variables
   bool _isAnalyzing = false;
   bool _isServiceAvailable = false;
   bool _isCheckingService = true;
+  bool _isCameraActive = false;
+  bool _isCameraInitializing = false;
   FaceSentimentResult? _lastResult;
   String? _errorMessage;
   Uint8List? _capturedImage;
+
+  // Camera elements
+  html.VideoElement? _videoElement;
+  html.MediaStream? _mediaStream;
+  final String _viewId = 'webcam-view-${DateTime.now().millisecondsSinceEpoch}';
 
   // Animation controllers
   late AnimationController _pulseController;
@@ -46,10 +53,29 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
     );
 
     _checkServiceAvailability();
+    _registerViewFactory();
+  }
+
+  void _registerViewFactory() {
+    _videoElement = html.VideoElement()
+      ..autoplay = true
+      ..muted = true
+      ..style.width = '100%'
+      ..style.height = '100%'
+      ..style.objectFit = 'cover'
+      ..style.borderRadius = '32px'
+      ..style.transform = 'scaleX(-1)'; // Mirror effect
+
+    // Register the platform view
+    ui.platformViewRegistry.registerViewFactory(
+      _viewId,
+      (int viewId) => _videoElement!,
+    );
   }
 
   @override
   void dispose() {
+    _stopCamera();
     _pulseController.dispose();
     _resultController.dispose();
     super.dispose();
@@ -64,33 +90,93 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
     });
   }
 
-  Future<void> _captureFromCamera() async {
+  Future<void> _startCamera() async {
     setState(() {
-      _isAnalyzing = true;
+      _isCameraInitializing = true;
       _errorMessage = null;
       _lastResult = null;
+      _capturedImage = null;
     });
 
     try {
-      // Use camera to capture image
-      final XFile? image = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        preferredCameraDevice: CameraDevice.front,
-        imageQuality: 85,
-        maxWidth: 800,
-        maxHeight: 600,
-      );
+      // Request camera access
+      _mediaStream = await html.window.navigator.mediaDevices?.getUserMedia({
+        'video': {
+          'facingMode': 'user',
+          'width': {'ideal': 1280},
+          'height': {'ideal': 720},
+        },
+        'audio': false,
+      });
 
-      if (image == null) {
+      if (_mediaStream != null && _videoElement != null) {
+        _videoElement!.srcObject = _mediaStream;
+        await _videoElement!.play();
+
         setState(() {
-          _isAnalyzing = false;
-          _errorMessage = 'Photo capture cancelled';
+          _isCameraActive = true;
+          _isCameraInitializing = false;
         });
-        return;
       }
+    } catch (e) {
+      setState(() {
+        _isCameraInitializing = false;
+        _errorMessage =
+            'Camera access denied. Please allow camera access and try again.';
+      });
+    }
+  }
 
-      // Read image bytes
-      final imageBytes = await image.readAsBytes();
+  void _stopCamera() {
+    if (_mediaStream != null) {
+      _mediaStream!.getTracks().forEach((track) => track.stop());
+      _mediaStream = null;
+    }
+    if (_videoElement != null) {
+      _videoElement!.srcObject = null;
+    }
+    setState(() {
+      _isCameraActive = false;
+    });
+  }
+
+  Future<void> _captureAndAnalyze() async {
+    if (_videoElement == null || !_isCameraActive) return;
+
+    setState(() {
+      _isAnalyzing = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Create a canvas to capture the video frame
+      final canvas = html.CanvasElement(
+        width: _videoElement!.videoWidth,
+        height: _videoElement!.videoHeight,
+      );
+      final ctx = canvas.context2D;
+
+      // Draw the current video frame (mirrored)
+      ctx.save();
+      ctx.scale(-1, 1);
+      ctx.drawImage(_videoElement!, -canvas.width!, 0);
+      ctx.restore();
+
+      // Convert to blob and then to bytes
+      final blob = await canvas.toBlob('image/jpeg', 0.85);
+      final reader = html.FileReader();
+
+      final completer = Completer<Uint8List>();
+      reader.onLoadEnd.listen((_) {
+        final result = reader.result as List<int>;
+        completer.complete(Uint8List.fromList(result));
+      });
+      reader.readAsArrayBuffer(blob);
+
+      final imageBytes = await completer.future;
+
+      // Stop camera and show captured image
+      _stopCamera();
       setState(() => _capturedImage = imageBytes);
 
       // Analyze emotion
@@ -105,49 +191,6 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       _resultController.forward(from: 0);
 
       // Save mood to backend
-      await _saveMood(result);
-    } catch (e) {
-      setState(() {
-        _isAnalyzing = false;
-        _errorMessage = 'Error: ${e.toString().replaceAll('Exception: ', '')}';
-      });
-    }
-  }
-
-  Future<void> _pickFromGallery() async {
-    setState(() {
-      _isAnalyzing = true;
-      _errorMessage = null;
-      _lastResult = null;
-    });
-
-    try {
-      final XFile? image = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 85,
-        maxWidth: 800,
-        maxHeight: 600,
-      );
-
-      if (image == null) {
-        setState(() {
-          _isAnalyzing = false;
-          _errorMessage = 'No image selected';
-        });
-        return;
-      }
-
-      final imageBytes = await image.readAsBytes();
-      setState(() => _capturedImage = imageBytes);
-
-      final result = await _sentimentService.analyzeEmotion(imageBytes);
-
-      setState(() {
-        _lastResult = result;
-        _isAnalyzing = false;
-      });
-
-      _resultController.forward(from: 0);
       await _saveMood(result);
     } catch (e) {
       setState(() {
@@ -218,7 +261,10 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              _stopCamera();
+              Navigator.pop(context);
+            },
             icon: const Icon(Icons.arrow_back_ios),
             style: IconButton.styleFrom(
               backgroundColor: Colors.white,
@@ -318,7 +364,7 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          _buildImageArea(),
+          _buildCameraArea(),
           const SizedBox(height: 24),
           if (_lastResult != null) _buildResultCard(),
           if (_errorMessage != null) _buildErrorCard(),
@@ -335,16 +381,16 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
     );
   }
 
-  Widget _buildImageArea() {
+  Widget _buildCameraArea() {
     return Container(
-      height: 300,
+      height: 350,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Colors.grey[900],
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -352,17 +398,22 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(32),
-        child: _buildImageContent(),
+        child: _buildCameraContent(),
       ),
     ).animate().fadeIn(delay: 200.ms, duration: 400.ms).scale();
   }
 
-  Widget _buildImageContent() {
+  Widget _buildCameraContent() {
+    // Show captured image with result
     if (_capturedImage != null) {
       return Stack(
         fit: StackFit.expand,
         children: [
-          Image.memory(_capturedImage!, fit: BoxFit.cover),
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()..scale(-1.0, 1.0),
+            child: Image.memory(_capturedImage!, fit: BoxFit.cover),
+          ),
           if (_isAnalyzing)
             Container(
               color: Colors.black54,
@@ -419,41 +470,120 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       );
     }
 
-    // Default state
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AnimatedBuilder(
-          animation: _pulseController,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: 1 + (_pulseController.value * 0.1),
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: EdenMindTheme.primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
+    // Show live camera feed
+    if (_isCameraActive) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          HtmlElementView(viewType: _viewId),
+          // Camera overlay
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: EdenMindTheme.primaryColor.withOpacity(0.5),
+                  width: 3,
                 ),
-                child: Icon(
-                  Icons.face_retouching_natural,
-                  size: 64,
-                  color: EdenMindTheme.primaryColor,
+                borderRadius: BorderRadius.circular(32),
+              ),
+            ),
+          ),
+          // Face guide
+          Center(
+            child: Container(
+              width: 200,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(100),
+              ),
+            ),
+          ),
+          // Instructions
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'Position your face in the frame',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
-            );
-          },
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Show initializing state
+    if (_isCameraInitializing) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: EdenMindTheme.primaryColor),
+            const SizedBox(height: 16),
+            Text(
+              'Starting camera...',
+              style: TextStyle(color: Colors.grey[400], fontSize: 16),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          'Take a selfie or choose a photo\nto analyze your emotions',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey[600], fontSize: 16),
-        ),
-      ],
+      );
+    }
+
+    // Default state - prompt to start camera
+    return Container(
+      color: Colors.grey[200],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedBuilder(
+            animation: _pulseController,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: 1 + (_pulseController.value * 0.1),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: EdenMindTheme.primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.videocam_rounded,
+                    size: 64,
+                    color: EdenMindTheme.primaryColor,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Click "Start Camera" to begin\nemotion analysis',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey[600], fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildActionButtons() {
+    // After capture - show retry button
     if (_lastResult != null) {
       return SizedBox(
         width: double.infinity,
@@ -473,38 +603,74 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       );
     }
 
+    // Camera is active - show capture button
+    if (_isCameraActive) {
+      return Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _isAnalyzing ? null : _captureAndAnalyze,
+              icon: Icon(_isAnalyzing ? Icons.hourglass_empty : Icons.camera),
+              label: Text(_isAnalyzing ? 'Analyzing...' : 'Capture Photo'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.grey[300],
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _stopCamera,
+              icon: const Icon(Icons.close),
+              label: const Text('Cancel'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.grey[600],
+                side: BorderSide(color: Colors.grey[400]!),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Default - show start camera button
     return Column(
       children: [
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            onPressed: _isAnalyzing ? null : _captureFromCamera,
-            icon: Icon(_isAnalyzing ? Icons.hourglass_empty : Icons.camera_alt),
-            label: Text(_isAnalyzing ? 'Analyzing...' : 'Take a Selfie'),
+            onPressed: _isCameraInitializing ? null : _startCamera,
+            icon: Icon(
+              _isCameraInitializing ? Icons.hourglass_empty : Icons.videocam,
+            ),
+            label: Text(_isCameraInitializing ? 'Starting...' : 'Start Camera'),
             style: ElevatedButton.styleFrom(
               backgroundColor: EdenMindTheme.primaryColor,
               foregroundColor: Colors.white,
               disabledBackgroundColor: Colors.grey[300],
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 18),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: _isAnalyzing ? null : _pickFromGallery,
-            icon: const Icon(Icons.photo_library),
-            label: const Text('Choose from Gallery'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: EdenMindTheme.primaryColor,
-              side: BorderSide(color: EdenMindTheme.primaryColor),
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
