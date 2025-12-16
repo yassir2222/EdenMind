@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:eden_mind_app/config/app_config.dart';
 import 'meditation_detail_page.dart';
-
 import 'package:flutter_animate/flutter_animate.dart';
 
 class MeditationPage extends StatefulWidget {
@@ -14,72 +16,175 @@ class _MeditationPageState extends State<MeditationPage> {
   int _selectedFilterIndex = 0;
   final List<String> _filters = ['Guided', 'Sounds', 'Timer'];
 
-  final List<Map<String, dynamic>> _sessions = [
-    {
-      'title': 'Morning Start',
-      'duration': '10 min',
-      'category': 'Focus',
-      'image':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuAwyboGUvvaBFrDMMhr8UNrU7vOgpEBDvc-ntHuMmsCEGz2R2efhUCEGSHMSGPNj2j3gGW06Y8373T3WkWe26w_vUIUgf1jSHwcMN-wEavHQ18EROJZ7MxFnxxnp7qlOZyibXwiOR-VwvjOUywNY-cfdu3XGU09YUTft85nGak9C2YCtNK5tOGhIHRieol9fFmQKkr6xZy0hZAnABA2bHhA13qvjL-jHCZXtLCJNwoOMfeehGwQwBjqI3WQneqnoGYcQ9HwPsv5UQc',
-      'color': Color(0xFFA3A7F4), // Primary from design
-    },
-    {
-      'title': 'Stress Relief',
-      'duration': '15 min',
-      'category': 'Anxiety',
-      'image':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuD8WsvCzqgGUB_QFmYoX6aSxG9J9-CLov_pvTQbtPZ29cUaiqvsEOnLA1XOm5aqs-SoZIF3jLTt7K0LxtwRnO2cFkA1ictmaUXLRp8t9gvbWLEYKILdTfFytVDL8N6CcVSoYDyFFkMh9Dg_hLnBt_H_B_d-oB4MB4925HVIKHQ-t7Vgx5Kd4D9omy9qtH8e7KyjZu7Y6UXHocISvdM7GTClEaAy6pmLjQM74QRHIqmXLdBCMy4KXikFGG63ZUlvyU2yy5sr0vmiy8Q',
-      'color': Color(0xFFF9D5A2), // Secondary from design
-    },
-    {
-      'title': 'Deep Sleep',
-      'duration': '20 min',
-      'category': 'Sleep',
-      'image':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuADmOCSygLpA6tdf_MvNGGV3QI9Kf-9wTVcSTvG2-itERbQ0EDrl66kailEaXI7eLbSPY0omy0X6oGjdFAtkcLLE-FI6bKezrelHVzDqauW4UcNDng82Iou-02-nKsaggZf3h2y_TruPzJKsFQim_yR1nJKeEwLOIfmrwhjG_wOn2o3sWnZQj2W3axI_M_4bPlOAWAErHERGwnlemn4mO-ZcFB3tCSzfCp9JIttedmLNUBea3sLQCYtn_M3CP62FzyLIr1Kryj_ZT4',
-      'color': Color(0xFFA3A7F4), // Primary
-    },
-  ];
+  List<Map<String, dynamic>> _sessions = [];
+  bool _isLoading = true;
+  String? _error;
+
+  // Default images for different categories
+  final Map<String, String> _categoryImages = {
+    'meditation':
+        'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400',
+    'relaxation':
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+    'motivation':
+        'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=400',
+    'ambient':
+        'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400',
+    'sleep':
+        'https://images.unsplash.com/photo-1511295742362-92c96b1cf484?w=400',
+  };
+
+  final Map<String, Color> _categoryColors = {
+    'meditation': const Color(0xFFA3A7F4),
+    'relaxation': const Color(0xFF82C9D0),
+    'motivation': const Color(0xFFF9D5A2),
+    'ambient': const Color(0xFFB8A5E0),
+    'sleep': const Color(0xFF7986CB),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMeditationTracks();
+  }
+
+  Future<void> _loadMeditationTracks() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse('${AppConfig.baseUrl}/music/tracks'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _sessions = data.map((track) {
+            final category = track['category'] ?? 'ambient';
+            return {
+              'title': track['title'] ?? 'Unknown',
+              'duration': track['duration'] ?? '5 min',
+              'durationSeconds': track['durationSeconds'] ?? 300,
+              'category': _getCategoryLabel(category),
+              'categoryKey': category,
+              'image': _categoryImages[category] ?? _categoryImages['ambient']!,
+              'color': _categoryColors[category] ?? _categoryColors['ambient']!,
+              'audioUrl':
+                  'http://${AppConfig.serverIp}:${AppConfig.serverPort}${track['url']}',
+              'fileName': track['fileName'],
+            };
+          }).toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = 'Failed to load tracks';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Connection error';
+        _isLoading = false;
+      });
+    }
+  }
+
+  String _getCategoryLabel(String category) {
+    switch (category) {
+      case 'meditation':
+        return 'Focus';
+      case 'relaxation':
+        return 'Calm';
+      case 'motivation':
+        return 'Energy';
+      case 'sleep':
+        return 'Sleep';
+      default:
+        return 'Ambient';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FD), // Background from design
+      backgroundColor: const Color(0xFFF7F8FD),
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(context),
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeroSection()
-                        .animate()
-                        .fadeIn(duration: 600.ms)
-                        .scale(),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Find Your Inner Peace',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF12141D), // Text Primary
-                        fontFamily:
-                            'Manrope', // Assuming font is available or fallback
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFA3A7F4),
                       ),
-                    ).animate().fadeIn(delay: 200.ms).slideX(),
-                    const SizedBox(height: 16),
-                    _buildFilterChips().animate().fadeIn(delay: 300.ms),
-                    const SizedBox(height: 24),
-                    _buildSessionList(),
-                  ],
-                ),
-              ),
+                    )
+                  : _error != null
+                  ? _buildErrorWidget()
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeroSection()
+                              .animate()
+                              .fadeIn(duration: 600.ms)
+                              .scale(),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Find Your Inner Peace',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF12141D),
+                            ),
+                          ).animate().fadeIn(delay: 200.ms).slideX(),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${_sessions.length} meditation tracks available',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFFA1A4B2),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildFilterChips().animate().fadeIn(delay: 300.ms),
+                          const SizedBox(height: 24),
+                          _buildSessionList(),
+                        ],
+                      ),
+                    ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.cloud_off, size: 64, color: Color(0xFFA1A4B2)),
+          const SizedBox(height: 16),
+          Text(
+            _error ?? 'An error occurred',
+            style: const TextStyle(fontSize: 16, color: Color(0xFFA1A4B2)),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _loadMeditationTracks,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFA3A7F4),
+            ),
+            child: const Text('Retry', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }
@@ -110,18 +215,38 @@ class _MeditationPageState extends State<MeditationPage> {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Text(
               'Meditation',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF12141D),
               ),
             ),
           ),
-          const SizedBox(width: 40), // Balance the back button
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.refresh,
+                size: 20,
+                color: Color(0xFF12141D),
+              ),
+              onPressed: _loadMeditationTracks,
+            ),
+          ),
         ],
       ),
     );
@@ -130,15 +255,73 @@ class _MeditationPageState extends State<MeditationPage> {
   Widget _buildHeroSection() {
     return Container(
       width: double.infinity,
-      height: 300,
+      height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        image: const DecorationImage(
-          image: NetworkImage(
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuDhbCOUCYEO9k6eLXvGgDF0NzDa3uARjoR5YX60q8p7WZDIbEpR68SbiflVfpbNZqlT9EPmYY0X1Pfxtxq31JGe4ccV1izEpgzC96gPJ9ssRbQOgbcOpI-9mWcyKAeqApESMcmRecHGs_AgFl3eUoL59Iwd2AHiYIoF9jeHQPa_2GlSUFGZGJq3tCsKZ9rJwU3aMQKs8ATn6ryfmJldkfEn0khsdM4d0Kh0suGqYc2UWoQkHpxFRZQWD2kkz5F81t-XFxohjlyilRk',
-          ),
-          fit: BoxFit.cover,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFA3A7F4), Color(0xFF7B7FE0)],
         ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -30,
+            top: -30,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
+          Positioned(
+            left: -20,
+            bottom: -20,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.self_improvement,
+                  color: Colors.white,
+                  size: 48,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Daily Meditation',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Take a moment to breathe and relax',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -182,6 +365,19 @@ class _MeditationPageState extends State<MeditationPage> {
   }
 
   Widget _buildSessionList() {
+    if (_sessions.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32),
+          child: Text(
+            'No meditation tracks available.\nAdd MP3 files to the music folder.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color(0xFFA1A4B2)),
+          ),
+        ),
+      );
+    }
+
     return Column(
       children: List.generate(_sessions.length, (index) {
         final session = _sessions[index];
@@ -217,10 +413,21 @@ class _MeditationPageState extends State<MeditationPage> {
                             height: 64,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: NetworkImage(session['image']),
-                                fit: BoxFit.cover,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  session['color'] as Color,
+                                  (session['color'] as Color).withValues(
+                                    alpha: 0.7,
+                                  ),
+                                ],
                               ),
+                            ),
+                            child: const Icon(
+                              Icons.music_note,
+                              color: Colors.white,
+                              size: 32,
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -235,6 +442,8 @@ class _MeditationPageState extends State<MeditationPage> {
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF12141D),
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
@@ -251,7 +460,7 @@ class _MeditationPageState extends State<MeditationPage> {
                             width: 48,
                             height: 48,
                             decoration: BoxDecoration(
-                              color: session['color'],
+                              color: session['color'] as Color,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(

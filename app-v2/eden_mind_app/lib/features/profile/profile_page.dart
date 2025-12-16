@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import '../auth/auth_service.dart';
 import '../auth/login_page.dart';
+import 'progress_page.dart';
 import 'dart:developer';
 
 class ProfilePage extends StatelessWidget {
@@ -145,10 +145,16 @@ class ProfilePage extends StatelessWidget {
               child: CircleAvatar(
                 radius: 60,
                 backgroundColor: EdenMindTheme.primaryColor,
-                backgroundImage: avatarUrl != null
+                backgroundImage: (avatarUrl != null && avatarUrl.isNotEmpty)
                     ? NetworkImage(avatarUrl)
                     : null,
-                child: avatarUrl == null
+                onBackgroundImageError:
+                    (avatarUrl != null && avatarUrl.isNotEmpty)
+                    ? (exception, stackTrace) {
+                        debugPrint('Avatar load error: $exception');
+                      }
+                    : null,
+                child: (avatarUrl == null || avatarUrl.isEmpty)
                     ? Text(
                         name.isNotEmpty ? name[0].toUpperCase() : 'U',
                         style: const TextStyle(
@@ -257,22 +263,35 @@ class ProfilePage extends StatelessWidget {
         ).showSnackBar(const SnackBar(content: Text('Uploading image...')));
 
         final authService = context.read<AuthService>();
-        final imageUrl = await authService.uploadImage(File(pickedFile.path));
+
+        // Read file as bytes (works for both web and mobile)
+        final bytes = await pickedFile.readAsBytes();
+        final filename = pickedFile.name.isNotEmpty
+            ? pickedFile.name
+            : 'profile_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+        final imageUrl = await authService.uploadImageBytes(bytes, filename);
 
         if (imageUrl != null) {
           await authService.updateProfile(avatarUrl: imageUrl);
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Profile image updated!')),
+              const SnackBar(
+                content: Text('Profile image updated successfully!'),
+                backgroundColor: Colors.green,
+              ),
             );
           }
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error updating image: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error updating image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -305,7 +324,12 @@ class ProfilePage extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProgressPage()),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: EdenMindTheme.primaryColor,
             foregroundColor: Colors.white,

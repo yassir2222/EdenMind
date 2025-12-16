@@ -5,11 +5,17 @@ import 'features/dashboard/dashboard_page.dart';
 import 'package:provider/provider.dart';
 import 'features/auth/auth_service.dart';
 import 'features/auth/login_page.dart';
+import 'features/mood_log/mood_service.dart';
+import 'features/chatbot/chat_service.dart';
 
 void main() {
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthService()..init())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthService()..init()),
+        Provider(create: (_) => MoodService()),
+        Provider(create: (_) => ChatService()),
+      ],
       child: const MyApp(),
     ),
   );

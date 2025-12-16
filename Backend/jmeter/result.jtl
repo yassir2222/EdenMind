@@ -1,0 +1,241 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1765798819642,237,Spike Register User,200,,Spike Test Thread Group 3-10,text,true,,733,317,35,38,http://localhost:8081/api/auth/register,225,0,51
+1765798819659,220,Spike Register User,200,,Spike Test Thread Group 3-16,text,true,,733,317,35,38,http://localhost:8081/api/auth/register,210,0,34
+1765798819642,237,Spike Register User,400,,Spike Test Thread Group 3-12,,false,,351,317,35,38,http://localhost:8081/api/auth/register,227,0,52
+1765798819642,237,Spike Register User,400,,Spike Test Thread Group 3-13,,false,,351,317,35,38,http://localhost:8081/api/auth/register,227,0,53
+1765798819642,437,Register User,200,,Users Thread Group 1-1,text,true,,733,317,2,55,http://localhost:8081/api/auth/register,437,0,53
+1765798819642,535,Spike Register User,400,,Spike Test Thread Group 3-8,,false,,351,317,63,69,http://localhost:8081/api/auth/register,535,0,51
+1765798819690,491,Stress Register User,200,,Stress Test Thread Group 2-2,text,true,,736,319,4,68,http://localhost:8081/api/auth/register,490,0,3
+1765798819690,514,Spike Register User,200,,Spike Test Thread Group 3-19,text,true,,733,317,62,68,http://localhost:8081/api/auth/register,514,0,3
+1765798819642,571,Spike Register User,400,,Spike Test Thread Group 3-7,,false,,351,317,61,67,http://localhost:8081/api/auth/register,571,0,51
+1765798819854,533,Spike Register User,200,,Spike Test Thread Group 3-22,text,true,,733,317,81,88,http://localhost:8081/api/auth/register,533,0,2
+1765798819898,490,Spike Register User,200,,Spike Test Thread Group 3-23,text,true,,733,317,80,87,http://localhost:8081/api/auth/register,489,0,2
+1765798819641,773,Spike Register User,400,,Spike Test Thread Group 3-2,,false,,351,317,81,88,http://localhost:8081/api/auth/register,773,0,53
+1765798819835,579,Spike Register User,200,,Spike Test Thread Group 3-32,text,true,,733,317,81,88,http://localhost:8081/api/auth/register,579,0,1
+1765798819642,788,Stress Register User,200,,Stress Test Thread Group 2-1,text,true,,736,319,5,87,http://localhost:8081/api/auth/register,788,0,52
+1765798819641,796,Spike Register User,400,,Spike Test Thread Group 3-9,,false,,351,317,80,87,http://localhost:8081/api/auth/register,796,0,52
+1765798819742,698,Spike Register User,200,,Spike Test Thread Group 3-21,text,true,,733,317,79,86,http://localhost:8081/api/auth/register,698,0,1
+1765798819641,814,Spike Register User,400,,Spike Test Thread Group 3-1,,false,,351,317,80,87,http://localhost:8081/api/auth/register,814,0,53
+1765798819871,710,Spike Register User,200,,Spike Test Thread Group 3-36,text,true,,733,317,86,95,http://localhost:8081/api/auth/register,710,0,2
+1765798819746,837,Spike Register User,200,,Spike Test Thread Group 3-24,text,true,,733,317,85,94,http://localhost:8081/api/auth/register,837,0,1
+1765798820410,192,Spike Register User,200,,Spike Test Thread Group 3-89,text,true,,733,317,84,93,http://localhost:8081/api/auth/register,192,0,1
+1765798819707,913,Spike Register User,200,,Spike Test Thread Group 3-20,text,true,,729,317,83,92,http://localhost:8081/api/auth/register,913,0,34
+1765798819771,940,Spike Register User,200,,Spike Test Thread Group 3-25,text,true,,733,317,82,92,http://localhost:8081/api/auth/register,940,0,1
+1765798819877,845,Spike Register User,200,,Spike Test Thread Group 3-26,text,true,,733,317,81,91,http://localhost:8081/api/auth/register,845,0,1
+1765798819879,863,Spike Register User,200,,Spike Test Thread Group 3-31,text,true,,733,317,80,90,http://localhost:8081/api/auth/register,862,0,3
+1765798819838,983,Spike Register User,200,,Spike Test Thread Group 3-33,text,true,,733,317,79,89,http://localhost:8081/api/auth/register,983,0,1
+1765798819799,1039,Spike Register User,200,,Spike Test Thread Group 3-29,text,true,,733,317,78,88,http://localhost:8081/api/auth/register,1039,0,1
+1765798819876,983,Spike Register User,200,,Spike Test Thread Group 3-27,text,true,,733,317,77,87,http://localhost:8081/api/auth/register,983,0,11
+1765798819784,1158,Spike Register User,200,,Spike Test Thread Group 3-28,text,true,,733,317,76,87,http://localhost:8081/api/auth/register,1158,0,1
+1765798819876,1069,Spike Register User,400,,Spike Test Thread Group 3-30,,false,,351,317,75,86,http://localhost:8081/api/auth/register,1069,0,2
+1765798819982,970,Spike Register User,200,,Spike Test Thread Group 3-41,text,true,,733,317,74,85,http://localhost:8081/api/auth/register,970,0,1
+1765798820084,976,Spike Register User,200,,Spike Test Thread Group 3-54,text,true,,733,317,73,85,http://localhost:8081/api/auth/register,976,0,2
+1765798819641,1427,Spike Register User,200,,Spike Test Thread Group 3-5,text,true,,733,317,72,84,http://localhost:8081/api/auth/register,1427,0,52
+1765798819642,1427,Spike Register User,200,,Spike Test Thread Group 3-14,text,true,,733,317,72,84,http://localhost:8081/api/auth/register,1427,0,52
+1765798819651,1419,Spike Register User,200,,Spike Test Thread Group 3-15,text,true,,733,317,70,82,http://localhost:8081/api/auth/register,1419,0,43
+1765798819872,1200,Spike Register User,200,,Spike Test Thread Group 3-37,text,true,,733,317,69,81,http://localhost:8081/api/auth/register,1200,0,1
+1765798819642,1439,Spike Register User,500,,Spike Test Thread Group 3-11,text,false,,1092,317,68,80,http://localhost:8081/api/auth/register,1438,0,53
+1765798819641,1442,Spike Register User,500,,Spike Test Thread Group 3-6,text,false,,1092,317,67,79,http://localhost:8081/api/auth/register,1442,0,52
+1765798819982,1106,Spike Register User,500,,Spike Test Thread Group 3-43,text,false,,1092,317,66,78,http://localhost:8081/api/auth/register,1106,0,1
+1765798819641,1462,Spike Register User,500,,Spike Test Thread Group 3-4,text,false,,1091,317,65,78,http://localhost:8081/api/auth/register,1462,0,54
+1765798819641,1467,Spike Register User,500,,Spike Test Thread Group 3-3,text,false,,1092,317,64,77,http://localhost:8081/api/auth/register,1466,0,52
+1765798819889,1351,Spike Register User,200,,Spike Test Thread Group 3-35,text,true,,733,317,63,76,http://localhost:8081/api/auth/register,1351,0,1
+1765798820022,1218,Spike Register User,200,,Spike Test Thread Group 3-50,text,true,,733,317,63,76,http://localhost:8081/api/auth/register,1218,0,2
+1765798819889,1355,Spike Register User,500,,Spike Test Thread Group 3-34,text,false,,1092,317,61,74,http://localhost:8081/api/auth/register,1354,0,1
+1765798819985,1263,Spike Register User,200,,Spike Test Thread Group 3-46,text,true,,733,317,60,73,http://localhost:8081/api/auth/register,1263,0,1
+1765798820024,1251,Spike Register User,200,,Spike Test Thread Group 3-52,text,true,,733,317,59,72,http://localhost:8081/api/auth/register,1250,0,1
+1765798819987,1389,Spike Register User,200,,Spike Test Thread Group 3-47,text,true,,733,317,58,72,http://localhost:8081/api/auth/register,1389,0,2
+1765798819680,1697,Spike Register User,200,,Spike Test Thread Group 3-18,text,true,,733,317,58,72,http://localhost:8081/api/auth/register,1696,0,14
+1765798819985,1394,Spike Register User,400,,Spike Test Thread Group 3-48,,false,,351,317,56,70,http://localhost:8081/api/auth/register,1394,0,1
+1765798820182,1220,Stress Register User,200,,Stress Test Thread Group 2-2,text,true,,732,319,10,69,http://localhost:8081/api/auth/register,1220,0,0
+1765798819895,1516,Spike Register User,200,,Spike Test Thread Group 3-38,text,true,,733,317,55,68,http://localhost:8081/api/auth/register,1515,0,2
+1765798819902,1563,Spike Register User,200,,Spike Test Thread Group 3-40,text,true,,729,317,54,67,http://localhost:8081/api/auth/register,1563,0,3
+1765798819983,1548,Spike Register User,200,,Spike Test Thread Group 3-44,text,true,,733,317,53,68,http://localhost:8081/api/auth/register,1548,0,1
+1765798819989,1566,Register User,200,,Users Thread Group 1-2,text,true,,733,317,5,67,http://localhost:8081/api/auth/register,1565,0,1
+1765798820237,1457,Spike Register User,200,,Spike Test Thread Group 3-69,text,true,,733,317,52,67,http://localhost:8081/api/auth/register,1457,0,1
+1765798820175,1526,Spike Register User,200,,Spike Test Thread Group 3-67,text,true,,733,317,51,66,http://localhost:8081/api/auth/register,1525,0,11
+1765798819981,1730,Spike Register User,200,,Spike Test Thread Group 3-42,text,true,,733,317,50,65,http://localhost:8081/api/auth/register,1729,0,3
+1765798819895,1826,Spike Register User,500,,Spike Test Thread Group 3-39,text,false,,1092,317,49,64,http://localhost:8081/api/auth/register,1826,0,2
+1765798819891,1830,Stress Register User,200,,Stress Test Thread Group 2-3,text,true,,736,319,10,64,http://localhost:8081/api/auth/register,1830,0,1
+1765798820051,1687,Spike Register User,200,,Spike Test Thread Group 3-55,text,true,,733,317,48,63,http://localhost:8081/api/auth/register,1687,0,2
+1765798819983,1757,Spike Register User,500,,Spike Test Thread Group 3-45,text,false,,1091,317,47,62,http://localhost:8081/api/auth/register,1756,0,1
+1765798820410,1399,Spike Register User,400,,Spike Test Thread Group 3-90,,false,,351,317,46,62,http://localhost:8081/api/auth/register,1399,0,5
+1765798821555,256,Log Emotion,200,,Users Thread Group 1-2,,true,,380,594,5,61,http://localhost:8081/api/emotions,256,0,0
+1765798819993,1931,Spike Register User,200,,Spike Test Thread Group 3-49,text,true,,733,317,45,62,http://localhost:8081/api/auth/register,1930,0,3
+1765798820081,1846,Spike Register User,200,,Spike Test Thread Group 3-53,text,true,,729,317,44,61,http://localhost:8081/api/auth/register,1846,0,6
+1765798820227,1701,Spike Register User,200,,Spike Test Thread Group 3-68,text,true,,729,317,44,61,http://localhost:8081/api/auth/register,1701,0,2
+1765798820382,1607,Spike Register User,200,,Spike Test Thread Group 3-88,text,true,,733,317,42,60,http://localhost:8081/api/auth/register,1607,0,21
+1765798820107,1884,Spike Register User,200,,Spike Test Thread Group 3-60,text,true,,733,317,41,59,http://localhost:8081/api/auth/register,1884,0,2
+1765798820132,1861,Spike Register User,200,,Spike Test Thread Group 3-58,text,true,,733,317,40,58,http://localhost:8081/api/auth/register,1861,0,1
+1765798820148,1884,Spike Register User,200,,Spike Test Thread Group 3-64,text,true,,733,317,39,57,http://localhost:8081/api/auth/register,1884,0,4
+1765798820121,1911,Spike Register User,200,,Spike Test Thread Group 3-61,text,true,,733,317,39,57,http://localhost:8081/api/auth/register,1911,0,1
+1765798820093,1946,Spike Register User,200,,Spike Test Thread Group 3-57,text,true,,733,317,37,55,http://localhost:8081/api/auth/register,1946,0,1
+1765798819670,2442,Spike Register User,200,,Spike Test Thread Group 3-17,text,true,,733,317,36,55,http://localhost:8081/api/auth/register,2441,0,24
+1765798820431,1685,Stress Register User,200,,Stress Test Thread Group 2-1,text,true,,732,319,13,54,http://localhost:8081/api/auth/register,1685,0,0
+1765798820155,1965,Spike Register User,200,,Spike Test Thread Group 3-65,text,true,,733,317,35,53,http://localhost:8081/api/auth/register,1965,0,2
+1765798820100,2089,Stress Register User,200,,Stress Test Thread Group 2-4,text,true,,736,319,12,52,http://localhost:8081/api/auth/register,2089,0,15
+1765798820162,2055,Spike Register User,200,,Spike Test Thread Group 3-62,text,true,,733,317,34,52,http://localhost:8081/api/auth/register,2055,0,1
+1765798820447,1777,Spike Register User,200,,Spike Test Thread Group 3-94,text,true,,733,317,33,51,http://localhost:8081/api/auth/register,1777,0,1
+1765798820430,1806,Spike Register User,200,,Spike Test Thread Group 3-91,text,true,,733,317,32,50,http://localhost:8081/api/auth/register,1805,0,1
+1765798820162,2089,Spike Register User,500,,Spike Test Thread Group 3-59,text,false,,1092,317,31,49,http://localhost:8081/api/auth/register,2089,0,2
+1765798820448,1843,Spike Register User,200,,Spike Test Thread Group 3-92,text,true,,733,317,30,48,http://localhost:8081/api/auth/register,1843,0,1
+1765798820460,1923,Spike Register User,200,,Spike Test Thread Group 3-95,text,true,,734,317,29,48,http://localhost:8081/api/auth/register,1923,0,1
+1765798820163,2222,Spike Register User,200,,Spike Test Thread Group 3-63,text,true,,734,317,28,47,http://localhost:8081/api/auth/register,2222,0,1
+1765798820168,2224,Spike Register User,200,,Spike Test Thread Group 3-66,text,true,,734,317,27,46,http://localhost:8081/api/auth/register,2224,0,2
+1765798820248,2148,Spike Register User,200,,Spike Test Thread Group 3-73,text,true,,734,317,26,45,http://localhost:8081/api/auth/register,2148,0,2
+1765798820244,2253,Spike Register User,200,,Spike Test Thread Group 3-72,text,true,,734,317,25,46,http://localhost:8081/api/auth/register,2253,0,2
+1765798820259,2239,Spike Register User,200,,Spike Test Thread Group 3-70,text,true,,734,317,24,45,http://localhost:8081/api/auth/register,2239,0,1
+1765798820267,2233,Spike Register User,200,,Spike Test Thread Group 3-74,text,true,,734,317,23,44,http://localhost:8081/api/auth/register,2232,0,1
+1765798820267,2290,Spike Register User,200,,Spike Test Thread Group 3-75,text,true,,734,317,22,43,http://localhost:8081/api/auth/register,2289,0,2
+1765798820287,2324,Spike Register User,200,,Spike Test Thread Group 3-76,text,true,,734,317,21,42,http://localhost:8081/api/auth/register,2323,0,2
+1765798820263,2348,Spike Register User,200,,Spike Test Thread Group 3-71,text,true,,734,317,21,42,http://localhost:8081/api/auth/register,2348,0,2
+1765798820296,2388,Spike Register User,200,,Spike Test Thread Group 3-77,text,true,,734,317,19,40,http://localhost:8081/api/auth/register,2388,0,2
+1765798820309,2416,Spike Register User,200,,Spike Test Thread Group 3-78,text,true,,734,317,18,40,http://localhost:8081/api/auth/register,2416,0,1
+1765798820337,2388,Spike Register User,200,,Spike Test Thread Group 3-82,text,true,,734,317,18,40,http://localhost:8081/api/auth/register,2388,0,4
+1765798820313,2416,Spike Register User,200,,Spike Test Thread Group 3-79,text,true,,734,317,16,38,http://localhost:8081/api/auth/register,2415,0,2
+1765798820352,2393,Spike Register User,200,,Spike Test Thread Group 3-83,text,true,,734,317,15,37,http://localhost:8081/api/auth/register,2393,0,1
+1765798820352,2396,Spike Register User,500,,Spike Test Thread Group 3-81,text,false,,1092,317,14,36,http://localhost:8081/api/auth/register,2396,0,1
+1765798820346,2544,Spike Register User,200,,Spike Test Thread Group 3-80,text,true,,734,317,13,35,http://localhost:8081/api/auth/register,2543,0,2
+1765798820355,2535,Stress Register User,200,,Stress Test Thread Group 2-5,text,true,,737,319,15,35,http://localhost:8081/api/auth/register,2535,0,2
+1765798820362,2551,Spike Register User,200,,Spike Test Thread Group 3-84,text,true,,734,317,12,35,http://localhost:8081/api/auth/register,2551,0,1
+1765798820360,2573,Spike Register User,200,,Spike Test Thread Group 3-85,text,true,,734,317,11,34,http://localhost:8081/api/auth/register,2573,0,3
+1765798820373,2649,Spike Register User,200,,Spike Test Thread Group 3-86,text,true,,734,317,10,34,http://localhost:8081/api/auth/register,2649,0,6
+1765798820485,2694,Spike Register User,200,,Spike Test Thread Group 3-96,text,true,,730,317,9,34,http://localhost:8081/api/auth/register,2694,0,1
+1765798820474,2710,Spike Register User,200,,Spike Test Thread Group 3-93,text,true,,734,317,8,33,http://localhost:8081/api/auth/register,2709,0,5
+1765798820381,2806,Spike Register User,200,,Spike Test Thread Group 3-87,text,true,,734,317,7,32,http://localhost:8081/api/auth/register,2806,0,1
+1765798820528,2677,Spike Register User,200,,Spike Test Thread Group 3-100,text,true,,734,317,6,31,http://localhost:8081/api/auth/register,2676,0,1
+1765798820496,2870,Spike Register User,200,,Spike Test Thread Group 3-98,text,true,,734,317,5,31,http://localhost:8081/api/auth/register,2870,0,1
+1765798820508,2874,Stress Register User,200,,Stress Test Thread Group 2-6,text,true,,737,319,18,30,http://localhost:8081/api/auth/register,2874,0,1
+1765798820496,2899,Register User,200,,Users Thread Group 1-3,text,true,,734,317,8,30,http://localhost:8081/api/auth/register,2899,0,31
+1765798820024,3373,Spike Register User,400,,Spike Test Thread Group 3-51,,false,,351,317,4,30,http://localhost:8081/api/auth/register,3373,0,18
+1765798820510,2934,Spike Register User,200,,Spike Test Thread Group 3-99,text,true,,734,317,3,29,http://localhost:8081/api/auth/register,2934,0,1
+1765798820494,2954,Spike Register User,200,,Spike Test Thread Group 3-97,text,true,,734,317,2,28,http://localhost:8081/api/auth/register,2954,0,1
+1765798820139,3320,Log Emotion,200,,Users Thread Group 1-1,,true,,380,594,8,27,http://localhost:8081/api/emotions,3320,0,0
+1765798820690,2810,Stress Register User,200,,Stress Test Thread Group 2-7,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,2810,0,1
+1765798820889,2630,Stress Register User,200,,Stress Test Thread Group 2-8,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,2630,0,0
+1765798821291,2231,Stress Register User,200,,Stress Test Thread Group 2-10,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,2231,0,2
+1765798820979,2545,Register User,200,,Users Thread Group 1-4,text,true,,734,317,9,29,http://localhost:8081/api/auth/register,2545,0,1
+1765798821096,2592,Stress Register User,200,,Stress Test Thread Group 2-9,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,2592,0,2
+1765798821490,2204,Stress Register User,200,,Stress Test Thread Group 2-11,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,2203,0,1
+1765798821480,2309,Register User,200,,Users Thread Group 1-5,text,true,,734,317,9,30,http://localhost:8081/api/auth/register,2309,0,1
+1765798820092,3699,Spike Register User,200,,Spike Test Thread Group 3-56,text,true,,734,317,1,30,http://localhost:8081/api/auth/register,3699,0,2
+1765798821980,1813,Register User,200,,Users Thread Group 1-6,text,true,,734,317,9,29,http://localhost:8081/api/auth/register,1813,0,2
+1765798821721,2119,Stress Register User,200,,Stress Test Thread Group 2-3,text,true,,737,319,20,29,http://localhost:8081/api/auth/register,2118,0,0
+1765798821790,2051,Stress Register User,200,,Stress Test Thread Group 2-12,text,true,,737,319,19,28,http://localhost:8081/api/auth/register,2051,0,25
+1765798821891,1977,Stress Register User,200,,Stress Test Thread Group 2-13,text,true,,737,319,19,28,http://localhost:8081/api/auth/register,1977,0,10
+1765798822190,1682,Stress Register User,200,,Stress Test Thread Group 2-4,text,true,,737,319,19,28,http://localhost:8081/api/auth/register,1682,0,0
+1765798822480,1528,Register User,200,,Users Thread Group 1-7,text,true,,734,317,10,29,http://localhost:8081/api/auth/register,1528,0,1
+1765798823519,491,Stress Register User,200,,Stress Test Thread Group 2-8,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,491,0,0
+1765798822715,1317,Stress Register User,200,,Stress Test Thread Group 2-17,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,1317,0,2
+1765798822905,1195,Stress Register User,200,,Stress Test Thread Group 2-18,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,1194,0,2
+1765798822323,1779,Stress Register User,200,,Stress Test Thread Group 2-15,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,1779,0,1
+1765798822539,1608,Stress Register User,200,,Stress Test Thread Group 2-16,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,1607,0,26
+1765798823027,1123,Register User,200,,Users Thread Group 1-8,text,true,,734,317,10,29,http://localhost:8081/api/auth/register,1123,0,1
+1765798822891,1332,Stress Register User,200,,Stress Test Thread Group 2-5,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,1332,0,0
+1765798823346,947,Stress Register User,200,,Stress Test Thread Group 2-20,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,946,0,2
+1765798823382,946,Stress Register User,200,,Stress Test Thread Group 2-6,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,946,0,0
+1765798823122,1254,Stress Register User,200,,Stress Test Thread Group 2-19,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,1253,0,2
+1765798823487,1018,Register User,200,,Users Thread Group 1-9,text,true,,734,317,10,29,http://localhost:8081/api/auth/register,1018,0,2
+1765798823523,986,Stress Register User,200,,Stress Test Thread Group 2-10,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,985,0,0
+1765798823689,820,Stress Register User,200,,Stress Test Thread Group 2-9,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,819,0,0
+1765798822105,2404,Stress Register User,200,,Stress Test Thread Group 2-14,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,2403,0,1
+1765798823589,922,Stress Register User,200,,Stress Test Thread Group 2-21,text,true,,737,319,17,27,http://localhost:8081/api/auth/register,921,0,1
+1765798823501,1012,Stress Register User,200,,Stress Test Thread Group 2-7,text,true,,737,319,17,27,http://localhost:8081/api/auth/register,1011,0,0
+1765798823694,874,Stress Register User,200,,Stress Test Thread Group 2-11,text,true,,737,319,16,26,http://localhost:8081/api/auth/register,874,0,0
+1765798823396,1214,Log Emotion,200,,Users Thread Group 1-3,,true,,380,595,10,25,http://localhost:8081/api/emotions,1214,0,0
+1765798823842,871,Stress Register User,200,,Stress Test Thread Group 2-12,text,true,,737,319,16,26,http://localhost:8081/api/auth/register,871,0,0
+1765798823728,1005,Stress Register User,200,,Stress Test Thread Group 2-22,text,true,,737,319,15,25,http://localhost:8081/api/auth/register,1005,0,1
+1765798824034,791,Stress Register User,200,,Stress Test Thread Group 2-17,text,true,,737,319,15,25,http://localhost:8081/api/auth/register,791,0,0
+1765798823982,843,Register User,200,,Users Thread Group 1-10,text,true,,734,317,10,25,http://localhost:8081/api/auth/register,843,0,1
+1765798823525,1301,Log Emotion,200,,Users Thread Group 1-4,,true,,380,595,10,24,http://localhost:8081/api/emotions,1301,0,0
+1765798823918,913,Stress Register User,200,,Stress Test Thread Group 2-23,text,true,,737,319,14,24,http://localhost:8081/api/auth/register,913,0,1
+1765798824510,364,Stress Register User,200,,Stress Test Thread Group 2-14,text,true,,737,319,14,24,http://localhost:8081/api/auth/register,364,0,0
+1765798824103,785,Stress Register User,200,,Stress Test Thread Group 2-15,text,true,,733,319,13,23,http://localhost:8081/api/auth/register,785,0,0
+1765798823791,1118,Log Emotion,200,,Users Thread Group 1-5,,true,,380,595,10,23,http://localhost:8081/api/emotions,1118,0,0
+1765798823869,1078,Stress Register User,200,,Stress Test Thread Group 2-13,text,true,,737,319,13,23,http://localhost:8081/api/auth/register,1078,0,0
+1765798824100,850,Stress Register User,200,,Stress Test Thread Group 2-18,text,true,,737,319,12,22,http://localhost:8081/api/auth/register,850,0,0
+1765798823796,1160,Log Emotion,200,,Users Thread Group 1-6,,true,,380,595,10,21,http://localhost:8081/api/emotions,1160,0,0
+1765798824506,471,Log Emotion,200,,Users Thread Group 1-9,,true,,380,595,10,21,http://localhost:8081/api/emotions,471,0,0
+1765798824147,946,Stress Register User,200,,Stress Test Thread Group 2-16,text,true,,737,319,11,21,http://localhost:8081/api/auth/register,945,0,0
+1765798824171,938,Stress Register User,200,,Stress Test Thread Group 2-24,text,true,,737,319,11,21,http://localhost:8081/api/auth/register,938,0,1
+1765798824151,983,Log Emotion,200,,Users Thread Group 1-8,,true,,380,595,10,21,http://localhost:8081/api/emotions,983,0,0
+1765798824327,813,Stress Register User,200,,Stress Test Thread Group 2-25,text,true,,737,319,11,21,http://localhost:8081/api/auth/register,812,0,1
+1765798824376,770,Stress Register User,200,,Stress Test Thread Group 2-19,text,true,,737,319,11,21,http://localhost:8081/api/auth/register,770,0,0
+1765798824293,871,Stress Register User,200,,Stress Test Thread Group 2-20,text,true,,737,319,10,20,http://localhost:8081/api/auth/register,871,0,0
+1765798824010,1158,Log Emotion,200,,Users Thread Group 1-7,,true,,380,595,10,19,http://localhost:8081/api/emotions,1158,0,0
+1765798824511,715,Stress Register User,200,,Stress Test Thread Group 2-21,text,true,,737,319,9,19,http://localhost:8081/api/auth/register,715,0,0
+1765798824701,537,Stress Register User,200,,Stress Test Thread Group 2-27,text,true,,737,319,8,18,http://localhost:8081/api/auth/register,536,0,2
+1765798824492,755,Stress Register User,200,,Stress Test Thread Group 2-26,text,true,,733,319,8,18,http://localhost:8081/api/auth/register,755,0,1
+1765798824826,431,Log Emotion,200,,Users Thread Group 1-10,,true,,380,595,10,18,http://localhost:8081/api/emotions,430,0,0
+1765798824734,582,Stress Register User,200,,Stress Test Thread Group 2-22,text,true,,737,319,9,19,http://localhost:8081/api/auth/register,582,0,0
+1765798824895,437,Stress Register User,200,,Stress Test Thread Group 2-28,text,true,,737,319,8,18,http://localhost:8081/api/auth/register,436,0,1
+1765798825104,316,Stress Register User,200,,Stress Test Thread Group 2-29,text,true,,737,319,8,18,http://localhost:8081/api/auth/register,316,0,2
+1765798825110,342,Stress Register User,200,,Stress Test Thread Group 2-24,text,true,,737,319,8,18,http://localhost:8081/api/auth/register,342,0,0
+1765798824831,637,Stress Register User,200,,Stress Test Thread Group 2-23,text,true,,737,319,7,17,http://localhost:8081/api/auth/register,637,0,0
+1765798825140,337,Stress Register User,200,,Stress Test Thread Group 2-25,text,true,,737,319,6,16,http://localhost:8081/api/auth/register,337,0,0
+1765798825238,373,Stress Register User,200,,Stress Test Thread Group 2-27,text,true,,737,319,6,16,http://localhost:8081/api/auth/register,373,0,0
+1765798825248,382,Stress Register User,200,,Stress Test Thread Group 2-26,text,true,,737,319,5,15,http://localhost:8081/api/auth/register,382,0,0
+1765798825295,448,Stress Register User,200,,Stress Test Thread Group 2-30,text,true,,737,319,5,15,http://localhost:8081/api/auth/register,448,0,1
+1765798825332,430,Stress Register User,200,,Stress Test Thread Group 2-28,text,true,,737,319,5,15,http://localhost:8081/api/auth/register,430,0,0
+1765798825421,474,Stress Register User,200,,Stress Test Thread Group 2-29,text,true,,737,319,5,15,http://localhost:8081/api/auth/register,473,0,0
+1765798825493,558,Stress Register User,200,,Stress Test Thread Group 2-31,text,true,,733,319,4,14,http://localhost:8081/api/auth/register,557,0,1
+1765798823460,7468,Chat Query,200,,Users Thread Group 1-1,text,true,,2033,540,10,31,http://localhost:8081/api/chat/query,7467,0,0
+1765798825690,5361,Stress Register User,200,,Stress Test Thread Group 2-32,text,true,,737,319,21,31,http://localhost:8081/api/auth/register,5361,0,1
+1765798825743,5423,Stress Register User,200,,Stress Test Thread Group 2-30,text,true,,737,319,21,31,http://localhost:8081/api/auth/register,5423,0,0
+1765798825894,5365,Stress Register User,200,,Stress Test Thread Group 2-33,text,true,,737,319,20,30,http://localhost:8081/api/auth/register,5365,0,4
+1765798826051,5301,Stress Register User,200,,Stress Test Thread Group 2-31,text,true,,737,319,20,30,http://localhost:8081/api/auth/register,5301,0,0
+1765798821811,9608,Chat Query,200,,Users Thread Group 1-2,text,true,,2485,540,10,29,http://localhost:8081/api/chat/query,9608,0,0
+1765798826089,5357,Stress Register User,200,,Stress Test Thread Group 2-34,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,5356,0,2
+1765798825135,6335,Chat Query,200,,Users Thread Group 1-8,text,true,,2830,541,10,29,http://localhost:8081/api/chat/query,6335,0,0
+1765798826288,5229,Stress Register User,200,,Stress Test Thread Group 2-35,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,5229,0,1
+1765798824827,6708,Chat Query,200,,Users Thread Group 1-4,text,true,,2579,541,10,29,http://localhost:8081/api/chat/query,6708,0,0
+1765798826490,5061,Stress Register User,200,,Stress Test Thread Group 2-36,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,5061,0,1
+1765798826690,4898,Stress Register User,200,,Stress Test Thread Group 2-37,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4898,0,1
+1765798826889,4786,Stress Register User,200,,Stress Test Thread Group 2-38,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4786,0,1
+1765798827116,4602,Stress Register User,200,,Stress Test Thread Group 2-39,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4602,0,2
+1765798824978,6741,Chat Query,200,,Users Thread Group 1-9,text,true,,2658,541,10,29,http://localhost:8081/api/chat/query,6741,0,0
+1765798827315,4406,Stress Register User,200,,Stress Test Thread Group 2-40,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4406,0,10
+1765798824956,6801,Chat Query,200,,Users Thread Group 1-6,text,true,,2352,541,10,29,http://localhost:8081/api/chat/query,6801,0,0
+1765798827494,4295,Stress Register User,200,,Stress Test Thread Group 2-41,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4295,0,2
+1765798827695,4172,Stress Register User,200,,Stress Test Thread Group 2-42,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4172,0,2
+1765798827894,4008,Stress Register User,200,,Stress Test Thread Group 2-43,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,4008,0,2
+1765798828088,3816,Stress Register User,200,,Stress Test Thread Group 2-44,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,3815,0,2
+1765798828291,3629,Stress Register User,200,,Stress Test Thread Group 2-45,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,3629,0,1
+1765798828489,3470,Stress Register User,200,,Stress Test Thread Group 2-46,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,3469,0,2
+1765798828690,3313,Stress Register User,200,,Stress Test Thread Group 2-47,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,3313,0,2
+1765798828891,3176,Stress Register User,200,,Stress Test Thread Group 2-48,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,3176,0,2
+1765798829289,2832,Stress Register User,200,,Stress Test Thread Group 2-50,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,2832,0,1
+1765798831052,1088,Stress Register User,200,,Stress Test Thread Group 2-32,text,true,,737,319,19,29,http://localhost:8081/api/auth/register,1088,0,0
+1765798829088,3059,Stress Register User,200,,Stress Test Thread Group 2-49,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,3059,0,1
+1765798831259,901,Stress Register User,200,,Stress Test Thread Group 2-33,text,true,,737,319,18,28,http://localhost:8081/api/auth/register,901,0,0
+1765798831446,822,Stress Register User,200,,Stress Test Thread Group 2-34,text,true,,737,319,17,27,http://localhost:8081/api/auth/register,822,0,0
+1765798824910,7389,Chat Query,200,,Users Thread Group 1-5,text,true,,2574,541,10,26,http://localhost:8081/api/chat/query,7388,0,0
+1765798825169,7132,Chat Query,200,,Users Thread Group 1-7,text,true,,2465,541,10,26,http://localhost:8081/api/chat/query,7131,0,0
+1765798824611,7690,Chat Query,200,,Users Thread Group 1-3,text,true,,2299,541,10,26,http://localhost:8081/api/chat/query,7689,0,0
+1765798831517,819,Stress Register User,200,,Stress Test Thread Group 2-35,text,true,,737,319,16,26,http://localhost:8081/api/auth/register,818,0,0
+1765798831588,828,Stress Register User,200,,Stress Test Thread Group 2-37,text,true,,737,319,15,25,http://localhost:8081/api/auth/register,828,0,0
+1765798830933,1490,Get Conversations,200,,Users Thread Group 1-1,text,true,,548,482,10,24,http://localhost:8081/api/chat/conversations,1489,0,0
+1765798831718,741,Stress Register User,200,,Stress Test Thread Group 2-39,text,true,,737,319,14,23,http://localhost:8081/api/auth/register,740,0,0
+1765798831551,942,Stress Register User,200,,Stress Test Thread Group 2-36,text,true,,737,319,13,22,http://localhost:8081/api/auth/register,942,0,0
+1765798831676,838,Stress Register User,200,,Stress Test Thread Group 2-38,text,true,,737,319,12,21,http://localhost:8081/api/auth/register,838,0,0
+1765798831420,1100,Get Conversations,200,,Users Thread Group 1-2,text,true,,548,482,9,20,http://localhost:8081/api/chat/conversations,1100,0,0
+1765798831867,709,Stress Register User,200,,Stress Test Thread Group 2-42,text,true,,737,319,11,19,http://localhost:8081/api/auth/register,709,0,0
+1765798831471,1109,Get Conversations,200,,Users Thread Group 1-8,text,true,,548,483,8,18,http://localhost:8081/api/chat/conversations,1109,0,0
+1765798831789,811,Stress Register User,200,,Stress Test Thread Group 2-41,text,true,,737,319,10,17,http://localhost:8081/api/auth/register,811,0,0
+1765798831905,696,Stress Register User,200,,Stress Test Thread Group 2-44,text,true,,737,319,10,17,http://localhost:8081/api/auth/register,696,0,0
+1765798831536,1069,Get Conversations,200,,Users Thread Group 1-4,text,true,,548,483,7,15,http://localhost:8081/api/chat/conversations,1069,0,0
+1765798831720,894,Get Conversations,200,,Users Thread Group 1-9,text,true,,548,483,6,14,http://localhost:8081/api/chat/conversations,894,0,0
+1765798831758,862,Get Conversations,200,,Users Thread Group 1-6,text,true,,548,483,5,13,http://localhost:8081/api/chat/conversations,861,0,0
+1765798831903,732,Stress Register User,200,,Stress Test Thread Group 2-43,text,true,,737,319,8,12,http://localhost:8081/api/auth/register,732,0,0
+1765798832299,341,Get Conversations,200,,Users Thread Group 1-5,text,true,,548,483,4,11,http://localhost:8081/api/chat/conversations,341,0,0
+1765798832301,346,Get Conversations,200,,Users Thread Group 1-7,text,true,,548,483,3,10,http://localhost:8081/api/chat/conversations,346,0,0
+1765798832301,349,Get Conversations,200,,Users Thread Group 1-3,text,true,,548,483,2,9,http://localhost:8081/api/chat/conversations,349,0,0
+1765798831721,936,Stress Register User,200,,Stress Test Thread Group 2-40,text,true,,737,319,7,8,http://localhost:8081/api/auth/register,936,0,0
+1765798831920,778,Stress Register User,200,,Stress Test Thread Group 2-45,text,true,,737,319,6,7,http://localhost:8081/api/auth/register,778,0,0
+1765798831959,752,Stress Register User,200,,Stress Test Thread Group 2-46,text,true,,737,319,5,6,http://localhost:8081/api/auth/register,752,0,0
+1765798832004,724,Stress Register User,200,,Stress Test Thread Group 2-47,text,true,,737,319,4,5,http://localhost:8081/api/auth/register,724,0,0
+1765798832068,684,Stress Register User,200,,Stress Test Thread Group 2-48,text,true,,737,319,3,4,http://localhost:8081/api/auth/register,684,0,0
+1765798832122,647,Stress Register User,200,,Stress Test Thread Group 2-50,text,true,,737,319,2,3,http://localhost:8081/api/auth/register,647,0,0
+1765798832148,633,Stress Register User,200,,Stress Test Thread Group 2-49,text,true,,737,319,1,2,http://localhost:8081/api/auth/register,633,0,0
+1765798825257,7767,Chat Query,200,,Users Thread Group 1-10,text,true,,3007,541,1,1,http://localhost:8081/api/chat/query,7767,0,0
+1765798833025,15,Get Conversations,200,,Users Thread Group 1-10,text,true,,548,483,1,1,http://localhost:8081/api/chat/conversations,15,0,0

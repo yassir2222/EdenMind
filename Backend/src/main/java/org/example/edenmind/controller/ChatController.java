@@ -50,6 +50,30 @@ public class ChatController {
         return ResponseEntity.ok(conversationRepository.findByUserIdOrderByUpdatedAtDesc(user.getId()));
     }
 
+    @DeleteMapping("/conversations/{id}")
+    public ResponseEntity<Void> deleteConversation(@PathVariable Long id) {
+        User user = getAuthenticatedUser();
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        Optional<Conversation> conversationOpt = conversationRepository.findById(id);
+        if (conversationOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Conversation conversation = conversationOpt.get();
+        if (!conversation.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        // Delete all messages first, then the conversation
+        messageRepository.deleteByConversationId(id);
+        conversationRepository.delete(conversation);
+        
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/conversations/{id}/messages")
     public ResponseEntity<List<Message>> getMessages(@PathVariable Long id) {
         User user = getAuthenticatedUser();

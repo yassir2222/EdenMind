@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'chat_service.dart';
 import 'dart:ui'; // For BackdropFilter
+import 'package:provider/provider.dart';
 
 class ChatbotPage extends StatefulWidget {
   const ChatbotPage({super.key});
@@ -13,7 +14,7 @@ class ChatbotPage extends StatefulWidget {
 }
 
 class _ChatbotPageState extends State<ChatbotPage> {
-  final ChatService _chatService = ChatService();
+  ChatService get _chatService => context.read<ChatService>();
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -197,27 +198,35 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
   Widget _buildDrawer() {
     return Drawer(
-      backgroundColor: Colors.transparent, // Transparent for custom styling
+      backgroundColor: Colors.transparent,
       child: ClipRRect(
-        // Clip for blur effect edges
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.9),
+              color: Colors.white.withValues(alpha: 0.95),
             ),
             child: Column(
               children: [
                 SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'Conversations',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: EdenMindTheme.textColor,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Conversations',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: EdenMindTheme.textColor,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -239,56 +248,173 @@ class _ChatbotPageState extends State<ChatbotPage> {
                 ),
                 const SizedBox(height: 20),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: _conversations.length,
-                    itemBuilder: (context, index) {
-                      final conv = _conversations[index];
-                      final isActive = conv['id'] == _currentConversationId;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isActive
-                              ? EdenMindTheme.primaryColor.withValues(
-                                  alpha: 0.1,
-                                )
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            conv['title'] ?? 'Conversation ${conv['id']}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: isActive
-                                  ? EdenMindTheme.primaryColor
-                                  : EdenMindTheme.textColor,
-                              fontWeight: isActive
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
+                  child: _conversations.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.chat_bubble_outline,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No conversations yet',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Start chatting with ZenBot!',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ],
                           ),
-                          leading: Icon(
-                            Icons.chat_bubble_outline,
-                            color: isActive
-                                ? EdenMindTheme.primaryColor
-                                : Colors.grey,
-                          ),
-                          onTap: () => _loadConversation(conv['id']),
+                        )
+                      : ListView.builder(
+                          itemCount: _conversations.length,
+                          itemBuilder: (context, index) {
+                            final conv = _conversations[index];
+                            final isActive =
+                                conv['id'] == _currentConversationId;
+                            final createdAt = conv['createdAt'] != null
+                                ? _formatDate(conv['createdAt'])
+                                : '';
+
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isActive
+                                    ? EdenMindTheme.primaryColor.withValues(
+                                        alpha: 0.1,
+                                      )
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  conv['title'] ?? 'Conversation ${conv['id']}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: isActive
+                                        ? EdenMindTheme.primaryColor
+                                        : EdenMindTheme.textColor,
+                                    fontWeight: isActive
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  createdAt,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                                leading: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: isActive
+                                        ? EdenMindTheme.primaryColor.withValues(
+                                            alpha: 0.2,
+                                          )
+                                        : Colors.grey.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.chat_bubble_outline,
+                                    color: isActive
+                                        ? EdenMindTheme.primaryColor
+                                        : Colors.grey,
+                                    size: 20,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.grey[400],
+                                    size: 20,
+                                  ),
+                                  onPressed: () =>
+                                      _deleteConversation(conv['id']),
+                                ),
+                                onTap: () => _loadConversation(conv['id']),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
-            ), // Column
-          ), // Container
-        ), // BackdropFilter
-      ), // ClipRRect
-    ); // Drawer
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(String dateString) {
+    try {
+      final date = DateTime.parse(dateString);
+      final now = DateTime.now();
+      final difference = now.difference(date);
+
+      if (difference.inDays == 0) {
+        return 'Today ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+      } else if (difference.inDays == 1) {
+        return 'Yesterday';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        return '${date.day}/${date.month}/${date.year}';
+      }
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<void> _deleteConversation(int id) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Conversation?'),
+        content: const Text('This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        await _chatService.deleteConversation(id);
+        if (_currentConversationId == id) {
+          _startNewChat();
+        } else {
+          _fetchConversations();
+        }
+      } catch (e) {
+        debugPrint('Error deleting conversation: $e');
+      }
+    }
   }
 
   Widget _buildHeader(BuildContext context) {
