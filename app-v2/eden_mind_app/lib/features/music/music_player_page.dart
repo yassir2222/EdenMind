@@ -24,11 +24,13 @@ class Track {
 class MusicPlayerPage extends StatefulWidget {
   final Track track;
   final List<Track> recommendedTracks;
+  final AudioPlayer? audioPlayer;
 
   const MusicPlayerPage({
     super.key,
     required this.track,
     this.recommendedTracks = const [],
+    this.audioPlayer,
   });
 
   @override
@@ -48,7 +50,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
+    _audioPlayer = widget.audioPlayer ?? AudioPlayer();
     _setupAudioPlayer();
   }
 

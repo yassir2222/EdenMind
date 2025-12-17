@@ -1,0 +1,22 @@
+File                                                         | Missed | Total  | Coverage
+------------------------------------------------------------------------------------------
+lib\features\games\grounding_inventory_page.dart             | 173    | 277    | 37.5%
+lib\features\games\distortion_hunter_page.dart               | 169    | 325    | 48.0%
+lib\features\map\therapist_map_page.dart                     | 162    | 163    | 0.6%
+lib\features\profile\profile_page.dart                       | 156    | 346    | 54.9%
+lib\features\profile\progress_page.dart                      | 148    | 199    | 25.6%
+lib\features\mood_log\mood_log_page.dart                     | 138    | 139    | 0.7%
+lib\features\music\music_page.dart                           | 136    | 255    | 46.7%
+lib\features\meditation\meditation_detail_page.dart          | 131    | 131    | 0.0%
+lib\features\meditation\meditation_page.dart                 | 127    | 168    | 24.4%
+lib\features\auth\auth_service.dart                          | 117    | 136    | 14.0%
+lib\features\games\serenity_tower_page.dart                  | 116    | 316    | 63.3%
+lib\features\games\services\emotion_service.dart             | 78     | 81     | 3.7%
+lib\features\notifications\notification_service.dart         | 72     | 77     | 6.5%
+lib\features\chatbot\chatbot_page.dart                       | 71     | 265    | 73.2%
+lib\features\meditation\meditation_session_page.dart         | 54     | 234    | 76.9%
+lib\features\music\music_player_page.dart                    | 49     | 173    | 71.7%
+lib\features\notifications\notifications_page.dart           | 44     | 206    | 78.6%
+lib\features\map\services\therapist_repository.dart          | 41     | 41     | 0.0%
+lib\features\games\breathing_game_page.dart                  | 37     | 185    | 80.0%
+lib\features\mood_log\add_mood_page.dart                     | 31     | 167    | 81.4%

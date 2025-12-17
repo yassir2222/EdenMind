@@ -1,0 +1,15 @@
+﻿00:00 +0: loading C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/chatbot/chatbot_page_test.dart
+00:00 +0 -1: loading C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/chatbot/chatbot_page_test.dart [E]
+  Failed to load "C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/chatbot/chatbot_page_test.dart":
+  Compilation failed for testPath=C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/chatbot/chatbot_page_test.dart: test/features/chatbot/chatbot_page_test.dart:11:8: Error: Error when reading 'test/features/chatbot/chatbot_page_test.mocks.dart': Le fichier sp├®cifi├® est introuvable.
+  
+  import 'chatbot_page_test.mocks.dart';
+         ^
+  test/features/chatbot/chatbot_page_test.dart:15:8: Error: 'MockChatService' isn't a type.
+    late MockChatService mockChatService;
+         ^^^^^^^^^^^^^^^
+  test/features/chatbot/chatbot_page_test.dart:26:23: Error: Method not found: 'MockChatService'.
+      mockChatService = MockChatService();
+                        ^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.

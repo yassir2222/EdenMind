@@ -1,0 +1,7 @@
+org\example\pages\BasePage.class
+org\example\pages\LoginPage.class
+org\example\pages\MoodPage.class
+org\example\pages\GamesPage.class
+org\example\pages\ChatPage.class
+org\example\pages\ProfilePage.class
+org\example\pages\DashboardPage.class

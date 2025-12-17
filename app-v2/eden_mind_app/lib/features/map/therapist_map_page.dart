@@ -8,7 +8,14 @@ import 'package:eden_mind_app/features/map/services/location_service.dart';
 import 'package:eden_mind_app/features/map/services/therapist_repository.dart';
 
 class TherapistMapPage extends StatefulWidget {
-  const TherapistMapPage({super.key});
+  final LocationService? locationService;
+  final TherapistRepository? therapistRepository;
+
+  const TherapistMapPage({
+    super.key,
+    this.locationService,
+    this.therapistRepository,
+  });
 
   @override
   State<TherapistMapPage> createState() => _TherapistMapPageState();
@@ -16,20 +23,22 @@ class TherapistMapPage extends StatefulWidget {
 
 class _TherapistMapPageState extends State<TherapistMapPage> {
   final MapController _mapController = MapController();
-  final LocationService _locationService = LocationService();
-  final TherapistRepository _therapistRepository = TherapistRepository();
+  late final LocationService _locationService;
+  late final TherapistRepository _therapistRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    _locationService = widget.locationService ?? LocationService();
+    _therapistRepository = widget.therapistRepository ?? TherapistRepository();
+    _initializeMap();
+  }
 
   Therapist? _selectedTherapist;
   List<Therapist> _therapists = [];
   bool _isLoading = true;
   LatLng _initialCenter = const LatLng(48.8566, 2.3522); // Default to Paris
   LatLng? _userLocation;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeMap();
-  }
 
   Future<void> _initializeMap() async {
     try {

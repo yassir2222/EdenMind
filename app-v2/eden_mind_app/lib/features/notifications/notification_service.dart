@@ -4,7 +4,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationService {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage;
+  final http.Client _client;
+
+  NotificationService({
+    http.Client? client,
+    FlutterSecureStorage? secureStorage,
+  }) : _client = client ?? http.Client(),
+       _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   String get _baseUrl => '${AppConfig.baseUrl}/notifications';
 
@@ -17,7 +24,7 @@ class NotificationService {
     final token = await _getToken();
     if (token == null) throw Exception('No authentication token');
 
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse(_baseUrl),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -36,7 +43,7 @@ class NotificationService {
     if (token == null) return 0;
 
     try {
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse('$_baseUrl/unread-count'),
         headers: {'Authorization': 'Bearer $token'},
       );
@@ -56,7 +63,7 @@ class NotificationService {
     final token = await _getToken();
     if (token == null) throw Exception('No authentication token');
 
-    final response = await http.put(
+    final response = await _client.put(
       Uri.parse('$_baseUrl/$notificationId/read'),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -71,7 +78,7 @@ class NotificationService {
     final token = await _getToken();
     if (token == null) throw Exception('No authentication token');
 
-    final response = await http.put(
+    final response = await _client.put(
       Uri.parse('$_baseUrl/read-all'),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -86,7 +93,7 @@ class NotificationService {
     final token = await _getToken();
     if (token == null) throw Exception('No authentication token');
 
-    final response = await http.delete(
+    final response = await _client.delete(
       Uri.parse('$_baseUrl/$notificationId'),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -101,7 +108,7 @@ class NotificationService {
     final token = await _getToken();
     if (token == null) throw Exception('No authentication token');
 
-    final response = await http.delete(
+    final response = await _client.delete(
       Uri.parse('$_baseUrl/clear-all'),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -117,7 +124,7 @@ class NotificationService {
     if (token == null) return;
 
     try {
-      await http.post(
+      await _client.post(
         Uri.parse('$_baseUrl/init-samples'),
         headers: {'Authorization': 'Bearer $token'},
       );
@@ -136,7 +143,7 @@ class NotificationService {
     if (token == null) return;
 
     try {
-      await http.post(
+      await _client.post(
         Uri.parse(_baseUrl),
         headers: {
           'Authorization': 'Bearer $token',

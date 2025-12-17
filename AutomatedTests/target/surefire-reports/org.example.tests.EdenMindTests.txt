@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.example.tests.EdenMindTests
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 134.6 s -- in org.example.tests.EdenMindTests

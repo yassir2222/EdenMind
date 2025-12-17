@@ -26,7 +26,10 @@ void main() {
 
   group('AuthService Tests', () {
     test('login success should save token and notify listeners', () async {
-      final token = 'test_token';
+      // Valid dummy JWT
+      final token =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsInVzZXJJZCI6IjEyMyIsImV4cCI6MTk5OTk5OTk5OX0.signature';
+
       when(
         mockClient.post(
           Uri.parse('$baseUrl/login'),
@@ -35,10 +38,13 @@ void main() {
         ),
       ).thenAnswer((_) async => http.Response('{"token": "$token"}', 200));
 
-      // Stub secure storage to just return success or null (we can verify call)
+      // Stub secure storage
       when(
         mockSecureStorage.write(key: 'jwt_token', value: token),
       ).thenAnswer((_) async => {});
+
+      // Stub init user call if needed? No, login does not call init or profile fetch immediately unless logic changed?
+      // AuthService._saveToken calls JwtDecoder.decode.
 
       await authService.login('test@example.com', 'password');
 
@@ -55,7 +61,7 @@ void main() {
       ).thenAnswer((_) async => http.Response('Unauthorized', 401));
 
       expect(
-        () => authService.login('test@example.com', 'wrongpassword'),
+        authService.login('test@example.com', 'wrongpassword'),
         throwsException,
       );
     });

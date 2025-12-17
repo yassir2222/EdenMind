@@ -6,8 +6,15 @@ import 'package:eden_mind_app/features/notifications/notification_service.dart';
 
 class MeditationSessionPage extends StatefulWidget {
   final Map<String, dynamic> session;
+  final AudioPlayer? audioPlayer;
+  final NotificationService? notificationService;
 
-  const MeditationSessionPage({super.key, required this.session});
+  const MeditationSessionPage({
+    super.key,
+    required this.session,
+    this.audioPlayer,
+    this.notificationService,
+  });
 
   @override
   State<MeditationSessionPage> createState() => _MeditationSessionPageState();
@@ -16,8 +23,8 @@ class MeditationSessionPage extends StatefulWidget {
 class _MeditationSessionPageState extends State<MeditationSessionPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _breathController;
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  final NotificationService _notificationService = NotificationService();
+  late AudioPlayer _audioPlayer;
+  late NotificationService _notificationService;
   bool _isPlaying = false;
   Duration _totalDuration = const Duration(minutes: 10);
   Duration _currentPosition = Duration.zero;
@@ -28,6 +35,9 @@ class _MeditationSessionPageState extends State<MeditationSessionPage>
   @override
   void initState() {
     super.initState();
+    _audioPlayer = widget.audioPlayer ?? AudioPlayer();
+    _notificationService = widget.notificationService ?? NotificationService();
+
     _breathController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
