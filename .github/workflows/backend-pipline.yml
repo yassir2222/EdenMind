@@ -45,4 +45,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
           ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=yassir2222
+          -Dsonar.projectKey=yassir2222_EdenMind
           -Dsonar.qualitygate.wait=true
