@@ -4,13 +4,15 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
-import 'dart:typed_data' as _i5;
+import 'dart:convert' as _i8;
+import 'dart:typed_data' as _i6;
 
 import 'package:audioplayers/audioplayers.dart' as _i2;
 import 'package:eden_mind_app/features/notifications/notification_service.dart'
-    as _i6;
+    as _i7;
+import 'package:http/http.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i4;
+import 'package:mockito/src/dummies.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -37,19 +39,30 @@ class _FakeCompleter_1<T> extends _i1.SmartFake implements _i3.Completer<T> {
     : super(parent, parentInvocation);
 }
 
+class _FakeResponse_2 extends _i1.SmartFake implements _i4.Response {
+  _FakeResponse_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeStreamedResponse_3 extends _i1.SmartFake
+    implements _i4.StreamedResponse {
+  _FakeStreamedResponse_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [AudioPlayer].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
-  MockAudioPlayer() {
-    _i1.throwOnMissingStub(this);
-  }
-
   @override
   _i2.AudioCache get audioCache =>
       (super.noSuchMethod(
             Invocation.getter(#audioCache),
             returnValue: _FakeAudioCache_0(
+              this,
+              Invocation.getter(#audioCache),
+            ),
+            returnValueForMissingStub: _FakeAudioCache_0(
               this,
               Invocation.getter(#audioCache),
             ),
@@ -60,7 +73,11 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
   String get playerId =>
       (super.noSuchMethod(
             Invocation.getter(#playerId),
-            returnValue: _i4.dummyValue<String>(
+            returnValue: _i5.dummyValue<String>(
+              this,
+              Invocation.getter(#playerId),
+            ),
+            returnValueForMissingStub: _i5.dummyValue<String>(
               this,
               Invocation.getter(#playerId),
             ),
@@ -69,17 +86,29 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
 
   @override
   double get volume =>
-      (super.noSuchMethod(Invocation.getter(#volume), returnValue: 0.0)
+      (super.noSuchMethod(
+            Invocation.getter(#volume),
+            returnValue: 0.0,
+            returnValueForMissingStub: 0.0,
+          )
           as double);
 
   @override
   double get balance =>
-      (super.noSuchMethod(Invocation.getter(#balance), returnValue: 0.0)
+      (super.noSuchMethod(
+            Invocation.getter(#balance),
+            returnValue: 0.0,
+            returnValueForMissingStub: 0.0,
+          )
           as double);
 
   @override
   double get playbackRate =>
-      (super.noSuchMethod(Invocation.getter(#playbackRate), returnValue: 0.0)
+      (super.noSuchMethod(
+            Invocation.getter(#playbackRate),
+            returnValue: 0.0,
+            returnValueForMissingStub: 0.0,
+          )
           as double);
 
   @override
@@ -87,6 +116,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#mode),
             returnValue: _i2.PlayerMode.mediaPlayer,
+            returnValueForMissingStub: _i2.PlayerMode.mediaPlayer,
           )
           as _i2.PlayerMode);
 
@@ -95,6 +125,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#releaseMode),
             returnValue: _i2.ReleaseMode.release,
+            returnValueForMissingStub: _i2.ReleaseMode.release,
           )
           as _i2.ReleaseMode);
 
@@ -103,6 +134,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#desiredState),
             returnValue: _i2.PlayerState.stopped,
+            returnValueForMissingStub: _i2.PlayerState.stopped,
           )
           as _i2.PlayerState);
 
@@ -111,6 +143,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#state),
             returnValue: _i2.PlayerState.stopped,
+            returnValueForMissingStub: _i2.PlayerState.stopped,
           )
           as _i2.PlayerState);
 
@@ -122,6 +155,10 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
               this,
               Invocation.getter(#creatingCompleter),
             ),
+            returnValueForMissingStub: _FakeCompleter_1<void>(
+              this,
+              Invocation.getter(#creatingCompleter),
+            ),
           )
           as _i3.Completer<void>);
 
@@ -130,6 +167,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#eventStream),
             returnValue: _i3.Stream<_i2.AudioEvent>.empty(),
+            returnValueForMissingStub: _i3.Stream<_i2.AudioEvent>.empty(),
           )
           as _i3.Stream<_i2.AudioEvent>);
 
@@ -138,6 +176,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#onPlayerStateChanged),
             returnValue: _i3.Stream<_i2.PlayerState>.empty(),
+            returnValueForMissingStub: _i3.Stream<_i2.PlayerState>.empty(),
           )
           as _i3.Stream<_i2.PlayerState>);
 
@@ -146,6 +185,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#onPositionChanged),
             returnValue: _i3.Stream<Duration>.empty(),
+            returnValueForMissingStub: _i3.Stream<Duration>.empty(),
           )
           as _i3.Stream<Duration>);
 
@@ -154,6 +194,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#onDurationChanged),
             returnValue: _i3.Stream<Duration>.empty(),
+            returnValueForMissingStub: _i3.Stream<Duration>.empty(),
           )
           as _i3.Stream<Duration>);
 
@@ -162,6 +203,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#onPlayerComplete),
             returnValue: _i3.Stream<void>.empty(),
+            returnValueForMissingStub: _i3.Stream<void>.empty(),
           )
           as _i3.Stream<void>);
 
@@ -170,6 +212,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#onSeekComplete),
             returnValue: _i3.Stream<void>.empty(),
+            returnValueForMissingStub: _i3.Stream<void>.empty(),
           )
           as _i3.Stream<void>);
 
@@ -178,6 +221,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.getter(#onLog),
             returnValue: _i3.Stream<String>.empty(),
+            returnValueForMissingStub: _i3.Stream<String>.empty(),
           )
           as _i3.Stream<String>);
 
@@ -372,7 +416,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> setSourceBytes(_i5.Uint8List? bytes, {String? mimeType}) =>
+  _i3.Future<void> setSourceBytes(_i6.Uint8List? bytes, {String? mimeType}) =>
       (super.noSuchMethod(
             Invocation.method(#setSourceBytes, [bytes], {#mimeType: mimeType}),
             returnValue: _i3.Future<void>.value(),
@@ -385,6 +429,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.method(#getDuration, []),
             returnValue: _i3.Future<Duration?>.value(),
+            returnValueForMissingStub: _i3.Future<Duration?>.value(),
           )
           as _i3.Future<Duration?>);
 
@@ -393,6 +438,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
       (super.noSuchMethod(
             Invocation.method(#getCurrentPosition, []),
             returnValue: _i3.Future<Duration?>.value(),
+            returnValueForMissingStub: _i3.Future<Duration?>.value(),
           )
           as _i3.Future<Duration?>);
 
@@ -410,11 +456,7 @@ class MockAudioPlayer extends _i1.Mock implements _i2.AudioPlayer {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockNotificationService extends _i1.Mock
-    implements _i6.NotificationService {
-  MockNotificationService() {
-    _i1.throwOnMissingStub(this);
-  }
-
+    implements _i7.NotificationService {
   @override
   _i3.Future<List<Map<String, dynamic>>> getNotifications() =>
       (super.noSuchMethod(
@@ -422,6 +464,10 @@ class MockNotificationService extends _i1.Mock
             returnValue: _i3.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
+            returnValueForMissingStub:
+                _i3.Future<List<Map<String, dynamic>>>.value(
+                  <Map<String, dynamic>>[],
+                ),
           )
           as _i3.Future<List<Map<String, dynamic>>>);
 
@@ -430,6 +476,7 @@ class MockNotificationService extends _i1.Mock
       (super.noSuchMethod(
             Invocation.method(#getUnreadCount, []),
             returnValue: _i3.Future<int>.value(0),
+            returnValueForMissingStub: _i3.Future<int>.value(0),
           )
           as _i3.Future<int>);
 
@@ -527,4 +574,249 @@ class MockNotificationService extends _i1.Mock
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
+}
+
+/// A class which mocks [Client].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockClient extends _i1.Mock implements _i4.Client {
+  @override
+  _i3.Future<_i4.Response> head(Uri? url, {Map<String, String>? headers}) =>
+      (super.noSuchMethod(
+            Invocation.method(#head, [url], {#headers: headers}),
+            returnValue: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(#head, [url], {#headers: headers}),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(#head, [url], {#headers: headers}),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Response>);
+
+  @override
+  _i3.Future<_i4.Response> get(Uri? url, {Map<String, String>? headers}) =>
+      (super.noSuchMethod(
+            Invocation.method(#get, [url], {#headers: headers}),
+            returnValue: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(#get, [url], {#headers: headers}),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(#get, [url], {#headers: headers}),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Response>);
+
+  @override
+  _i3.Future<_i4.Response> post(
+    Uri? url, {
+    Map<String, String>? headers,
+    Object? body,
+    _i8.Encoding? encoding,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #post,
+              [url],
+              {#headers: headers, #body: body, #encoding: encoding},
+            ),
+            returnValue: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #post,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #post,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Response>);
+
+  @override
+  _i3.Future<_i4.Response> put(
+    Uri? url, {
+    Map<String, String>? headers,
+    Object? body,
+    _i8.Encoding? encoding,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #put,
+              [url],
+              {#headers: headers, #body: body, #encoding: encoding},
+            ),
+            returnValue: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #put,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #put,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Response>);
+
+  @override
+  _i3.Future<_i4.Response> patch(
+    Uri? url, {
+    Map<String, String>? headers,
+    Object? body,
+    _i8.Encoding? encoding,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #patch,
+              [url],
+              {#headers: headers, #body: body, #encoding: encoding},
+            ),
+            returnValue: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #patch,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #patch,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Response>);
+
+  @override
+  _i3.Future<_i4.Response> delete(
+    Uri? url, {
+    Map<String, String>? headers,
+    Object? body,
+    _i8.Encoding? encoding,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #delete,
+              [url],
+              {#headers: headers, #body: body, #encoding: encoding},
+            ),
+            returnValue: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #delete,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.Response>.value(
+              _FakeResponse_2(
+                this,
+                Invocation.method(
+                  #delete,
+                  [url],
+                  {#headers: headers, #body: body, #encoding: encoding},
+                ),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Response>);
+
+  @override
+  _i3.Future<String> read(Uri? url, {Map<String, String>? headers}) =>
+      (super.noSuchMethod(
+            Invocation.method(#read, [url], {#headers: headers}),
+            returnValue: _i3.Future<String>.value(
+              _i5.dummyValue<String>(
+                this,
+                Invocation.method(#read, [url], {#headers: headers}),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<String>.value(
+              _i5.dummyValue<String>(
+                this,
+                Invocation.method(#read, [url], {#headers: headers}),
+              ),
+            ),
+          )
+          as _i3.Future<String>);
+
+  @override
+  _i3.Future<_i6.Uint8List> readBytes(
+    Uri? url, {
+    Map<String, String>? headers,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#readBytes, [url], {#headers: headers}),
+            returnValue: _i3.Future<_i6.Uint8List>.value(_i6.Uint8List(0)),
+            returnValueForMissingStub: _i3.Future<_i6.Uint8List>.value(
+              _i6.Uint8List(0),
+            ),
+          )
+          as _i3.Future<_i6.Uint8List>);
+
+  @override
+  _i3.Future<_i4.StreamedResponse> send(_i4.BaseRequest? request) =>
+      (super.noSuchMethod(
+            Invocation.method(#send, [request]),
+            returnValue: _i3.Future<_i4.StreamedResponse>.value(
+              _FakeStreamedResponse_3(
+                this,
+                Invocation.method(#send, [request]),
+              ),
+            ),
+            returnValueForMissingStub: _i3.Future<_i4.StreamedResponse>.value(
+              _FakeStreamedResponse_3(
+                this,
+                Invocation.method(#send, [request]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.StreamedResponse>);
+
+  @override
+  void close() => super.noSuchMethod(
+    Invocation.method(#close, []),
+    returnValueForMissingStub: null,
+  );
 }

@@ -57,7 +57,7 @@ void main() {
           location: const LatLng(48.8566, 2.3522),
           imageUrl: 'https://example.com/house.jpg',
           phoneNumber: '1234567890',
-          biography: 'Grumpy but effective.',
+          description: 'Grumpy but effective.',
         ),
       ],
     );

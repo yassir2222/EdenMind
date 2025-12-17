@@ -3,11 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
-import 'dart:io' as _i4;
-import 'dart:ui' as _i5;
+import 'dart:async' as _i4;
+import 'dart:io' as _i5;
+import 'dart:ui' as _i6;
 
-import 'package:eden_mind_app/features/auth/auth_service.dart' as _i2;
+import 'package:eden_mind_app/features/auth/auth_service.dart' as _i3;
+import 'package:image_picker/image_picker.dart' as _i7;
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
+    as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -25,10 +28,16 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
+class _FakeLostDataResponse_0 extends _i1.SmartFake
+    implements _i2.LostDataResponse {
+  _FakeLostDataResponse_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [AuthService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthService extends _i1.Mock implements _i2.AuthService {
+class MockAuthService extends _i1.Mock implements _i3.AuthService {
   MockAuthService() {
     _i1.throwOnMissingStub(this);
   }
@@ -52,25 +61,25 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
           as bool);
 
   @override
-  _i3.Future<void> init() =>
+  _i4.Future<void> init() =>
       (super.noSuchMethod(
             Invocation.method(#init, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<void> login(String? email, String? password) =>
+  _i4.Future<void> login(String? email, String? password) =>
       (super.noSuchMethod(
             Invocation.method(#login, [email, password]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<void> register(
+  _i4.Future<void> register(
     String? firstName,
     String? lastName,
     String? email,
@@ -83,29 +92,29 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
               email,
               password,
             ]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<String?> uploadImage(_i4.File? imageFile) =>
+  _i4.Future<String?> uploadImage(_i5.File? imageFile) =>
       (super.noSuchMethod(
             Invocation.method(#uploadImage, [imageFile]),
-            returnValue: _i3.Future<String?>.value(),
+            returnValue: _i4.Future<String?>.value(),
           )
-          as _i3.Future<String?>);
+          as _i4.Future<String?>);
 
   @override
-  _i3.Future<String?> uploadImageBytes(List<int>? bytes, String? filename) =>
+  _i4.Future<String?> uploadImageBytes(List<int>? bytes, String? filename) =>
       (super.noSuchMethod(
             Invocation.method(#uploadImageBytes, [bytes, filename]),
-            returnValue: _i3.Future<String?>.value(),
+            returnValue: _i4.Future<String?>.value(),
           )
-          as _i3.Future<String?>);
+          as _i4.Future<String?>);
 
   @override
-  _i3.Future<void> updateProfile({
+  _i4.Future<void> updateProfile({
     String? firstName,
     String? lastName,
     String? avatarUrl,
@@ -128,28 +137,28 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
               #childrenCount: childrenCount,
               #country: country,
             }),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<void> logout() =>
+  _i4.Future<void> logout() =>
       (super.noSuchMethod(
             Invocation.method(#logout, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
@@ -165,4 +174,144 @@ class MockAuthService extends _i1.Mock implements _i2.AuthService {
     Invocation.method(#notifyListeners, []),
     returnValueForMissingStub: null,
   );
+}
+
+/// A class which mocks [ImagePicker].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockImagePicker extends _i1.Mock implements _i7.ImagePicker {
+  MockImagePicker() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.XFile?> pickImage({
+    required _i2.ImageSource? source,
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    _i2.CameraDevice? preferredCameraDevice = _i2.CameraDevice.rear,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pickImage, [], {
+              #source: source,
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #preferredCameraDevice: preferredCameraDevice,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<_i2.XFile?>.value(),
+          )
+          as _i4.Future<_i2.XFile?>);
+
+  @override
+  _i4.Future<List<_i2.XFile>> pickMultiImage({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    int? limit,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pickMultiImage, [], {
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #limit: limit,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
+          )
+          as _i4.Future<List<_i2.XFile>>);
+
+  @override
+  _i4.Future<_i2.XFile?> pickMedia({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pickMedia, [], {
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<_i2.XFile?>.value(),
+          )
+          as _i4.Future<_i2.XFile?>);
+
+  @override
+  _i4.Future<List<_i2.XFile>> pickMultipleMedia({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    int? limit,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pickMultipleMedia, [], {
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #limit: limit,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
+          )
+          as _i4.Future<List<_i2.XFile>>);
+
+  @override
+  _i4.Future<_i2.XFile?> pickVideo({
+    required _i2.ImageSource? source,
+    _i2.CameraDevice? preferredCameraDevice = _i2.CameraDevice.rear,
+    Duration? maxDuration,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pickVideo, [], {
+              #source: source,
+              #preferredCameraDevice: preferredCameraDevice,
+              #maxDuration: maxDuration,
+            }),
+            returnValue: _i4.Future<_i2.XFile?>.value(),
+          )
+          as _i4.Future<_i2.XFile?>);
+
+  @override
+  _i4.Future<List<_i2.XFile>> pickMultiVideo({
+    Duration? maxDuration,
+    int? limit,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pickMultiVideo, [], {
+              #maxDuration: maxDuration,
+              #limit: limit,
+            }),
+            returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
+          )
+          as _i4.Future<List<_i2.XFile>>);
+
+  @override
+  _i4.Future<_i2.LostDataResponse> retrieveLostData() =>
+      (super.noSuchMethod(
+            Invocation.method(#retrieveLostData, []),
+            returnValue: _i4.Future<_i2.LostDataResponse>.value(
+              _FakeLostDataResponse_0(
+                this,
+                Invocation.method(#retrieveLostData, []),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.LostDataResponse>);
+
+  @override
+  bool supportsImageSource(_i2.ImageSource? source) =>
+      (super.noSuchMethod(
+            Invocation.method(#supportsImageSource, [source]),
+            returnValue: false,
+          )
+          as bool);
 }
