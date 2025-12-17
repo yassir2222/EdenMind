@@ -37,7 +37,7 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build and run tests
-        run: ./mvnw -B verify
+        run: ./mvnw -B verify -Dspring.profiles.active=test
 
       - name: SonarCloud analysis
         env:

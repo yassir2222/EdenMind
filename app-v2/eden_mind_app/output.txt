@@ -1,0 +1,104 @@
+Resolving dependencies...
+Downloading packages...
+  camera 0.10.6 (0.11.3 available)
+  characters 1.4.0 (1.4.1 available)
+  flutter_appauth 6.0.7 (11.0.0 available)
+  flutter_appauth_platform_interface 6.0.0 (11.0.0 available)
+  flutter_lints 5.0.0 (6.0.0 available)
+  flutter_markdown 0.7.7+1 (discontinued replaced by flutter_markdown_plus)
+  google_fonts 6.3.2 (6.3.3 available)
+  image_picker_ios 0.8.13+2 (0.8.13+3 available)
+  lints 5.1.1 (6.0.0 available)
+  matcher 0.12.17 (0.12.18 available)
+  material_color_utilities 0.11.1 (0.13.0 available)
+  meta 1.16.0 (1.17.0 available)
+  mgrs_dart 2.0.0 (3.0.0 available)
+  package_info_plus 8.3.1 (9.0.0 available)
+  proj4dart 2.1.0 (3.0.0 available)
+  test_api 0.7.6 (0.7.8 available)
+  unicode 0.3.1 (1.1.8 available)
+Got dependencies!
+1 package is discontinued.
+16 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/meditation/meditation_session_page_test.dart
+00:00 +0: MeditationSessionPage initializes with correct duration from durationSeconds
+00:01 +1: MeditationSessionPage initializes with correct duration from string string
+00:01 +2: MeditationSessionPage defaults to 10 min if parsing fails
+00:01 +3: MeditationSessionPage defaults to 10 min if duration info is missing
+00:01 +4: MeditationSessionPage uses default color if not provided
+00:01 +5: MeditationSessionPage updates UI when position changes
+00:01 +6: MeditationSessionPage updates duration when duration stream fires
+00:02 +7: MeditationSessionPage toggle play calls play when stopped and updates state
+00:02 +8: MeditationSessionPage toggle play calls pause when playing
+00:02 +9: MeditationSessionPage toggle play calls resume when paused and position > 0
+00:02 +10: MeditationSessionPage shows snackbar if no audio url
+00:02 +11: MeditationSessionPage handles play error
+Error playing audio: Play Error
+00:02 +12: MeditationSessionPage toggle mute calls setVolume
+00:02 +13: MeditationSessionPage seek forward adds 10 seconds
+00:03 +14: MeditationSessionPage seek backward subtracts 10 seconds
+00:03 +15: MeditationSessionPage seek backward clamps to zero
+00:03 +16: MeditationSessionPage seek forward clamps to total duration
+00:03 +17: MeditationSessionPage slider seek calls audioPlayer.seek
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <1>
+  Actual: <3>
+Unexpected number of calls
+
+When the exception was thrown, this was the stack:
+#0      fail (package:matcher/src/expect/expect.dart:149:31)
+#1      _expect (package:matcher/src/expect/expect.dart:144:3)
+#2      expect (package:matcher/src/expect/expect.dart:56:3)
+#3      VerificationResult.called (package:mockito/src/mock.dart:1069:5)
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/meditation/meditation_session_page_test.dart:423:41)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  slider seek calls audioPlayer.seek
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +17 -1: MeditationSessionPage slider seek calls audioPlayer.seek [E]
+  Test failed. See exception logs above.
+  The test description was: slider seek calls audioPlayer.seek
+  
+00:04 +17 -1: MeditationSessionPage stop button calls stop and resets position
+00:04 +18 -1: MeditationSessionPage player complete stops playback, notifies, and shows dialog
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TextWidgetFinder:<Found 1 widget with text "Well Done! 🧘": [
+            Text("Well Done! 🧘", dependencies: [DefaultSelectionStyle, DefaultTextStyle,
+MediaQuery]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/meditation/meditation_session_page_test.dart:473:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/yassi/Music/EdenMind/app-v2/eden_mind_app/test/features/meditation/meditation_session_page_test.dart line 473
+The test description was:
+  player complete stops playback, notifies, and shows dialog
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +18 -2: MeditationSessionPage player complete stops playback, notifies, and shows dialog [E]
+  Test failed. See exception logs above.
+  The test description was: player complete stops playback, notifies, and shows dialog
+  
+00:06 +18 -2: MeditationSessionPage player complete dialog back buttons
+00:06 +19 -2: MeditationSessionPage header info button shows details dialog
+00:06 +20 -2: MeditationSessionPage header back button stops player and pops
+00:07 +21 -2: Some tests failed.
