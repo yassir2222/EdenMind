@@ -4,7 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:eden_mind_app/features/mood_log/mood_service.dart';
 
 class AddMoodPage extends StatefulWidget {
-  const AddMoodPage({super.key});
+  final MoodService? moodService;
+  const AddMoodPage({super.key, this.moodService});
 
   @override
   State<AddMoodPage> createState() => _AddMoodPageState();
@@ -54,7 +55,8 @@ class _AddMoodPageState extends State<AddMoodPage> {
   Future<void> _saveMood() async {
     setState(() => _isLoading = true);
     try {
-      await MoodService().saveMood(
+      final service = widget.moodService ?? MoodService();
+      await service.saveMood(
         _selectedMood,
         _selectedActivities.toList(),
         _noteController.text,

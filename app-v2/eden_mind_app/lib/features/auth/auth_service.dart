@@ -9,7 +9,12 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:developer';
 
 class AuthService extends ChangeNotifier {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage;
+  final http.Client _client;
+
+  AuthService({http.Client? client, FlutterSecureStorage? secureStorage})
+    : _client = client ?? http.Client(),
+      _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   // Dynamic Base URL based on Platform
   String get _baseUrl {
@@ -35,7 +40,7 @@ class AuthService extends ChangeNotifier {
       try {
         final userId = decodedToken['id'] ?? decodedToken['userId'];
         if (userId != null) {
-          final response = await http.get(
+          final response = await _client.get(
             Uri.parse('$_baseUrl/../users/$userId'),
             headers: {'Authorization': 'Bearer $token'},
           );
@@ -71,7 +76,7 @@ class AuthService extends ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     try {
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse('$_baseUrl/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
@@ -97,7 +102,7 @@ class AuthService extends ChangeNotifier {
     String password,
   ) async {
     try {
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse('$_baseUrl/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
@@ -147,7 +152,7 @@ class AuthService extends ChangeNotifier {
         await http.MultipartFile.fromPath('file', imageFile.path),
       );
 
-      final streamedResponse = await request.send();
+      final streamedResponse = await _client.send(request);
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
@@ -188,7 +193,7 @@ class AuthService extends ChangeNotifier {
         http.MultipartFile.fromBytes('file', bytes, filename: filename),
       );
 
-      final streamedResponse = await request.send();
+      final streamedResponse = await _client.send(request);
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
@@ -233,7 +238,7 @@ class AuthService extends ChangeNotifier {
       }
 
       // Fetch current user details first
-      final userResponse = await http.get(
+      final userResponse = await _client.get(
         Uri.parse('$_baseUrl/../users/$userId'),
         headers: {'Authorization': 'Bearer $token'},
       );
@@ -259,7 +264,7 @@ class AuthService extends ChangeNotifier {
       if (childrenCount != null) finalData['childrenCount'] = childrenCount;
       if (country != null) finalData['country'] = country;
 
-      final response = await http.put(
+      final response = await _client.put(
         Uri.parse('$_baseUrl/../users/$userId'),
         headers: {
           'Content-Type': 'application/json',

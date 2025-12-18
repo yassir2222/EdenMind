@@ -6,23 +6,27 @@ import 'notification_service.dart';
 enum NotificationType { reminder, achievement, tip, update, meditation }
 
 class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({super.key});
+  final NotificationService? notificationService;
+
+  const NotificationsPage({super.key, this.notificationService});
 
   @override
   State<NotificationsPage> createState() => _NotificationsPageState();
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  final NotificationService _service = NotificationService();
-  List<Map<String, dynamic>> _notifications = [];
-  bool _isLoading = true;
-  String? _error;
+  late final NotificationService _service;
 
   @override
   void initState() {
     super.initState();
+    _service = widget.notificationService ?? NotificationService();
     _loadNotifications();
   }
+
+  List<Map<String, dynamic>> _notifications = [];
+  bool _isLoading = true;
+  String? _error;
 
   Future<void> _loadNotifications() async {
     setState(() {

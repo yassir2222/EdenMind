@@ -6,7 +6,9 @@ import 'meditation_detail_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class MeditationPage extends StatefulWidget {
-  const MeditationPage({super.key});
+  final http.Client? httpClient;
+
+  const MeditationPage({super.key, this.httpClient});
 
   @override
   State<MeditationPage> createState() => _MeditationPageState();
@@ -55,7 +57,8 @@ class _MeditationPageState extends State<MeditationPage> {
     });
 
     try {
-      final response = await http.get(
+      final client = widget.httpClient ?? http.Client();
+      final response = await client.get(
         Uri.parse('${AppConfig.baseUrl}/music/tracks'),
       );
 

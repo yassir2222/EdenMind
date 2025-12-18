@@ -7,14 +7,18 @@ import 'package:eden_mind_app/config/app_config.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 
 class ProgressPage extends StatefulWidget {
-  const ProgressPage({super.key});
+  final http.Client? client;
+  final FlutterSecureStorage? secureStorage;
+
+  const ProgressPage({super.key, this.client, this.secureStorage});
 
   @override
   State<ProgressPage> createState() => _ProgressPageState();
 }
 
 class _ProgressPageState extends State<ProgressPage> {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  late final FlutterSecureStorage _secureStorage;
+  late final http.Client _client;
   Map<String, dynamic>? _progressData;
   bool _isLoading = true;
   String? _error;
@@ -22,6 +26,8 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   void initState() {
     super.initState();
+    _secureStorage = widget.secureStorage ?? const FlutterSecureStorage();
+    _client = widget.client ?? http.Client();
     _loadProgress();
   }
 
@@ -37,7 +43,7 @@ class _ProgressPageState extends State<ProgressPage> {
         throw Exception('Not authenticated');
       }
 
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse('${AppConfig.baseUrl}/progress'),
         headers: {'Authorization': 'Bearer $token'},
       );

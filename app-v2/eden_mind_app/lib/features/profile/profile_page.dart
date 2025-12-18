@@ -8,7 +8,9 @@ import 'progress_page.dart';
 import 'dart:developer';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final ImagePicker? imagePicker;
+
+  const ProfilePage({super.key, this.imagePicker});
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +253,7 @@ class ProfilePage extends StatelessWidget {
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
-      final picker = ImagePicker();
+      final picker = imagePicker ?? ImagePicker();
       final pickedFile = await picker.pickImage(source: source);
 
       if (pickedFile != null) {
