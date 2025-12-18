@@ -43,4 +43,16 @@ public class ChatPage extends BasePage {
             return false;
         }
     }
+
+    public boolean waitForBotResponse() {
+        try {
+            // Bot messages have 'rounded-tl-none' class (top-left corner not rounded)
+            return wait.until(d -> {
+                List<WebElement> botMessages = d.findElements(org.openqa.selenium.By.cssSelector(".rounded-tl-none"));
+                return !botMessages.isEmpty();
+            });
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
