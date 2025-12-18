@@ -40,4 +40,13 @@ public class MoodPage extends BasePage {
         openLogForm();
         return moodButtons.size();
     }
+
+    public void selectFirstMood() {
+        openLogForm();
+        if (!moodButtons.isEmpty()) {
+            moodButtons.get(0).click();
+        } else {
+            throw new RuntimeException("No mood buttons found to click!");
+        }
+    }
 }

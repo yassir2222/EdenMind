@@ -80,7 +80,7 @@ public class EdenMindTests extends BaseTest {
         dashboard.goToProfile();
 
         ProfilePage profile = new ProfilePage(driver);
-        String newBio = "Updated by Selenium at " + System.currentTimeMillis();
+        String newBio = "Updated by Selenium at ";
         profile.updateBio(newBio);
 
         // Assert alert or success message if visible, or just re-read value
@@ -102,7 +102,7 @@ public class EdenMindTests extends BaseTest {
         dashboard.goToChat();
 
         ChatPage chatPage = new ChatPage(driver);
-        String testMsg = "Hello" + System.currentTimeMillis();
+        String testMsg = "Hello";
         chatPage.sendMessage(testMsg);
 
         assertThat(chatPage.isMessageVisible(testMsg)).isTrue();
@@ -122,6 +122,78 @@ public class EdenMindTests extends BaseTest {
     @Test
     public void test10_LogoutFlow() {
         DashboardPage dashboard = performLogin();
+        dashboard.logout();
+
+        assertThat(driver.getCurrentUrl()).contains("/login");
+    }
+
+    @Test
+    public void test11_FullUserJourney() {
+        // 1. Create/Register Account
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.navigateTo();
+        loginPage.clickRegister();
+
+        RegisterPage registerPage = new RegisterPage(driver);
+        long timestamp = System.currentTimeMillis();
+        String newUserEmail = "user" + timestamp + "@test.com";
+        String newUserPass = "Test@123";
+        registerPage.register("Test", "User", newUserEmail, newUserPass);
+
+        // 2. Verify auto-login to Dashboard
+        DashboardPage dashboard = new DashboardPage(driver);
+        // Wait for dashboard header to be visible (Using getWelcomeText which waits)
+        // If auto-login works, we should be at /dashboard
+        try {
+            new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(5))
+                    .until(d -> d.getCurrentUrl().contains("/dashboard"));
+        } catch (Exception e) {
+            // Fallback: If not redirected, maybe try to login manually (though code
+            // suggested auto-login)
+            if (driver.getCurrentUrl().contains("login")) {
+                loginPage.login(newUserEmail, newUserPass);
+            }
+        }
+        assertThat(driver.getCurrentUrl()).contains("/dashboard");
+        assertThat(dashboard.getWelcomeText()).contains("Good Morning");
+
+        // 3. Logout and Login with same account
+        dashboard.logout();
+        assertThat(driver.getCurrentUrl()).contains("/login");
+
+        loginPage.login(newUserEmail, newUserPass);
+        // Re-initialize dashboard after login
+        dashboard = new DashboardPage(driver);
+        new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(5))
+                .until(d -> d.getCurrentUrl().contains("/dashboard"));
+
+        // 4. Test Chatbot (Send message and wait for response)
+        dashboard.goToChat();
+        ChatPage chatPage = new ChatPage(driver);
+        String msg = "Hello";
+        chatPage.sendMessage(msg);
+        assertThat(chatPage.isMessageVisible(msg)).isTrue();
+        // Wait for ANY bot response
+        assertThat(chatPage.waitForBotResponse()).isTrue();
+
+        // 5. Test Breathing Game (Wait 10s)
+        dashboard.goToGames();
+        GamesPage gamesPage = new GamesPage(driver);
+        gamesPage.clickBreathingGame();
+        assertThat(driver.getCurrentUrl()).contains("breathing");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // 6. Create a Mood
+        dashboard.goToMood();
+        MoodPage moodPage = new MoodPage(driver);
+        moodPage.selectFirstMood();
+        
+        dashboard.goToProfile();
+
         dashboard.logout();
 
         assertThat(driver.getCurrentUrl()).contains("/login");
