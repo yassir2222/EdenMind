@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'chat_service.dart';
 import 'dart:ui'; // For BackdropFilter
 import 'package:provider/provider.dart';
