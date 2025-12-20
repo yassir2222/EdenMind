@@ -17,6 +17,7 @@ class _SignupPageState extends State<SignupPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -175,7 +176,7 @@ class _SignupPageState extends State<SignupPage> {
                     // Password Field
                     TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         hintText: 'Password',
                         filled: true,
@@ -185,6 +186,17 @@ class _SignupPageState extends State<SignupPage> {
                           borderSide: BorderSide.none,
                         ),
                         contentPadding: const EdgeInsets.all(20),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            color: const Color(0xFFA1A4B2),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -248,8 +260,8 @@ class _SignupPageState extends State<SignupPage> {
                     ),
 
                     const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
                       children: [
                         Text(
                           'ALREADY HAVE AN ACCOUNT? ',

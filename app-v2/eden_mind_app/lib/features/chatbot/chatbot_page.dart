@@ -5,6 +5,8 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'chat_service.dart';
 import 'dart:ui'; // For BackdropFilter
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'elevenlabs_tts_service.dart';
 
 class ChatbotPage extends StatefulWidget {
   final String? initialMood;
@@ -28,9 +30,18 @@ class _ChatbotPageState extends State<ChatbotPage> {
   bool _isLoading = false;
   bool _isMessagesLoading = false;
 
+  // Voice chat state
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  final ElevenLabsTtsService _elevenLabsTts = ElevenLabsTtsService();
+  bool _isListening = false;
+  bool _voiceModeEnabled = false;
+  bool _speechAvailable = false;
+  bool _isSpeaking = false;
+
   @override
   void initState() {
     super.initState();
+    _initVoice();
     // Use mood-aware message if provided, otherwise default greeting
     if (widget.initialMessage != null && widget.initialMood != null) {
       _messages.add({
@@ -46,6 +57,71 @@ class _ChatbotPageState extends State<ChatbotPage> {
       });
     }
     _fetchConversations();
+  }
+
+  Future<void> _initVoice() async {
+    _speechAvailable = await _speech.initialize(
+      onStatus: (status) => debugPrint('Speech status: $status'),
+      onError: (error) => debugPrint('Speech error: $error'),
+    );
+    
+    // Set up ElevenLabs completion handler
+    _elevenLabsTts.onSpeakingComplete = () {
+      if (mounted) setState(() => _isSpeaking = false);
+    };
+    
+    setState(() {});
+  }
+
+  Future<void> _speak(String text) async {
+    if (_voiceModeEnabled) {
+      // Clean markdown for speech
+      final cleanText = text
+          .replaceAll(RegExp(r'\*\*|\*|__|_|`|#'), '')
+          .replaceAll(RegExp(r'\[.*?\]\(.*?\)'), '')
+          .replaceAll(RegExp(r'\n+'), ' ');
+      
+      setState(() => _isSpeaking = true);
+      
+      await _elevenLabsTts.speak(cleanText);
+    }
+  }
+
+  Future<void> _stopSpeaking() async {
+    await _elevenLabsTts.stop();
+    setState(() => _isSpeaking = false);
+  }
+
+  void _startListening() async {
+    if (!_speechAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Speech recognition not available')),
+      );
+      return;
+    }
+
+    await _stopSpeaking();
+    setState(() => _isListening = true);
+
+    await _speech.listen(
+      onResult: (result) {
+        if (result.finalResult) {
+          _controller.text = result.recognizedWords;
+          setState(() => _isListening = false);
+          if (result.recognizedWords.isNotEmpty) {
+            _sendMessage();
+          }
+        }
+      },
+      listenFor: const Duration(seconds: 30),
+      pauseFor: const Duration(seconds: 3),
+      localeId: 'en_US',
+    );
+  }
+
+  void _stopListening() async {
+    await _speech.stop();
+    setState(() => _isListening = false);
   }
 
   Future<void> _fetchConversations() async {
@@ -132,14 +208,16 @@ class _ChatbotPageState extends State<ChatbotPage> {
       );
 
       if (mounted) {
+        final botResponse = result['answer'] as String;
         setState(() {
-          _messages.add({'text': result['answer'], 'isBot': true});
+          _messages.add({'text': botResponse, 'isBot': true});
           _isLoading = false;
           _currentConversationId =
               result['conversationId']; // Ensure ID is linked for subsequent messages
         });
         _scrollToBottom(); // Scroll after new message
         _fetchConversations(); // Refresh list to show updated timestamp/order or new chat
+        _speak(botResponse); // Speak the response if voice mode enabled
       }
     } catch (e) {
       if (mounted) {
@@ -631,61 +709,153 @@ class _ChatbotPageState extends State<ChatbotPage> {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: EdenMindTheme.backgroundColor,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(Icons.add, color: Colors.grey),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Container(
-              height: 48,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: EdenMindTheme.backgroundColor,
-                borderRadius: BorderRadius.circular(16),
+          // Voice mode toggle row with stop button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                _voiceModeEnabled ? Icons.volume_up : Icons.volume_off,
+                size: 16,
+                color: _voiceModeEnabled ? EdenMindTheme.primaryColor : Colors.grey[400],
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      onSubmitted: (_) => _sendMessage(),
-                      decoration: InputDecoration(
-                        hintText: 'Type your message...',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14,
+              const SizedBox(width: 8),
+              Text(
+                'Voice Response',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[500],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Switch(
+                value: _voiceModeEnabled,
+                onChanged: (value) {
+                  setState(() => _voiceModeEnabled = value);
+                  if (!value) _stopSpeaking();
+                },
+                activeColor: EdenMindTheme.primaryColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              if (_isSpeaking) ...[
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: _stopSpeaking,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.stop, size: 14, color: Colors.red),
+                        SizedBox(width: 4),
+                        Text(
+                          'Stop',
+                          style: TextStyle(fontSize: 12, color: Colors.red, fontWeight: FontWeight.w600),
                         ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                        filled: false,
-                      ),
+                      ],
                     ),
                   ),
-                  Icon(Icons.mood, color: Colors.grey[400]),
-                ],
-              ),
-            ),
+                ),
+              ],
+            ],
           ),
-          const SizedBox(width: 12),
-          GestureDetector(
-            onTap: _sendMessage,
-            child: Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: EdenMindTheme.primaryColor,
-                borderRadius: BorderRadius.circular(16),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              // Microphone button
+              GestureDetector(
+                onTap: _isListening ? _stopListening : _startListening,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: _isListening
+                        ? Colors.red
+                        : EdenMindTheme.backgroundColor,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: _isListening
+                        ? [
+                            BoxShadow(
+                              color: Colors.red.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Icon(
+                    _isListening ? Icons.stop : Icons.mic,
+                    color: _isListening ? Colors.white : Colors.grey,
+                  ),
+                ),
               ),
-              child: const Icon(Icons.send_rounded, color: Colors.white),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  height: 48,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: EdenMindTheme.backgroundColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          onSubmitted: (_) => _sendMessage(),
+                          decoration: InputDecoration(
+                            hintText: _isListening
+                                ? 'Listening...'
+                                : 'Type or tap mic...',
+                            hintStyle: TextStyle(
+                              color: _isListening
+                                  ? EdenMindTheme.primaryColor
+                                  : Colors.grey[400],
+                              fontSize: 14,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            filled: false,
+                          ),
+                        ),
+                      ),
+                      if (_isListening)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      else
+                        Icon(Icons.mood, color: Colors.grey[400]),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              GestureDetector(
+                onTap: _sendMessage,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: EdenMindTheme.primaryColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(Icons.send_rounded, color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ],
       ),

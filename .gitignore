@@ -39,3 +39,7 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+# JMeter results (generated files)
+*.jtl
+Backend/jmeter/report*/
+Backend/jmeter/prometheus_demo_result.jtl
