@@ -7,6 +7,8 @@ import 'serenity_tower_page.dart';
 import 'emotion_mosaic_page.dart';
 import 'grounding_inventory_page.dart';
 import 'gratitude_jar_page.dart';
+import 'puzzle_game_page.dart';
+import 'memory_game_page.dart';
 
 class TherapeuticGamesPage extends StatelessWidget {
   const TherapeuticGamesPage({super.key});
@@ -164,6 +166,23 @@ class TherapeuticGamesPage extends StatelessWidget {
                   );
                 },
               ),
+              const SizedBox(height: 16),
+              _buildGameCard(
+                title: 'Memory Match',
+                subtitle: 'Brain Training',
+                imageUrl:
+                    'https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=400',
+                aspectRatio: 1.0,
+                backgroundColor: const Color(0xFFE8D7FF),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MemoryGamePage(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -219,6 +238,23 @@ class TherapeuticGamesPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const GratitudeJarPage(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildGameCard(
+                title: 'Puzzle Zen',
+                subtitle: 'Focus & Relaxation',
+                imageUrl:
+                    'https://images.unsplash.com/photo-1494059980473-813e73ee784b?w=400',
+                aspectRatio: 3 / 4,
+                backgroundColor: const Color(0xFFE8F5E9),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PuzzleGamePage(),
                     ),
                   );
                 },
