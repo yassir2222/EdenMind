@@ -29,7 +29,11 @@ public class FileUploadController {
             }
 
             // Generate unique filename
-            String originalFilename = org.springframework.util.StringUtils.cleanPath(file.getOriginalFilename());
+            String rawFilename = file.getOriginalFilename();
+            if (rawFilename == null) {
+                throw new IOException("Filename cannot be null");
+            }
+            String originalFilename = org.springframework.util.StringUtils.cleanPath(rawFilename);
             if (originalFilename.contains("..")) {
                 throw new IOException("Invalid filename: " + originalFilename);
             }
