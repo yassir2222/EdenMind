@@ -58,6 +58,7 @@ void main() {
       // Or just verify no error on tap.
 
       // Cleanup
+      await tester.pump(const Duration(seconds: 1));
       await tester.pumpWidget(const SizedBox());
     });
 

@@ -212,199 +212,203 @@ class _GroundingInventoryPageState extends State<GroundingInventoryPage>
   }
 
   Widget _buildIntroScreen() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Animated circles representing the 5 senses
-            SizedBox(
-              height: 180,
-              width: 180,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Center circle
-                  Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: primaryColor.withValues(alpha: 0.3),
-                          blurRadius: 20,
-                          spreadRadius: 5,
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Animated circles representing the 5 senses
+              SizedBox(
+                height: 180,
+                width: 180,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Center circle
+                    Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: primaryColor.withValues(alpha: 0.3),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.self_improvement_rounded,
+                          size: 32,
+                          color: primaryColor,
                         ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.self_improvement_rounded,
-                        size: 32,
-                        color: primaryColor,
                       ),
                     ),
-                  ),
-                  // Surrounding senses circles
-                  ...List.generate(5, (index) {
-                    final step = _senseSteps[index];
+                    // Surrounding senses circles
+                    ...List.generate(5, (index) {
+                      final step = _senseSteps[index];
 
-                    return AnimatedBuilder(
-                      animation: _pulseController,
-                      builder: (context, child) {
-                        final scale = 1.0 + (_pulseController.value * 0.1);
-                        // Position in a circle
-                        final positions = [
-                          const Offset(0, -60), // Top
-                          const Offset(57, -18), // Top Right
-                          const Offset(35, 48), // Bottom Right
-                          const Offset(-35, 48), // Bottom Left
-                          const Offset(-57, -18), // Top Left
-                        ];
+                      return AnimatedBuilder(
+                        animation: _pulseController,
+                        builder: (context, child) {
+                          final scale = 1.0 + (_pulseController.value * 0.1);
+                          // Position in a circle
+                          final positions = [
+                            const Offset(0, -60), // Top
+                            const Offset(57, -18), // Top Right
+                            const Offset(35, 48), // Bottom Right
+                            const Offset(-35, 48), // Bottom Left
+                            const Offset(-57, -18), // Top Left
+                          ];
 
-                        return Positioned(
-                          left: 90 + positions[index].dx - 22,
-                          top: 90 + positions[index].dy - 22,
-                          child: Transform.scale(
-                            scale: scale,
-                            child: Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: step.gradient),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: step.color.withValues(alpha: 0.4),
-                                    blurRadius: 12,
-                                    spreadRadius: 2,
+                          return Positioned(
+                            left: 90 + positions[index].dx - 22,
+                            top: 90 + positions[index].dy - 22,
+                            child: Transform.scale(
+                              scale: scale,
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: step.gradient,
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${step.count}',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: step.color.withValues(alpha: 0.4),
+                                      blurRadius: 12,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${step.count}',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+                          );
+                        },
+                      );
+                    }),
+                  ],
+                ),
+              ).animate().fadeIn().scale(),
+
+              const SizedBox(height: 40),
+
+              Text(
+                'Technique 5-4-3-2-1',
+                style: GoogleFonts.poppins(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
+                textAlign: TextAlign.center,
+              ).animate().fadeIn(delay: 300.ms),
+
+              const SizedBox(height: 16),
+
+              Text(
+                'Un exercice d\'ancrage sensoriel pour calmer l\'anxiété et vous reconnecter au moment présent.',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: subTextColor,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ).animate().fadeIn(delay: 500.ms),
+
+              const SizedBox(height: 24),
+
+              // Sense labels
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: _senseSteps.map((step) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: step.color.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: step.color.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(step.icon, color: step.color, size: 16),
+                        const SizedBox(width: 6),
+                        Text(
+                          step.sense,
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: step.color,
                           ),
-                        );
-                      },
-                    );
-                  }),
-                ],
-              ),
-            ).animate().fadeIn().scale(),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ).animate().fadeIn(delay: 700.ms),
 
-            const SizedBox(height: 40),
+              const SizedBox(height: 48),
 
-            Text(
-              'Technique 5-4-3-2-1',
-              style: GoogleFonts.poppins(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: textColor,
-              ),
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: 300.ms),
-
-            const SizedBox(height: 16),
-
-            Text(
-              'Un exercice d\'ancrage sensoriel pour calmer l\'anxiété et vous reconnecter au moment présent.',
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                color: subTextColor,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(delay: 500.ms),
-
-            const SizedBox(height: 24),
-
-            // Sense labels
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              alignment: WrapAlignment.center,
-              children: _senseSteps.map((step) {
-                return Container(
+              GestureDetector(
+                onTap: _startExercise,
+                child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                    horizontal: 48,
+                    vertical: 16,
                   ),
                   decoration: BoxDecoration(
-                    color: step.color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: step.color.withValues(alpha: 0.3),
-                    ),
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryColor.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(step.icon, color: step.color, size: 16),
-                      const SizedBox(width: 6),
                       Text(
-                        step.sense,
+                        'Commencer',
                         style: GoogleFonts.poppins(
-                          fontSize: 11,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: step.color,
+                          color: Colors.white,
                         ),
                       ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.play_arrow_rounded, color: Colors.white),
                     ],
                   ),
-                );
-              }).toList(),
-            ).animate().fadeIn(delay: 700.ms),
-
-            const SizedBox(height: 48),
-
-            GestureDetector(
-              onTap: _startExercise,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 48,
-                  vertical: 16,
                 ),
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: primaryColor.withValues(alpha: 0.4),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Commencer',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.play_arrow_rounded, color: Colors.white),
-                  ],
-                ),
-              ),
-            ).animate().fadeIn(delay: 900.ms).slideY(begin: 0.3),
-          ],
+              ).animate().fadeIn(delay: 900.ms).slideY(begin: 0.3),
+            ],
+          ),
         ),
       ),
     );

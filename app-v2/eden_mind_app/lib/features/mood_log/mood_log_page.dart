@@ -96,7 +96,7 @@ class _MoodLogPageState extends State<MoodLogPage> {
                     ),
                   );
                   if (result == true) {
-                    _loadMoods(); // Refresh list
+                     await _loadMoods(); // Refresh list
                   }
                 },
                 backgroundColor: EdenMindTheme.primaryColor,

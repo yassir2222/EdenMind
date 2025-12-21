@@ -79,7 +79,7 @@ class _BreathingGamePageState extends State<BreathingGamePage>
     setState(() {
       _isInhaling = true;
     });
-    _breathingController.forward();
+    await _breathingController.forward();
     // Play inhale sound
     try {
       await _audioPlayer.stop();
@@ -99,7 +99,7 @@ class _BreathingGamePageState extends State<BreathingGamePage>
         _score += 100;
       }
     });
-    _breathingController.reverse();
+    await _breathingController.reverse();
     // Play exhale sound
     try {
       await _audioPlayer.stop();

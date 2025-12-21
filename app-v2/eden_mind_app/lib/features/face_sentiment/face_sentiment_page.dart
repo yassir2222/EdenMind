@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:typed_data';
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
-import 'dart:ui_web' as ui;
+import 'package:universal_html/html.dart' as html;
+import 'package:eden_mind_app/core/utils/web_utils.dart'; // Import the helper
+// import 'dart:ui_web' as ui; // Removed direct import
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -67,10 +68,7 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       ..style.transform = 'scaleX(-1)'; // Mirror effect
 
     // Register the platform view
-    ui.platformViewRegistry.registerViewFactory(
-      _viewId,
-      (int viewId) => _videoElement!,
-    );
+    WebUtils.registerViewFactory(_viewId, (int viewId) => _videoElement!);
   }
 
   @override
@@ -129,7 +127,7 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
 
   void _stopCamera() {
     if (_mediaStream != null) {
-      _mediaStream!.getTracks().forEach((track) => track.stop());
+      _mediaStream!.getTracks().forEach((track) => (track as dynamic).stop());
       _mediaStream = null;
     }
     if (_videoElement != null) {
@@ -151,8 +149,8 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
     try {
       // Create a canvas to capture the video frame
       final canvas = html.CanvasElement(
-        width: _videoElement!.videoWidth,
-        height: _videoElement!.videoHeight,
+        width: (_videoElement as dynamic).videoWidth,
+        height: (_videoElement as dynamic).videoHeight,
       );
       final ctx = canvas.context2D;
 
@@ -168,7 +166,7 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
 
       final completer = Completer<Uint8List>();
       reader.onLoadEnd.listen((_) {
-        final result = reader.result as List<int>;
+        final result = reader.result! as List<int>;
         completer.complete(Uint8List.fromList(result));
       });
       reader.readAsArrayBuffer(blob);
@@ -188,7 +186,7 @@ class _FaceSentimentPageState extends State<FaceSentimentPage>
       });
 
       // Trigger result animation
-      _resultController.forward(from: 0);
+      await _resultController.forward(from: 0);
 
       // Save mood to backend
       await _saveMood(result);

@@ -47,7 +47,7 @@ class _SignupPageState extends State<SignupPage> {
         _passwordController.text.trim(),
       );
       if (mounted && context.read<AuthService>().isAuthenticated) {
-        Navigator.of(context).pushAndRemoveUntil(
+        await Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const DashboardPage()),
           (route) => false,
         );

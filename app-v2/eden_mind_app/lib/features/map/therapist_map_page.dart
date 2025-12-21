@@ -67,9 +67,11 @@ class _TherapistMapPageState extends State<TherapistMapPage> {
       debugPrint("Error initializing map: $e");
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Could not get location: $e")));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Could not get location: $e")));
+        });
       }
     }
   }
@@ -133,7 +135,7 @@ class _TherapistMapPageState extends State<TherapistMapPage> {
                   return Marker(
                     point: therapist.location,
                     width: 60,
-                    height: 60,
+                    height: 80,
                     child: GestureDetector(
                       onTap: () {
                         setState(() {

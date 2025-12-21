@@ -139,7 +139,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
               result['conversationId']; // Ensure ID is linked for subsequent messages
         });
         _scrollToBottom(); // Scroll after new message
-        _fetchConversations(); // Refresh list to show updated timestamp/order or new chat
+        await _fetchConversations(); // Refresh list to show updated timestamp/order or new chat
       }
     } catch (e) {
       if (mounted) {
@@ -225,12 +225,14 @@ class _ChatbotPageState extends State<ChatbotPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Conversations',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: EdenMindTheme.textColor,
+                        Expanded(
+                          child: Text(
+                            'Conversations',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: EdenMindTheme.textColor,
+                            ),
                           ),
                         ),
                         IconButton(
@@ -420,7 +422,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
         if (_currentConversationId == id) {
           _startNewChat();
         } else {
-          _fetchConversations();
+          await _fetchConversations();
         }
       } catch (e) {
         debugPrint('Error deleting conversation: $e');

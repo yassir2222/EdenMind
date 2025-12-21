@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('GroundingInventoryPage Tests', () {
     testWidgets('full walk-through', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+
       await tester.pumpWidget(
         const MaterialApp(home: GroundingInventoryPage()),
       );
@@ -83,6 +86,9 @@ void main() {
 
       // Back to Intro
       expect(find.text('Technique 5-4-3-2-1'), findsOneWidget);
+
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
     });
   });
 }

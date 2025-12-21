@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         _passwordController.text.trim(),
       );
       if (mounted && context.read<AuthService>().isAuthenticated) {
-        Navigator.of(context).pushReplacement(
+        await Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const DashboardPage()),
         );
       }

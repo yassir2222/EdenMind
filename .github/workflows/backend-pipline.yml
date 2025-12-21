@@ -2,9 +2,7 @@ name: Backend Test
 
 on:
   push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+    branches: ["master"]
   workflow_dispatch:
 
 jobs:

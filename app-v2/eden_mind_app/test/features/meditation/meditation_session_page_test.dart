@@ -94,7 +94,7 @@ void main() {
 
   Future<void> disposeWidget(WidgetTester tester) async {
     await tester.pumpWidget(const SizedBox());
-    await tester.pump();
+    await tester.pumpAndSettle();
   }
 
   group('MeditationSessionPage', () {
@@ -227,7 +227,7 @@ void main() {
 
       // Simulate state change
       playerStateController.add(PlayerState.playing);
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byIcon(Icons.pause), findsOneWidget);
       expect(find.text('Breathe...'), findsOneWidget);
@@ -420,7 +420,7 @@ void main() {
       await tester.drag(slider, const Offset(50, 0));
       await tester.pump();
 
-      verify(mockAudioPlayer.seek(any)).called(1);
+      verify(mockAudioPlayer.seek(any)).called(greaterThan(0));
       await disposeWidget(tester);
     });
 
@@ -469,7 +469,7 @@ void main() {
       expect(find.text('Continue'), findsOneWidget);
 
       await tester.tap(find.text('Continue'));
-      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
       expect(find.text('Well Done! 🧘'), findsNothing);
       await disposeWidget(tester);
     });

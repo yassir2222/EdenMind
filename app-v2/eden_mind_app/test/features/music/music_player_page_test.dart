@@ -28,10 +28,10 @@ void main() {
   setUp(() {
     mockAudioPlayer = MockAudioPlayer();
 
-    positionController = StreamController<Duration>.broadcast();
-    durationController = StreamController<Duration>.broadcast();
-    playerStateController = StreamController<PlayerState>.broadcast();
-    completeController = StreamController<void>.broadcast();
+    positionController = StreamController<Duration>.broadcast(sync: true);
+    durationController = StreamController<Duration>.broadcast(sync: true);
+    playerStateController = StreamController<PlayerState>.broadcast(sync: true);
+    completeController = StreamController<void>.broadcast(sync: true);
 
     // Stub streams
     when(
@@ -114,12 +114,16 @@ void main() {
       // Simulate playing
       playerStateController.add(PlayerState.playing);
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.pause), findsOneWidget);
 
       // Tap Pause
       await tester.tap(find.byIcon(Icons.pause));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
 
       verify(mockAudioPlayer.pause()).called(1);
     });
@@ -134,12 +138,15 @@ void main() {
 
       // Simulate duration
       durationController.add(const Duration(minutes: 3));
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
       expect(find.text('03:00'), findsOneWidget);
 
       // Simulate position
       positionController.add(const Duration(minutes: 1, seconds: 30));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
       expect(find.text('01:30'), findsOneWidget);
     });
   });

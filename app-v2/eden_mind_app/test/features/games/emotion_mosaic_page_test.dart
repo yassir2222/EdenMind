@@ -57,6 +57,9 @@ void main() {
 
       // Back to Intro
       expect(find.text('Exprimez vos émotions'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpWidget(const SizedBox()); // Cleanup to cancel timers
     });
   });
 }
