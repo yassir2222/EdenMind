@@ -29,7 +29,11 @@ public class FileUploadController {
             }
 
             // Generate unique filename
-            String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            String originalFilename = org.springframework.util.StringUtils.cleanPath(file.getOriginalFilename());
+            if (originalFilename.contains("..")) {
+                throw new IOException("Invalid filename: " + originalFilename);
+            }
+            String filename = UUID.randomUUID().toString() + "_" + originalFilename;
             Path filePath = uploadPath.resolve(filename);
 
             // Save file
