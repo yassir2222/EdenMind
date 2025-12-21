@@ -1,11 +1,9 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:eden_mind_app/features/notifications/notification_service.dart';
-import 'dart:convert';
 
 import 'notification_service_test.mocks.dart';
 
@@ -27,8 +25,6 @@ void main() {
   });
 
   group('NotificationService Tests', () {
-    const testToken = 'test_token_123';
-
     test('NotificationService can be instantiated', () {
       expect(notificationService, isNotNull);
     });
