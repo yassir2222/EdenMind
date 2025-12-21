@@ -46,6 +46,7 @@ jobs:
           path: './Backend'
           format: 'HTML'
           out: 'reports'
+          args: '--disableCentral --noupdate'
 
       - name: Upload OWASP Report
         uses: actions/upload-artifact@v4
