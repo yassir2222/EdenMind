@@ -28,14 +28,14 @@ import { UserService } from '../../../core/services/user.service';
       <!-- Quick Actions (Static for now, but linked) -->
       <div>
          <div class="flex items-center gap-2 mb-4">
-            <span class="text-eden-mint font-bold text-xl">⚡</span>
+            <span class="material-icons text-eden-mint font-bold text-xl">bolt</span>
             <h3 class="text-xl font-bold text-gray-900">Quick Actions</h3>
          </div>
          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Mood Check-in -->
             <div class="bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-soft transition border border-transparent hover:border-gray-100 group cursor-pointer" routerLink="mood">
                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-sm mb-4 text-eden-mint">
-                  🙂
+                  <span class="material-icons">mood</span>
                </div>
                <h4 class="font-bold text-lg text-gray-900 mb-2">Daily Mood Check-in</h4>
                <p class="text-gray-500 text-sm mb-4">Track how you are feeling today to get personalized advice.</p>
@@ -47,7 +47,7 @@ import { UserService } from '../../../core/services/user.service';
             <!-- Resume Session -->
             <div class="bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-soft transition border border-transparent hover:border-gray-100 group cursor-pointer" routerLink="chat">
                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-sm mb-4 text-blue-400">
-                  💬
+                  <span class="material-icons">chat</span>
                </div>
                <h4 class="font-bold text-lg text-gray-900 mb-2">Resume Session</h4>
                <p class="text-gray-500 text-sm mb-4">Continue your conversation with Eden from where you left off.</p>
@@ -59,7 +59,7 @@ import { UserService } from '../../../core/services/user.service';
             <!-- Breathe -->
             <div class="bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-soft transition border border-transparent hover:border-gray-100 group cursor-pointer" routerLink="games">
                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-sm mb-4 text-purple-400">
-                  💨
+                  <span class="material-icons">air</span>
                </div>
                <h4 class="font-bold text-lg text-gray-900 mb-2">Breathe</h4>
                <p class="text-gray-500 text-sm mb-4">Take a moment to center yourself with a 2-minute exercise.</p>
@@ -109,7 +109,7 @@ import { UserService } from '../../../core/services/user.service';
              <div class="absolute top-0 right-0 w-32 h-32 bg-eden-mint opacity-10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
              
              <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-sm mb-6 z-10 text-eden-mint">
-                💡
+                <span class="material-icons">lightbulb</span>
              </div>
              <h3 class="font-bold text-lg text-gray-900 mb-2 z-10">Daily Insight</h3>
              <blockquote class="italic text-gray-600 mb-4 z-10">"Peace comes from within. Do not seek it without."</blockquote>

@@ -25,7 +25,7 @@ import { RouterLink } from '@angular/router';
           @if (errorMessage()) {
             <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-xl animate-fade-in">
               <div class="flex items-center">
-                <span class="text-red-500 text-xl mr-3">⚠️</span>
+                <span class="material-icons text-red-500 text-xl mr-3">warning</span>
                 <p class="text-sm text-red-700 font-bold">{{ errorMessage() }}</p>
               </div>
             </div>
@@ -38,7 +38,7 @@ import { RouterLink } from '@angular/router';
                 <input formControlName="email" type="email" 
                        class="w-full px-4 py-3 pl-10 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-eden-mint focus:border-transparent outline-none transition" 
                        placeholder="you@example.com">
-                <span class="absolute left-3 top-3.5 text-gray-400">📧</span>
+                <span class="material-icons absolute left-3 top-3.5 text-gray-400 text-lg">email</span>
               </div>
             </div>
 
@@ -51,7 +51,7 @@ import { RouterLink } from '@angular/router';
                 <input formControlName="password" type="password" 
                        class="w-full px-4 py-3 pl-10 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-eden-mint focus:border-transparent outline-none transition" 
                        placeholder="••••••••">
-                <span class="absolute left-3 top-3.5 text-gray-400">🔒</span>
+                <span class="material-icons absolute left-3 top-3.5 text-gray-400 text-lg">lock</span>
               </div>
             </div>
 
@@ -91,7 +91,7 @@ import { RouterLink } from '@angular/router';
          
          <div class="absolute bottom-12 left-12 right-12 z-20 text-white">
             <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold mb-6 border border-white/10">
-               <span>💡</span> Daily Tip
+               <span class="material-icons text-sm">lightbulb</span> Daily Tip
             </div>
             <blockquote class="text-4xl font-bold leading-tight mb-4 drop-shadow-md">
               "Peace comes from within. Do not seek it without."

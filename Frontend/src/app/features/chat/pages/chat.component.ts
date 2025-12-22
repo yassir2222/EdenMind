@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../core/services/chat.service';
 
 @Component({
-  selector: 'app-chat',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
+   selector: 'app-chat',
+   standalone: true,
+   imports: [CommonModule, FormsModule],
+   template: `
     <div class="h-[calc(100vh-100px)] flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm relative">
        <!-- Header (Bot Info) -->
        <div class="bg-white p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 z-10">
@@ -26,8 +26,8 @@ import { ChatService } from '../../../core/services/chat.service';
           </div>
           
           <div class="flex gap-2">
-             <button class="p-2 text-gray-400 hover:bg-gray-50 rounded-full transition"><span class="material-icons">📊</span></button>
-             <button class="p-2 text-gray-400 hover:bg-gray-50 rounded-full transition"><span class="material-icons">⚙️</span></button>
+             <button class="p-2 text-gray-400 hover:bg-gray-50 rounded-full transition"><span class="material-icons">bar_chart</span></button>
+             <button class="p-2 text-gray-400 hover:bg-gray-50 rounded-full transition"><span class="material-icons">settings</span></button>
           </div>
        </div>
 
@@ -41,7 +41,7 @@ import { ChatService } from '../../../core/services/chat.service';
            @if (chatService.messages().length === 0 && !chatService.isLoading()) {
               <div class="mt-20 flex flex-col items-center justify-center text-gray-400">
                  <div class="w-20 h-20 bg-eden-mint-light rounded-full flex items-center justify-center mb-6 animate-pulse">
-                    <span class="text-4xl">👋</span>
+                    <span class="material-icons text-4xl text-eden-mint">waving_hand</span>
                  </div>
                  <p class="font-medium text-lg text-gray-500">How are you feeling right now?</p>
                  <p class="text-sm text-gray-400 mt-2">I'm here to listen.</p>
@@ -96,7 +96,7 @@ import { ChatService } from '../../../core/services/chat.service';
            
            <form (ngSubmit)="sendMessage()" class="relative flex items-center">
              <button type="button" class="absolute left-4 text-gray-400 hover:text-gray-600 transition">
-                <span class="text-xl">+</span>
+                <span class="material-icons text-xl">add</span>
              </button>
              <input [(ngModel)]="newMessage" name="message" type="text" 
                     class="w-full pl-12 pr-14 py-4 rounded-full bg-gray-50 border-none focus:ring-0 focus:bg-gray-100 transition text-gray-700 placeholder-gray-400"
@@ -104,7 +104,7 @@ import { ChatService } from '../../../core/services/chat.service';
              
              <div class="absolute right-2 flex items-center gap-2">
                  <button type="button" class="p-2 text-gray-400 hover:text-gray-600 transition">
-                    🎤
+                    <span class="material-icons">mic</span>
                  </button>
                  <button type="submit" [disabled]="!newMessage.trim() || chatService.isLoading()" 
                          class="bg-eden-blue hover:bg-blue-600 text-white w-10 h-10 rounded-full shadow-md flex items-center justify-center transition transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -120,37 +120,37 @@ import { ChatService } from '../../../core/services/chat.service';
   `
 })
 export class ChatComponent implements OnInit {
-  chatService = inject(ChatService);
-  newMessage = '';
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+   chatService = inject(ChatService);
+   newMessage = '';
+   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-  constructor() {
-    effect(() => {
-      this.chatService.messages();
-      setTimeout(() => this.scrollToBottom(), 100);
-    });
-  }
+   constructor() {
+      effect(() => {
+         this.chatService.messages();
+         setTimeout(() => this.scrollToBottom(), 100);
+      });
+   }
 
-  ngOnInit() {
-    this.chatService.loadConversations();
-  }
+   ngOnInit() {
+      this.chatService.loadConversations();
+   }
 
-  quickReply(text: string) {
-    this.newMessage = text;
-    // Optional: Auto send
-    // this.sendMessage();
-  }
+   quickReply(text: string) {
+      this.newMessage = text;
+      // Optional: Auto send
+      // this.sendMessage();
+   }
 
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.chatService.sendMessage(this.newMessage);
-      this.newMessage = '';
-    }
-  }
+   sendMessage() {
+      if (this.newMessage.trim()) {
+         this.chatService.sendMessage(this.newMessage);
+         this.newMessage = '';
+      }
+   }
 
-  scrollToBottom() {
-    if (this.scrollContainer) {
-      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
-    }
-  }
+   scrollToBottom() {
+      if (this.scrollContainer) {
+         this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+      }
+   }
 }

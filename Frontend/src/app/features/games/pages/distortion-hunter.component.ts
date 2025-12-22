@@ -29,9 +29,9 @@ interface DistortionScenario {
             <h2 class="text-3xl font-bold text-gray-800">Distortion Hunter</h2>
             <p class="text-gray-500 text-sm">Identify the cognitive distortion to clear the fog.</p>
             
-            <div class="flex justify-center gap-2 mt-4">
+            <div class="flex justify-center gap-1 mt-4">
                @for (star of stars(); track $index) {
-                  <span class="text-2xl transition-all duration-500 transform" [class.scale-125]="star === '★'">{{ star }}</span>
+                  <span class="material-icons text-2xl transition-all duration-500 transform text-yellow-400" [class.scale-125]="star === 'star'">{{ star }}</span>
                }
             </div>
        </div>
@@ -44,8 +44,8 @@ interface DistortionScenario {
             <div class="bg-gray-800 text-white p-8 rounded-3xl shadow-xl mb-8 relative transform transition-all duration-500 hover:scale-[1.02]"
                  [ngClass]="{'animate-shake': shake(), 'bg-green-600': isCorrect() === true, 'bg-red-500': isCorrect() === false}">
                 
-                <div class="absolute -top-6 -left-6 text-6xl opacity-20">☁️</div>
-                <div class="absolute -bottom-6 -right-6 text-6xl opacity-20">🌩️</div>
+                <div class="absolute -top-6 -left-6 opacity-20"><span class="material-icons text-8xl">cloud</span></div>
+                <div class="absolute -bottom-6 -right-6 opacity-20"><span class="material-icons text-8xl">thunderstorm</span></div>
 
                 <h3 class="text-xl font-medium mb-2 opacity-70 uppercase tracking-widest text-xs">Negative Thought</h3>
                 <p class="text-2xl font-bold leading-relaxed">"{{ currentScenario()?.thought }}"</p>
@@ -53,8 +53,8 @@ interface DistortionScenario {
                 <!-- Feedback Overlay -->
                 @if (isCorrect() !== null) {
                     <div class="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[2px] rounded-3xl">
-                       <div class="text-6xl animate-bounce">
-                          {{ isCorrect() ? '✨' : '❌' }}
+                       <div class="animate-bounce">
+                          <span class="material-icons text-8xl text-white drop-shadow-lg">{{ isCorrect() ? 'check_circle' : 'cancel' }}</span>
                        </div>
                     </div>
                 }
@@ -77,7 +77,7 @@ interface DistortionScenario {
             <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
                 <div class="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl relative">
                     <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-eden-mint text-white w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-lg border-4 border-white">
-                        💡
+                        <span class="material-icons text-4xl">lightbulb</span>
                     </div>
                     
                     <div class="mt-8 text-center">
@@ -99,7 +99,7 @@ interface DistortionScenario {
         <!-- Game Complete Screen -->
         @if (gameComplete()) {
              <div class="bg-white rounded-3xl p-10 text-center shadow-xl border border-purple-100 animate-scale-in">
-                 <div class="text-8xl mb-6">🎉</div>
+                 <div class="mb-6"><span class="material-icons text-8xl text-eden-primary">celebration</span></div>
                  <h2 class="text-4xl font-bold text-gray-800 mb-4">Mind Clear!</h2>
                  <p class="text-gray-500 text-lg mb-8">You've successfully challenged 5 common cognitive distortions. Keep practicing this in your daily life.</p>
                  
@@ -181,7 +181,7 @@ export class DistortionHunterComponent {
     showRational = signal(false);
 
     // Stars display
-    stars = signal<string[]>(['☆', '☆', '☆', '☆', '☆']);
+    stars = signal<string[]>(['star_border', 'star_border', 'star_border', 'star_border', 'star_border']);
 
     constructor() {
         this.loadLevel(0);
@@ -230,7 +230,7 @@ export class DistortionHunterComponent {
 
     restart() {
         this.level.set(0);
-        this.stars.set(['☆', '☆', '☆', '☆', '☆']);
+        this.stars.set(['star_border', 'star_border', 'star_border', 'star_border', 'star_border']);
         this.gameComplete.set(false);
         this.loadLevel(0);
     }
@@ -238,7 +238,7 @@ export class DistortionHunterComponent {
     updateStar(idx: number) {
         this.stars.update(curr => {
             const arr = [...curr];
-            arr[idx] = '★';
+            arr[idx] = 'star';
             return arr;
         });
     }

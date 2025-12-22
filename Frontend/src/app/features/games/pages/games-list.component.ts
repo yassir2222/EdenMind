@@ -19,7 +19,7 @@ import { RouterLink } from '@angular/router';
            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
            <div class="relative z-10">
                <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform shadow-inner">
-                  🌬️
+                  <span class="material-icons">air</span>
                </div>
                <h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-eden-primary transition-colors">Breathing Exercise</h3>
                <p class="text-gray-500 leading-relaxed">A simple 4-7-8 rhythm to calm your nervous system and reduce anxiety instantly.</p>
@@ -31,7 +31,7 @@ import { RouterLink } from '@angular/router';
            <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
            <div class="relative z-10">
                <div class="w-16 h-16 bg-purple-100 text-purple-500 rounded-2xl flex items-center justify-center mb-6 text-3xl group-hover:rotate-12 transition-transform">
-                  🔍
+                  <span class="material-icons">psychology</span>
                </div>
                <h3 class="text-xl font-bold text-gray-800 mb-3 text-eden-primary transition-colors">Distortion Hunter</h3>
                <p class="text-gray-500 leading-relaxed">Identify and challenge cognitive distortions in this interactive CBT mini-game.</p>
@@ -43,7 +43,7 @@ import { RouterLink } from '@angular/router';
            <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
            <div class="relative z-10">
                <div class="w-16 h-16 bg-green-100 text-green-500 rounded-2xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform shadow-inner">
-                  🏰
+                  <span class="material-icons">balance</span>
                </div>
                <h3 class="text-xl font-bold text-gray-800 mb-3 text-eden-primary transition-colors">Serenity Tower</h3>
                <p class="text-gray-500 leading-relaxed">Build a tower of focus and balance. A mindfulness game to improve concentration.</p>

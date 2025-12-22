@@ -30,7 +30,7 @@ import { UserService } from '../../../core/services/user.service';
                         }
                      </div>
                      <button type="button" (click)="generateAvatar()" class="absolute bottom-0 right-0 bg-eden-primary text-white p-2 rounded-full shadow-lg hover:scale-110 transition nav-button" title="Generate New Avatar">
-                        <span class="text-xl">🎲</span>
+                        <span class="material-icons text-xl">casino</span>
                      </button>
                  </div>
 

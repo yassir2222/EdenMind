@@ -24,22 +24,22 @@ import { UserService } from '../../services/user.service';
         <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Menu</p>
 
         <a routerLink="/dashboard" routerLinkActive="bg-eden-mint-light text-eden-mint-dark font-bold" [routerLinkActiveOptions]="{exact: true}" class="flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group">
-          <span class="mr-3 text-xl w-6 text-center">📊</span>
+          <span class="material-icons mr-3 text-xl w-6 text-center">dashboard</span>
           <span class="font-medium">Dashboard</span>
         </a>
 
         <a routerLink="/dashboard/chat" routerLinkActive="bg-eden-mint-light text-eden-mint-dark font-bold" class="flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group">
-          <span class="mr-3 text-xl w-6 text-center">💬</span>
+          <span class="material-icons mr-3 text-xl w-6 text-center">chat_bubble_outline</span>
           <span class="font-medium">Chat AI</span>
         </a>
 
         <a routerLink="/dashboard/mood" routerLinkActive="bg-eden-mint-light text-eden-mint-dark font-bold" class="flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group">
-          <span class="mr-3 text-xl w-6 text-center">❤️</span>
+          <span class="material-icons mr-3 text-xl w-6 text-center">mood</span>
           <span class="font-medium">Mood Tracker</span>
         </a>
 
         <a routerLink="/dashboard/games" routerLinkActive="bg-eden-mint-light text-eden-mint-dark font-bold" class="flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group">
-          <span class="mr-3 text-xl w-6 text-center">🧩</span>
+          <span class="material-icons mr-3 text-xl w-6 text-center">extension</span>
           <span class="font-medium">Mini-Games</span>
         </a>
 
