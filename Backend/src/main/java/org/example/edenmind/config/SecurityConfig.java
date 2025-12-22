@@ -20,6 +20,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
+    @SuppressWarnings("java:S4502") // CSRF is disabled because we are using stateless JWT authentication
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configure(http))

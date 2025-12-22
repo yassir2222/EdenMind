@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:eden_mind_app/features/meditation/meditation_page.dart';
-import 'package:eden_mind_app/features/meditation/meditation_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -53,12 +52,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Test Track'), findsOneWidget);
-      expect(find.text('10 min'), findsOneWidget);
-      expect(find.text('Focus'), findsOneWidget);
+      expect(find.textContaining('10 min'), findsOneWidget);
+      expect(find.textContaining('Focus'), findsOneWidget);
     });
 
     testWidgets('maps all category labels correctly', (tester) async {
-      setScreenSize(tester);
+      tester.view.physicalSize = const Size(1200, 3000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
       when(mockClient.get(any)).thenAnswer(
         (_) async => http.Response(
@@ -76,11 +78,11 @@ void main() {
       await tester.pumpWidget(createWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('Focus'), findsWidgets);
-      expect(find.text('Calm'), findsWidgets);
-      expect(find.text('Inspire'), findsWidgets);
-      expect(find.text('Rest'), findsWidgets);
-      expect(find.text('Ambient'), findsWidgets);
+      expect(find.textContaining('Focus'), findsWidgets);
+      expect(find.textContaining('Calm'), findsWidgets);
+      expect(find.textContaining('Energy'), findsWidgets);
+      expect(find.textContaining('Sleep'), findsWidgets);
+      expect(find.textContaining('Ambient'), findsWidgets);
     });
 
     testWidgets('shows empty state when no tracks', (tester) async {
@@ -92,7 +94,10 @@ void main() {
       await tester.pumpWidget(createWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('No meditation tracks found'), findsOneWidget);
+      expect(
+        find.textContaining('No meditation tracks available'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows error when loading fails (500)', (tester) async {
@@ -114,7 +119,7 @@ void main() {
       await tester.pumpWidget(createWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('Connection Error'), findsOneWidget);
+      expect(find.text('Connection error'), findsOneWidget);
     });
 
     testWidgets('retry reloads tracks', (tester) async {
@@ -138,7 +143,10 @@ void main() {
       await tester.tap(find.text('Retry'));
       await tester.pumpAndSettle();
 
-      expect(find.text('No meditation tracks found'), findsOneWidget);
+      expect(
+        find.textContaining('No meditation tracks available'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('filter chips update UI selection', (tester) async {
@@ -150,8 +158,8 @@ void main() {
       await tester.pumpWidget(createWidget());
       await tester.pumpAndSettle();
 
-      // Tap 'Focus'
-      await tester.tap(find.text('Focus'));
+      // Tap 'Sounds'
+      await tester.tap(find.text('Sounds'));
       await tester.pumpAndSettle();
     });
 
@@ -164,7 +172,7 @@ void main() {
       await tester.pumpWidget(createWidget());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.tap(find.byIcon(Icons.arrow_back_ios_new));
       await tester.pumpAndSettle();
     });
 

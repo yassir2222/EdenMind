@@ -96,7 +96,7 @@ class _MoodLogPageState extends State<MoodLogPage> {
                     ),
                   );
                   if (result == true) {
-                    _loadMoods(); // Refresh list
+                     await _loadMoods(); // Refresh list
                   }
                 },
                 backgroundColor: EdenMindTheme.primaryColor,
@@ -289,37 +289,40 @@ class _MoodLogPageState extends State<MoodLogPage> {
                             if (activities.isNotEmpty) ...[
                               const SizedBox(height: 12),
                               Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
+                                spacing: 6,
+                                runSpacing: 6,
                                 children: activities.map((activity) {
                                   return Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 120,
+                                    ),
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
+                                      horizontal: 8,
+                                      vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
                                       color: EdenMindTheme.backgroundColor,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: Colors
-                                            .transparent, // Placeholder for potential border
-                                      ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
                                           _getActivityIcon(activity),
-                                          size: 16,
+                                          size: 14,
                                           color: EdenMindTheme.textColor,
                                         ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          activity,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: EdenMindTheme.textColor,
+                                        const SizedBox(width: 4),
+                                        Flexible(
+                                          child: Text(
+                                            activity.trim(),
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              color: EdenMindTheme.textColor,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                         ),
                                       ],

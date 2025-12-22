@@ -144,10 +144,26 @@ public class ChatController {
             List<EmotionLog> recentMoods = emotionLogRepository.findByUserEmailOrderByRecordedAtDesc(user.getEmail());
             if (!recentMoods.isEmpty()) {
                 userContext.append("\nRecent Mood Logs:\n");
+                
+                // Check if the most recent mood was from face analysis
+                EmotionLog latestMood = recentMoods.get(0);
+                if ("FACE_ANALYSIS".equals(latestMood.getSource())) {
+                    userContext.append("**IMPORTANT: User's current mood was just detected via facial analysis.**\n");
+                    userContext.append("Detected emotion: ").append(latestMood.getEmotionType());
+                    if (latestMood.getConfidence() != null) {
+                        userContext.append(" (").append(String.format("%.1f", latestMood.getConfidence())).append("% confidence)");
+                    }
+                    userContext.append("\n");
+                    userContext.append("Please acknowledge their current emotional state and respond with empathy.\n\n");
+                }
+                
                 for (int i = 0; i < Math.min(recentMoods.size(), 5); i++) {
                     EmotionLog log = recentMoods.get(i);
                     userContext.append("- ").append(log.getRecordedAt().toLocalDate())
                               .append(": ").append(log.getEmotionType());
+                    if ("FACE_ANALYSIS".equals(log.getSource())) {
+                        userContext.append(" [via camera]");
+                    }
                     if (log.getNote() != null && !log.getNote().isEmpty()) {
                         userContext.append(" (Note: ").append(log.getNote()).append(")");
                     }

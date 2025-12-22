@@ -64,7 +64,7 @@ void main() {
             },
             body: argThat(
               predicate((body) {
-                final decoded = jsonDecode(body as String);
+                final decoded = jsonDecode(body! as String) as Map<String, dynamic>;
                 return decoded['query'] == 'Hi' &&
                     !decoded.containsKey('conversationId');
               }),
@@ -104,7 +104,7 @@ void main() {
             headers: anyNamed('headers'),
             body: argThat(
               predicate((body) {
-                final decoded = jsonDecode(body as String);
+                final decoded = jsonDecode(body! as String) as Map<String, dynamic>;
                 return decoded['conversationId'] == 1;
               }),
               named: 'body',

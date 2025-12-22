@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,6 +23,7 @@ class _GratitudeJarPageState extends State<GratitudeJarPage>
   late AnimationController _floatController;
   final TextEditingController _textController = TextEditingController();
   final List<GratitudeNote> _notes = [];
+  Timer? _celebrationTimer;
   bool _showInput = false;
   bool _showCelebration = false;
 
@@ -51,6 +53,7 @@ class _GratitudeJarPageState extends State<GratitudeJarPage>
   void dispose() {
     _floatController.dispose();
     _textController.dispose();
+    _celebrationTimer?.cancel();
     super.dispose();
   }
 
@@ -73,7 +76,8 @@ class _GratitudeJarPageState extends State<GratitudeJarPage>
       // Show celebration every 3 notes
       if (_notes.length % 3 == 0) {
         _showCelebration = true;
-        Future.delayed(const Duration(seconds: 2), () {
+        _celebrationTimer?.cancel();
+        _celebrationTimer = Timer(const Duration(seconds: 2), () {
           if (mounted) {
             setState(() => _showCelebration = false);
           }

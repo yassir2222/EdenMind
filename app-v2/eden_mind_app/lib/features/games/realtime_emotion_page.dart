@@ -65,7 +65,7 @@ class _RealtimeEmotionPageState extends State<RealtimeEmotionPage> {
         _isCameraInitialized = true;
       });
       debugPrint("Starting image stream...");
-      _cameraController!.startImageStream(_processImage);
+      await _cameraController!.startImageStream(_processImage);
     } catch (e) {
       debugPrint("Camera error: $e");
     }

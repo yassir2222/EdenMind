@@ -31,12 +31,21 @@ public class EmotionLogController {
         String emotionType = (String) request.get("emotionType");
         String activities = (String) request.get("activities");
         String note = (String) request.get("note");
+        String source = (String) request.getOrDefault("source", "MANUAL");
+        Double confidence = request.get("confidence") != null 
+            ? ((Number) request.get("confidence")).doubleValue() 
+            : null;
 
         EmotionLog log = new EmotionLog(user, emotionType, activities, note);
+        log.setSource(source);
+        log.setConfidence(confidence);
         emotionLogRepository.save(log);
 
         // Create notification for mood logging
-        notificationService.notifyMoodLogged(user, emotionType);
+        String notificationMessage = source.equals("FACE_ANALYSIS") 
+            ? "Mood detected via camera: " + emotionType
+            : emotionType;
+        notificationService.notifyMoodLogged(user, notificationMessage);
 
         return ResponseEntity.ok().build();
     }

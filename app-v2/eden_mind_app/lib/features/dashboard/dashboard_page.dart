@@ -9,6 +9,7 @@ import 'package:eden_mind_app/features/meditation/meditation_page.dart';
 import 'package:eden_mind_app/features/games/therapeutic_games_page.dart';
 import 'package:eden_mind_app/features/music/music_page.dart';
 import 'package:eden_mind_app/features/notifications/notifications_page.dart';
+import 'package:eden_mind_app/features/face_sentiment/face_sentiment_page.dart';
 import 'package:eden_mind_app/features/map/therapist_map_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -67,7 +68,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       .animate()
                       .fadeIn(delay: 200.ms, duration: 600.ms)
                       .slideX(begin: -0.2, end: 0),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 24),
                   _buildActionGrid(
                     context,
                   ).animate().fadeIn(delay: 400.ms, duration: 600.ms).scale(),
@@ -187,18 +188,18 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             Expanded(
               child: _buildActionCard(
-                title: 'AI Chatbot',
-                subtitle: 'Talk it out',
-                icon: Icons.smart_toy_outlined,
-                color: Colors.deepPurple.withValues(alpha: 0.1),
-                iconBgColor: EdenMindTheme.primaryColor,
-                buttonText: 'Start',
-                buttonColor: EdenMindTheme.primaryColor,
+                title: 'Mood Scanner',
+                subtitle: 'AI face detection',
+                icon: Icons.face_retouching_natural,
+                color: const Color(0xFF667eea).withValues(alpha: 0.1),
+                iconBgColor: const Color(0xFF667eea),
+                buttonText: 'Scan',
+                buttonColor: const Color(0xFF667eea),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ChatbotPage(),
+                      builder: (context) => const FaceSentimentPage(),
                     ),
                   );
                 },
@@ -231,6 +232,26 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             Expanded(
               child: _buildActionCard(
+                title: 'AI Chatbot',
+                subtitle: 'Talk it out',
+                icon: Icons.smart_toy_outlined,
+                color: Colors.deepPurple.withValues(alpha: 0.1),
+                iconBgColor: EdenMindTheme.primaryColor,
+                buttonText: 'Start',
+                buttonColor: EdenMindTheme.primaryColor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChatbotPage(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildActionCard(
                 title: 'Find Therapist',
                 subtitle: 'Nearby help',
                 icon: Icons.map_rounded,
@@ -248,9 +269,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
             ),
-            // Placeholder for balance or future feature
-            const SizedBox(width: 16),
-            Expanded(child: Container()),
           ],
         ),
       ],

@@ -1,6 +1,5 @@
 import 'package:eden_mind_app/features/auth/auth_service.dart';
 import 'package:eden_mind_app/features/auth/login_page.dart';
-import 'package:eden_mind_app/features/dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

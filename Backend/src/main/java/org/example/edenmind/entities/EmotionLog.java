@@ -30,6 +30,12 @@ public class EmotionLog {
     @Column(name = "activities")
     private String activities; // Comma separated list
 
+    @Column(name = "source")
+    private String source; // MANUAL or FACE_ANALYSIS
+
+    @Column(name = "confidence")
+    private Double confidence; // Confidence score for face analysis (0-100)
+
     @Column(updatable = false)
     private LocalDateTime recordedAt;
 
@@ -111,5 +117,21 @@ public class EmotionLog {
 
     public void setRecordedAt(LocalDateTime recordedAt) {
         this.recordedAt = recordedAt;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Double getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(Double confidence) {
+        this.confidence = confidence;
     }
 }

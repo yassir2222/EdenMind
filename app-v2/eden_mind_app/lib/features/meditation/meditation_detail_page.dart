@@ -296,7 +296,7 @@ class MeditationDetailPage extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      benefit['icon'] as IconData,
+                      benefit['icon']! as IconData,
                       color: color,
                       size: 24,
                     ),
@@ -307,7 +307,7 @@ class MeditationDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          benefit['title'] as String,
+                          benefit['title']! as String,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -316,7 +316,7 @@ class MeditationDetailPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          benefit['description'] as String,
+                          benefit['description']! as String,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Color(0xFFA1A4B2),

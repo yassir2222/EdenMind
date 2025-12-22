@@ -31,12 +31,6 @@ void main() {
       await tester.pumpAndSettle();
 
       // 2. Login Flow
-      final emailField = find.bySemanticsLabel(
-        'Email Address',
-      ); // Using hintText/semantics
-      // Note: TextField decoration hintText serves as semantics label often, or we find by type.
-      // Let's use finding by type for robustness or specific text if unique.
-      // In login_page.dart, hintText is 'Email Address'
 
       await tester.enterText(
         find.widgetWithText(TextField, 'Email Address'),

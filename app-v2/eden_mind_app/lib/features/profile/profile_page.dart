@@ -214,14 +214,14 @@ class ProfilePage extends StatelessWidget {
   void _showImagePickerOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => SafeArea(
+      builder: (sheetContext) => SafeArea(
         child: Wrap(
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library),
               title: const Text('Choose from Gallery'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(sheetContext);
                 _pickImage(context, ImageSource.gallery);
               },
             ),
@@ -229,7 +229,7 @@ class ProfilePage extends StatelessWidget {
               leading: const Icon(Icons.camera_alt),
               title: const Text('Take a Photo'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(sheetContext);
                 _pickImage(context, ImageSource.camera);
               },
             ),
@@ -241,7 +241,7 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(color: Colors.red),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(sheetContext);
                   _removeImage(context);
                 },
               ),
@@ -257,7 +257,7 @@ class ProfilePage extends StatelessWidget {
       final pickedFile = await picker.pickImage(source: source);
 
       if (pickedFile != null) {
-        if (!context.mounted) return;
+        // if (!context.mounted) return;
 
         // Show loading indicator
         ScaffoldMessenger.of(
@@ -276,25 +276,25 @@ class ProfilePage extends StatelessWidget {
 
         if (imageUrl != null) {
           await authService.updateProfile(avatarUrl: imageUrl);
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Profile image updated successfully!'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          }
+          // if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile image updated successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          // }
         }
       }
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error updating image: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      // }
     }
   }
 
@@ -954,7 +954,7 @@ class ProfilePage extends StatelessWidget {
         onPressed: () async {
           await context.read<AuthService>().logout();
           if (context.mounted) {
-            Navigator.of(context).pushAndRemoveUntil(
+            await Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => const LoginPage()),
               (route) => false,
             );

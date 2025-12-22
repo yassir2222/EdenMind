@@ -29,6 +29,12 @@ void main() {
   });
 
   testWidgets('Interacts and saves mood', (WidgetTester tester) async {
+    // Set larger screen size for scrolling
+    tester.view.physicalSize = const Size(1200, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       MaterialApp(home: AddMoodPage(moodService: mockMoodService)),
     );
@@ -49,8 +55,11 @@ void main() {
     );
     await tester.pump();
 
-    // Tap Save
-    await tester.tap(find.text('Save Mood'));
+    // Scroll to and tap Save
+    final saveButton = find.text('Save Mood');
+    await tester.ensureVisible(saveButton);
+    await tester.pumpAndSettle();
+    await tester.tap(saveButton);
     await tester.pump(); // Start loading
     await tester.pump(); // Complete async
 
@@ -68,12 +77,20 @@ void main() {
       mockMoodService.saveMood(any, any, any),
     ).thenThrow(Exception('Save failed'));
 
+    tester.view.physicalSize = const Size(1200, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       MaterialApp(home: AddMoodPage(moodService: mockMoodService)),
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Save Mood'));
+    final saveButton = find.text('Save Mood');
+    await tester.ensureVisible(saveButton);
+    await tester.pumpAndSettle();
+    await tester.tap(saveButton);
     await tester.pump();
     await tester.pump(); // Process future
 

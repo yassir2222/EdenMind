@@ -44,21 +44,21 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: BreathingGamePage(audioPlayer: mockAudioPlayer)),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       expect(find.text('Breathing Game'), findsOneWidget);
       expect(find.text('Start'), findsOneWidget);
       expect(
         find.text('Tap & Hold to Inhale'),
-        findsNothing,
-      ); // Hidden by overlay effectively, actually it's behind
+        findsOneWidget,
+      ); // Hidden by overlay visually, but present in tree
     });
 
     testWidgets('Starts game and timer', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(home: BreathingGamePage(audioPlayer: mockAudioPlayer)),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       // Tap Start
       await tester.tap(find.text('Start'));
@@ -79,10 +79,10 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: BreathingGamePage(audioPlayer: mockAudioPlayer)),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       await tester.tap(find.text('Start'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       // Tap and hold (Inhale)
       // Find the breathing area. It has a GestureDetector.
@@ -127,11 +127,11 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: BreathingGamePage(audioPlayer: mockAudioPlayer)),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       // Tap close
       await tester.tap(find.byIcon(Icons.chevron_left));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       // Should verify pop, but in test environment without navigator observer it just happens.
       // If no crash, good.

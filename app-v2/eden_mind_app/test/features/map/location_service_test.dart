@@ -1,16 +1,12 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:eden_mind_app/features/map/services/location_service.dart';
-
-import 'location_service_test.mocks.dart';
 
 @GenerateMocks([GeolocatorPlatform])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   late LocationService locationService;
 
   setUp(() {

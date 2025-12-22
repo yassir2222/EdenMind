@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:eden_mind_app/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'chat_service.dart';
 import 'dart:ui'; // For BackdropFilter
 import 'package:provider/provider.dart';
 
 class ChatbotPage extends StatefulWidget {
-  const ChatbotPage({super.key});
+  final String? initialMood;
+  final String? initialMessage;
+
+  const ChatbotPage({super.key, this.initialMood, this.initialMessage});
 
   @override
   State<ChatbotPage> createState() => _ChatbotPageState();
@@ -28,12 +31,20 @@ class _ChatbotPageState extends State<ChatbotPage> {
   @override
   void initState() {
     super.initState();
-    // Start a new chat by default, but also fetch history
-    _messages.add({
-      'text':
-          'Hello! I\'m ZenBot, your personal companion. How are you feeling today?',
-      'isBot': true,
-    });
+    // Use mood-aware message if provided, otherwise default greeting
+    if (widget.initialMessage != null && widget.initialMood != null) {
+      _messages.add({
+        'text': widget.initialMessage!,
+        'isBot': true,
+        'mood': widget.initialMood,
+      });
+    } else {
+      _messages.add({
+        'text':
+            'Hello! I\'m ZenBot, your personal companion. How are you feeling today?',
+        'isBot': true,
+      });
+    }
     _fetchConversations();
   }
 
@@ -128,7 +139,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
               result['conversationId']; // Ensure ID is linked for subsequent messages
         });
         _scrollToBottom(); // Scroll after new message
-        _fetchConversations(); // Refresh list to show updated timestamp/order or new chat
+        await _fetchConversations(); // Refresh list to show updated timestamp/order or new chat
       }
     } catch (e) {
       if (mounted) {
@@ -214,12 +225,14 @@ class _ChatbotPageState extends State<ChatbotPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Conversations',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: EdenMindTheme.textColor,
+                        Expanded(
+                          child: Text(
+                            'Conversations',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: EdenMindTheme.textColor,
+                            ),
                           ),
                         ),
                         IconButton(
@@ -409,7 +422,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
         if (_currentConversationId == id) {
           _startNewChat();
         } else {
-          _fetchConversations();
+          await _fetchConversations();
         }
       } catch (e) {
         debugPrint('Error deleting conversation: $e');

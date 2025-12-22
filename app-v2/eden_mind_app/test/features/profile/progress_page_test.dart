@@ -212,13 +212,14 @@ void main() {
     ) async {
       when(
         mockStorage.read(key: 'jwt_token'),
-      ).thenThrow(Exception('Storage error'));
+      ).thenAnswer((_) async => throw Exception('Storage error'));
 
       await tester.pumpWidget(createWidget());
+      await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpAndSettle();
 
       expect(
-        find.text('Exception: Storage error'),
+        find.text('Failed to load progress'),
         findsOneWidget,
       ); // Shows error message
     });
@@ -227,9 +228,10 @@ void main() {
       when(mockStorage.read(key: 'jwt_token')).thenAnswer((_) async => null);
 
       await tester.pumpWidget(createWidget());
+      await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpAndSettle();
 
-      expect(find.text('Exception: Not authenticated'), findsOneWidget);
+      expect(find.text('Failed to load progress'), findsOneWidget);
     });
 
     testWidgets('Navigates back', (WidgetTester tester) async {

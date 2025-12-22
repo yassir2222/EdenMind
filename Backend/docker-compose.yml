@@ -1,4 +1,4 @@
-version: "3.8"
+
 
 services:
   sonarqube:
@@ -19,7 +19,7 @@ services:
       - sonarnet
 
   db:
-    image: postgres:latest
+    image: postgres:17
     environment:
       - POSTGRES_USER=sonar
       - POSTGRES_PASSWORD=sonar

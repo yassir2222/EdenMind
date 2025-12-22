@@ -256,9 +256,7 @@ class _DistortionHunterPageState extends State<DistortionHunterPage>
             if (_showFeedbackOverlay) _buildFeedbackOverlay(),
 
             // Pause Overlay
-            if (_isPaused &&
-                !_showFeedbackOverlay &&
-                !ModalRoute.of(context)!.isCurrent)
+            if (_isPaused && !_showFeedbackOverlay)
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
