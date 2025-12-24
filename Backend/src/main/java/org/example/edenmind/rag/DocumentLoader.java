@@ -59,7 +59,7 @@ public class DocumentLoader {
 
         } catch (Exception e) {
             System.err.println("Error ingesting documents: " + e.getMessage());
-            e.printStackTrace();
+
         }
     }
 }

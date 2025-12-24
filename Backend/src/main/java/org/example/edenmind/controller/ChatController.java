@@ -192,7 +192,7 @@ public class ChatController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            e.printStackTrace();
+
             return ResponseEntity.internalServerError().body(Collections.singletonMap("error", e.getMessage()));
         }
     }

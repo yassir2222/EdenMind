@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobalException(Exception ex) {
         System.out.println("GlobalExceptionHandler: Caught exception: " + ex.getMessage());
-        ex.printStackTrace(); // Important to see the full stack
+
 
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
