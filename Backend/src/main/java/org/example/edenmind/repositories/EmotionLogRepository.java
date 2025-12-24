@@ -14,5 +14,9 @@ public interface EmotionLogRepository extends JpaRepository<EmotionLog, Long> {
     List<EmotionLog> findByUserIdAndRecordedAtBetween(Long userId, LocalDateTime start, LocalDateTime end);
     List<EmotionLog> findByUserIdAndEmotionType(Long userId, String emotionType);
     long countByUserEmail(String email);
+    
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    void deleteByUserId(Long userId);
 }
 
